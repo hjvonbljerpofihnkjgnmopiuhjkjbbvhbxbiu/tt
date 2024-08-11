@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmResetBtn = document.getElementById('confirm-reset');
     const cancelResetBtn = document.getElementById('cancel-reset');
 
-    const jsonURL = 'https://raw.githubusercontent.com/tonusername/tonrepo/branche/data.json'; // Remplace par l'URL de ton fichier JSON
+    const jsonURL = 'https://raw.githubusercontent.com/hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu/tt/main/data.js'; // Remplace par l'URL de ton fichier JSON
 
     // Récupérer les données du fichier JSON
     fetch(jsonURL)
