@@ -15,17 +15,41 @@
   font-weight: normal;
   font-style: normal;
 }
-.popup {
-  width: 380px;
-  height: 180px;
-  background: var(--clr4);
-  bottom: 20px;
-  left: -380px;
-  position: fixed;
-  border-radius: 5px;
-  transition: 0.5s;
-  z-index: 999;
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
+
+.button {
+    padding: 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Alternating button colors */
+.button:nth-child(odd) {
+    background-color: #007bff;
+    color: white;
+}
+
+.button:nth-child(even) {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Hover effects */
+.button:hover:nth-child(odd) {
+    background-color: #0056b3;
+}
+
+.button:hover:nth-child(even) {
+    background-color: #218838;
+}
+
 
 .closeaparece {
   position: absolute;
