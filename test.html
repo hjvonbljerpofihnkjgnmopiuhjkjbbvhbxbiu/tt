@@ -73,49 +73,7 @@ $('.arrow').click(function(){
    $('.popup').show();
 });
 </script>
-<script>
-var frank = new Vue({
-  el:'#subscribe',
-  data:{
-		email: "",
-    code: "xkhlepohvzjnnivzlgjwxxdlospkpd",
-    submit: "insert",
-    showinvalid: false,
-    showalready: false,
-    showsuccess: false
-  },
-  methods: {
-           enviaremail() {
-            axios.post('/validaremail.php', {
-                email: this.email,
-                code: this.code,
-                submit: this.submit
-              })
-              .then(function (response) {
-                if(response.data == 'invalid'){
-                frank.showinvalid = true;
-                frank.showalready = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'This email is already subscribed'){
-                frank.showalready = true;
-                frank.showinvalid = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'You have been succesfully subscribed to our newsletter'){
-                frank.showsuccess = true;
-                frank.showinvalid = false;
-                frank.showalready = false;
-                    }
-              console.log(response.data);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
-        }
-});
-</script>
+
   <style>
 
 	  
@@ -147,7 +105,7 @@ var frank = new Vue({
 .btn:hover {
     opacity: 0.8;
 }
-.div {
+.segundanav {
 	background-color: #8f3985;
 }
 @media (max-width:1080px) {
@@ -223,20 +181,23 @@ M23.5,36V25c0-0.828-0.672-1.5-1.5-1.5s-1.5,0.672-1.5,1.5v11c0,0.828,0.672,1.5,1.
   <br>
   <div class="button-grid">
         <!-- Les boutons seront alternés avec les classes "colored" et "default" -->
-        <button class="btn colored">Prise de service<button>
-        <button class="btn default">Bouton 2</button>
-        <button class="btn colored">Bouton 3</button>
-        <button class="btn default">Bouton 4</button>
+        <button class="btn colored">Prise de service</button>
+        <button class="btn default">Outil de travail</button>
+        <button class="btn colored">Service et déplcament</button>
+        <button class="btn default">Réparation civil</button>
 
-        <button class="btn colored">Bouton 5</button>
-        <button class="btn default">Bouton 6</button>
-        <button class="btn colored">Bouton 7</button>
-        <button class="btn default">Bouton 8</button>
+        <button class="btn colored">Réparation partenaire</button>
+        <button class="btn default">Custom civil</button>
+        <button class="btn default">Custom Partenaire</button>
+        <button class="btn colored">Custom & répa perso</button>
 
-        <button class="btn colored">Bouton 9</button>
-        <button class="btn default">Bouton 10</button>
-        <button class="btn colored">Bouton 11</button>
-        <button class="btn default">Bouton 12</button>
+
+        <button class="btn colored">Note de frais</button>
+        <button class="btn default">Fabrication de kit</button>
+        <button class="btn colored">Tablette</button>
+        <button class="btn default">Comptabilité</button>
+        <button class="btn colored">Annexe</button>
+        <button class="btn default">Fin de service</button>
     </div>
               
 <br>
