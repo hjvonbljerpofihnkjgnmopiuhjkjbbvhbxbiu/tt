@@ -1,24 +1,245 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compteur Persistant</title>
-    <link rel="stylesheet" href="stylet.css">
-</head>
-<body>
-    <div id="container"></div>
-    <button id="reset-btn">Réinitialiser</button>
+<html lang="en" class="no-js"><head></head><body style="cursor: auto;">
 
-    <!-- La modale de confirmation -->
-    <div id="confirm-reset-modal" class="modal">
-        <div class="modal-content">
-            <p>Êtes-vous sûr de vouloir réinitialiser les valeurs ?</p>
-            <button id="confirm-reset">Oui</button>
-            <button id="cancel-reset">Non</button>
-        </div>
+  <title>Color perso Custom</title>
+  <meta name="description" content="Tablette servant a personnaliser les couleurs pour les véhicules">
+  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Htmlcolors.com">
+<meta name="twitter:title" content="Html Colors">
+<meta name="twitter:description" content="Get your Html Color codes with our color tools, HEX code, RGB, RGBA, HSL and HSLA values, including HSV, HWB and CMYK. Go pick!">
+<meta name="twitter:image" content="https://i.imgur.com/fWH7K9d.png">
+
+<link href="https://fonts.googleapis.com/css?family=David+Libre|Hind:400,700" rel="stylesheet">
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+<script src="js/scrolltop.js"></script>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/htmlcolorsappgrande.png">
+<script src="js/main.js"></script>
+<script src="js/vue%402.6.14.js"></script>
+<script src="js/axios.min.js"></script>
+
+ <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-113637426-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113637426-1');
+</script>
+<div id="subscribe"></div>
+<script>
+$(function() {
+    var wrap = $(".wrap.fixed");
+    $(window).scroll(function() {
+        var scroll = $(window).scrollTop();
+        if (scroll >= 50) wrap.addClass("sticky");
+        else wrap.removeClass("sticky");
+    });
+});
+
+$(document).ready(function() {
+
+
+   <div class="button-grid">
+        <button class="button">Bouton 1</button>
+        <button class="button">Bouton 2</button>
+        <button class="button">Bouton 3</button>
+        <button class="button">Bouton 4</button>
+
+        <button class="button">Bouton 5</button>
+        <button class="button">Bouton 6</button>
+        <button class="button">Bouton 7</button>
+        <button class="button">Bouton 8</button>
+
+        <button class="button">Bouton 9</button>
+        <button class="button">Bouton 10</button>
+        <button class="button">Bouton 11</button>
+        <button class="button">Bouton 12</button>
     </div>
+	
+  $(window).scroll(function() {
+      if ($(window).scrollTop() >= ($(document).height() - $(window).height())) {
+        $('.popup').css( "left", "20px" )
+        $('.arrow').hide();
+      }else{
+        $('.popup').css( "left", "-380px" );
+        $('.arrow').show();
+    }
+  });
 
-    <script src="scriptt.js"></script>
-</body>
-</html>
+  $('.closeaparece').click(function(){
+    $('.popup').hide();
+  });
+
+
+});
+
+
+$('.arrow').click(function(){
+   $("html").animate({ scrollTop: $('html').prop("scrollHeight")}, 1200);
+   $('.popup').show();
+});
+</script>
+<script>
+var frank = new Vue({
+  el:'#subscribe',
+  data:{
+		email: "",
+    code: "hyunyealvypnivjwnohgphqcineaub",
+    submit: "insert",
+    showinvalid: false,
+    showalready: false,
+    showsuccess: false
+  },
+  methods: {
+           enviaremail() {
+            axios.post('/validaremail.php', {
+                email: this.email,
+                code: this.code,
+                submit: this.submit
+              })
+              .then(function (response) {
+                if(response.data == 'invalid'){
+                frank.showinvalid = true;
+                frank.showalready = false;
+                frank.showsuccess = false;
+                    }
+                if(response.data == 'This email is already subscribed'){
+                frank.showalready = true;
+                frank.showinvalid = false;
+                frank.showsuccess = false;
+                    }
+                if(response.data == 'You have been succesfully subscribed to our newsletter'){
+                frank.showsuccess = true;
+                frank.showinvalid = false;
+                frank.showalready = false;
+                    }
+              console.log(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+        }
+});
+</script>
+  <style>
+@media (max-width:1080px) {
+  .eltextoindex{
+    margin-left:20px!important;
+  }
+}
+@media (max-width:720px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:25px!important;
+  }
+}
+@media (max-width:440px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:20px!important;
+  }
+}
+@media (max-width:374px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:18px!important;
+  }
+}
+</style>
+
+<style>
+@media (max-width:1265px) {
+	.dropprofile{min-width:130px!important;}
+}
+@media (max-width:991px) {
+	.phcardmobile{
+		margin-top:60px!important;
+	}
+}
+</style>
+ <!-- .cd-auto-hide-header -->
+
+
+
+<script>
+new Vue({
+  el:'#comment',
+  data:{
+		comment: "",
+    datetime: "2024-08-08 14:56:58",
+    userid: "",
+    slug: "/google-color-picker",
+    image: "",
+    name: "mulan GachaGworl",
+    username: "mulangachagworl",
+    showcomment: false,
+		showerror: false,
+    submit: "insert",
+		comments: []
+  },
+  methods: {
+           enviarcomment() {
+						 if(this.comment.length >= 1){
+						 if(this.comment.length <= 250){
+            axios.post('/validarcomment.php', {
+                comment: this.comment,
+                datetime: this.datetime,
+                userid: this.userid,
+                slug: this.slug,
+                submit: this.submit
+              })
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
+              this.showcomment = true;
+							this.comments.push({message: this.comment});
+          }}},
+
+					errorvue(){
+					   if(this.comment.length == 0){
+							 this.showerror = true;
+						}else{
+							this.showerror = false;
+						}
+					}
+        }
+});
+</script>
+<script>
+Vue.component('load', {
+template: '<div class="comment"><div class="comment-avatar"><a :href="/user/ + username "><img class="mobilecommentimage" style="object-fit:cover" :src="image"></a></div><div class="comment-box"><div style="line-height:20px;font-weight:700;font-size:17px"><a :href="/user/ + username" style="color:#428bca">{{ name }}</a></div><div style="line-height:20px" class="comment-text">{{ commentMessage }}</div><div class="comment-footer"><div class="comment-info"><span style="line-height:18px" class="comment-date">{{ datetime }}</span></div></div></div></div>',
+props: ['comment-message','datetime','name','image','username'],
+});
+</script>
+<script>
+Vue.component('errorvue', {
+template: '<div class="alert alert-danger"><strong style="font-weight:700">Warning!</strong> You should at list write something to continue. Thank You!</div>',
+});
+</script>
+    </div>
+    </div>
+<br><br>
+
+<br><br>
+
+ 
+
+    
+
+
+</div></body></html>
