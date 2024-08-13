@@ -115,8 +115,15 @@ var frank = new Vue({
 });
 </script>
   <style>
-	  .h3 {
-		  font-color: #333;
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.responsive-image {
+    max-width: 100%;
+    height: auto;
 }
 .bgcolor {
 	background-color: #8f050c;
@@ -190,8 +197,18 @@ var frank = new Vue({
               
 
   <div id="marginparrafo" class="marginclass margindeadentro">
-        <h3>Vous venez d'arriver à l'entreprise, dirigez-vous vers votre casier et mettez votre tenue de service qui vous a été asignez. Ensuite accéder au menu de prise de service afin de vous mettre en service. ⚠️ Pafois le "Entreprise ouverte" se décoche a la prise de votre service, pensez a le réactiver ! ⚠️.  Il est aussi important de prendre votre service sur l'intranet. Ensuite partez au coffre se situant au fond a gauche du garage. Prenez une dizaine de de chaque kit et ouvrez l'entreprise.</h3>
-
+        <h3>Vous venez d'arriver à l'entreprise pour prendre votre service. dirigez-vous vers votre casier et mettez votre tenue de service qui vous a été asignez.</h3>
+<div class="image-container">
+        <img src="https://exemple.com/tonimage.jpg" alt="Casier et tenue de service" class="responsive-image">
+    </div>
+ <h3>Ensuite accéder au menu de prise de service afin de vous mettre en service. Il est aussi important de prendre votre service sur l'intranet.</h3>
+<div class="image-container">
+        <img src="https://i.postimg.cc/W3GJHzpd/Sans-titre.png" alt="Description de l'image" class="responsive-image">
+    </div>
+<h3>⚠️ Pafois le "Entreprise ouverte" se décoche a la prise de votre service, pensez a le réactiver ! ⚠️.<br> Ensuite partez au coffre se situant au fond a gauche du garage. Prenez une dizaine de de chaque kit et ouvrez l'entreprise.</h3>
+<div class="image-container">
+        <img src="https://exemple.com/tonimage.jpg" alt="Description de l'image" class="responsive-image">
+    </div>
     <br><br>
     
     
