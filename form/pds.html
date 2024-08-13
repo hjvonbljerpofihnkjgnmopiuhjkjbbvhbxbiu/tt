@@ -1,1 +1,202 @@
+<html lang="en" class="no-js"><head></head><body>
 
+  <title>Google Color Picker | Html Colors</title>
+  <meta name="description" content="We've designed a Google Color Picker for you to find your colors in an easy and beautiful way. Stop wasting time, Go pick!">
+  <meta name="keywords" content="Html color picker, Google color picker, Color picker, Color values, Google picker">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Htmlcolors.com">
+<meta name="twitter:title" content="Html Colors">
+<meta name="twitter:description" content="Get your Html Color codes with our color tools, HEX code, RGB, RGBA, HSL and HSLA values, including HSV, HWB and CMYK. Go pick!">
+<meta name="twitter:image" content="https://i.imgur.com/fWH7K9d.png">
+
+<link href="https://fonts.googleapis.com/css?family=David+Libre|Hind:400,700" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="/css/reset.css"> <!-- CSS reset -->
+<link rel="stylesheet" href="/css/style.css"> <!-- Resource style -->
+<script src="/js/scrolltop.js"></script>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/img/htmlcolorsappgrande.png">
+<script src="/js/main.js"></script>
+<script src="https://htmlcolors.com/vue-scripts/vue@2.6.14.js"></script>
+<script src="https://htmlcolors.com/vue-scripts/axios.min.js"></script>
+
+ <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-113637426-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113637426-1');
+</script>
+
+<script>
+$(function() {
+    var wrap = $(".wrap.fixed");
+    $(window).scroll(function() {
+        var scroll = $(window).scrollTop();
+        if (scroll >= 50) wrap.addClass("sticky");
+        else wrap.removeClass("sticky");
+    });
+});
+
+$(document).ready(function() {
+
+  $(window).scroll(function() {
+      if ($(window).scrollTop() >= ($(document).height() - $(window).height())) {
+        $('.popup').css( "left", "20px" )
+        $('.arrow').hide();
+      }else{
+        $('.popup').css( "left", "-380px" );
+        $('.arrow').show();
+    }
+  });
+
+  $('.closeaparece').click(function(){
+    $('.popup').hide();
+  });
+
+
+});
+
+
+$('.arrow').click(function(){
+   $("html").animate({ scrollTop: $('html').prop("scrollHeight")}, 1200);
+   $('.popup').show();
+});
+</script>
+<script>
+var frank = new Vue({
+  el:'#subscribe',
+  data:{
+		email: "",
+    code: "pvgknaxndfmzxgipdehrgyxmriyeqg",
+    submit: "insert",
+    showinvalid: false,
+    showalready: false,
+    showsuccess: false
+  },
+  methods: {
+           enviaremail() {
+            axios.post('/validaremail.php', {
+                email: this.email,
+                code: this.code,
+                submit: this.submit
+              })
+              .then(function (response) {
+                if(response.data == 'invalid'){
+                frank.showinvalid = true;
+                frank.showalready = false;
+                frank.showsuccess = false;
+                    }
+                if(response.data == 'This email is already subscribed'){
+                frank.showalready = true;
+                frank.showinvalid = false;
+                frank.showsuccess = false;
+                    }
+                if(response.data == 'You have been succesfully subscribed to our newsletter'){
+                frank.showsuccess = true;
+                frank.showinvalid = false;
+                frank.showalready = false;
+                    }
+              console.log(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+        }
+});
+</script>
+  <style>
+@media (max-width:1080px) {
+  .eltextoindex{
+    margin-left:20px!important;
+  }
+}
+@media (max-width:720px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:25px!important;
+  }
+}
+@media (max-width:440px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:20px!important;
+  }
+}
+@media (max-width:374px) {
+  .eltextoindex{
+    margin-left:10px!important;
+    font-size:18px!important;
+  }
+}
+</style>
+
+<style>
+@media (max-width:1265px) {
+	.dropprofile{min-width:130px!important;}
+}
+@media (max-width:991px) {
+	.phcardmobile{
+		margin-top:60px!important;
+	}
+}
+</style>
+ <!-- .cd-auto-hide-header -->
+<script src="/js/googlepicker.js"></script>
+
+
+<script>
+  $(window).scroll(function() {
+      var scroll = $(window).scrollTop();
+
+      if (scroll >= 395) {
+          $("#socialshare").addClass("socialshare");
+          $("#marginparrafo").addClass("marginclass2").removeClass("marginclass");
+
+      } else {
+        $("#socialshare").removeClass("socialshare");
+        $("#marginparrafo").addClass("marginclass").removeClass("marginclass2");
+
+      }
+  });
+  </script>
+
+<br><br><br>
+
+<div class="container containerblanco">
+  <div class="segundanav" style="width:100%;background-color:#ffffff;border-bottom:1px solid #eaeaea;height:78px;display: table;z-index:3" id="fixnavid">
+<div style="vertical-align: middle;display: table-cell;"><svg style="margin-left:43px" version="1.1" class="button-svg svgtutorials" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="16px" viewBox="-0.5 21.5 24 16" enable-background="new -0.5 21.5 24 16" xml:space="preserve">
+<path class="fill" d="M1,37.5c-0.829,0-1.5-0.672-1.5-1.5v-4c0-0.828,0.671-1.5,1.5-1.5s1.5,0.672,1.5,1.5v4
+C2.5,36.828,1.829,37.5,1,37.5z M9.5,36v-8c0-0.828-0.671-1.5-1.5-1.5S6.5,27.172,6.5,28v8c0,0.828,0.671,1.5,1.5,1.5
+S9.5,36.828,9.5,36z M16.5,36v-6c0-0.828-0.672-1.5-1.5-1.5s-1.5,0.672-1.5,1.5v6c0,0.828,0.672,1.5,1.5,1.5S16.5,36.828,16.5,36z
+M23.5,36V25c0-0.828-0.672-1.5-1.5-1.5s-1.5,0.672-1.5,1.5v11c0,0.828,0.672,1.5,1.5,1.5S23.5,36.828,23.5,36z"></path></svg> <h1 class="eltextoindex" style="margin-left:6.3%;display: initial;font-size:40px;font-weight:400">Google Color Picker</h1>
+</div>
+
+
+</div>
+<div class="container">
+  <br>
+
+              
+
+  <div id="marginparrafo" class="marginclass margindeadentro">
+        
+
+    <br><br>
+    
+    
+ 
+
+    
+
+
+</div></div></div></body></html>
