@@ -1,15 +1,16 @@
-<html lang="fr" class="no-js"><head></head><body>
-
-  <title>Prise de service</title>
-  <meta name="description" content="Tablette de formation. Il est seulement complèmentaire a la formation.">
-  <style>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superposition de pages avec navigation</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             padding: 20px;
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
         }
 
@@ -34,7 +35,7 @@
 
         /* Alternating color */
         .colored {
-            background-color: #8f3985;
+            background-color: #8f050c;
         }
 
         .btn:hover {
@@ -57,15 +58,17 @@
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: white; /* Fond blanc pour la modal */
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 600px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            text-align: left; /* Aligner le texte à gauche */
+            text-align: left; /* Alignement du texte à gauche */
             color: black;
+            overflow-y: auto;
+            max-height: 80vh; /* Pour éviter que la modal ne dépasse l'écran */
         }
 
         .modal img {
@@ -93,43 +96,36 @@
         .close {
             background-color: red;
         }
-.tt {
-    font-weight: bold; /* Met le texte en gras */
-    text-decoration: underline; /* Souligne le texte */
-}
 
-.bgcolor {
-	background-color: #8f050c;
-}	  
+        pre {
+            white-space: pre-wrap; /* Préserve les retours à la ligne et l'espacement */
+            word-wrap: break-word; /* Évite le débordement des mots trop longs */
+            font-family: inherit;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
 
-</style>
+    <!-- Grid of buttons -->
+    <div class="button-grid">
+        <button class="btn colored" data-modal="1">Ouvrir Page 1</button>
+        <button class="btn" data-modal="2">Ouvrir Page 2</button>
+        <button class="btn colored" data-modal="3">Ouvrir Page 3</button>
+        <!-- Ajoutez plus de boutons selon vos besoins, jusqu'à 12 -->
+    </div>
 
-          <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
-    <br>
-         <div class="button-grid">
-		 <a class="btn colored" data-modal="1">🍜| Noodles</a>
-		 <a class="btn colored" data-modal="2">Ouvrir Page 2</a>
-		 <a class="btn colored" data-modal="3">Ouvrir Page 3</a>
-		 <a class="btn colored" data-modal="4">Ouvrir Page 4</a>
-
-		 <a class="btn colored" data-modal="5">Ouvrir Page 5</a>
-		 <a class="btn colored" data-modal="6">Ouvrir Page 6</a>
-		 <a class="btn colored" data-modal="7">Ouvrir Page 7</a>
-		 <a class="btn colored" data-modal="8">Ouvrir Page 8</a>
-		 
-		 <a class="btn colored" data-modal="9">Ouvrir Page 9</a>
-		 <a class="btn colored" data-modal="10">Ouvrir Page 10</a>
-		 <a class="btn colored" data-modal="11">Ouvrir Page 11</a>
-		 <a class="btn colored" data-modal="12">Ouvrir Page 12</a>
-	 </div>
-	  <br>
-      <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
-
-<!--------------------------------------------- Modal --------------------------------------------------------------------------------------------->
-	  <div id="modal1" class="modal">
+    <!-- Fenêtres modales -->
+    <div id="modal1" class="modal">
         <div class="modal-content">
-            <h2>🍜| Noodles</h2>
-            <pre>
+            <h2>Page 1</h2>
+            <pre>🤝 Déroulement Customisations :
+- Je retrouve le partenaire sur un pont.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+- Une fois la réponse donnée j'applique la custom sur le véhicule et lui applique la facture en ayant calculer les -0% de réduction.
+
+:RVT_warning: Des tablettes sont à votre disposition pour vous faciliter la tâches lors des calculs custom. :RVT_warning:
+
 🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
@@ -138,50 +134,78 @@
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
-- 1$ la total garage
+- 150$ la total garage
+- 150$ la perso total
 
-
-( ⚠️ A payer obligatoirement ⚠️ ).
+( :RVT_warning: A payer obligatoirement :RVT_warning: ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
-- NDL total garage
-- NDL moteur garage
+- GBF total garage
+- GBF moteur garage
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 1$ l'extérieur moteur
-- 1$ l'extérieur total
+- 100$ l'extérieur moteur
+- 250$ l'extérieur total
+- 150$ la perso total
 
-( ⚠️ A payer obligatoirement ⚠️ ).
+( :RVT_warning: A payer obligatoirement :RVT_warning: ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
-- NDL total ext
-- NDL moteur ext
+- GBF total ext
+- GBF moteur ext
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
+
+👏 Et enfin vous avez terminé votre intervention. Bon service !
+
+Cordialement,
+Hendrix Adam I RH.
             </pre>
-            <img src="https://i.postimg.cc/15r6XVqF/image.png" alt="ndl">
+            <img src="https://via.placeholder.com/600x300" alt="Image 1">
             <div class="modal-footer">
-                <button class="prev" onclick="changeModal(-1)">🔙| Précédent</button>
-		<button class="close" onclick="closeModal()">✖️| Fermer</button>
-                <button class="next" onclick="changeModal(1)">🔜| Suivant</button>
+                <button class="prev" onclick="changeModal(-1)">Précédent</button>
+                <button class="next" onclick="changeModal(1)">Suivant</button>
+                <button class="close" onclick="closeModal()">Fermer</button>
             </div>
         </div>
     </div>
-    
- 
 
-    
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h2>Page 2</h2>
+            <pre>Contenu de la page 2 ici...</pre>
+            <img src="https://via.placeholder.com/600x300" alt="Image 2">
+            <div class="modal-footer">
+                <button class="prev" onclick="changeModal(-1)">Précédent</button>
+                <button class="next" onclick="changeModal(1)">Suivant</button>
+                <button class="close" onclick="closeModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
 
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <h2>Page 3</h2>
+            <pre>Contenu de la page 3 ici...</pre>
+            <img src="https://via.placeholder.com/600x300" alt="Image 3">
+            <div class="modal-footer">
+                <button class="prev" onclick="changeModal(-1)">Précédent</button>
+                <button class="next" onclick="changeModal(1)">Suivant</button>
+                <button class="close" onclick="closeModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Ajoutez plus de fenêtres modales selon vos besoins, jusqu'à 12 -->
 
- <script>
+    <script>
         let currentModal = null;
 
-        document.querySelectorAll('.button').forEach(button => {
+        document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function() {
                 currentModal = parseInt(this.getAttribute('data-modal'));
                 openModal(currentModal);
@@ -212,4 +236,6 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
             }
         }
     </script>
-</body></html>
+
+</body>
+</html>
