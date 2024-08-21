@@ -242,21 +242,7 @@ var frank = new Vue({
 <script src="/js/googlepicker.js"></script>
 
 
-<script>
-  $(window).scroll(function() {
-      var scroll = $(window).scrollTop();
 
-      if (scroll >= 395) {
-          $("#socialshare").addClass("socialshare");
-          $("#marginparrafo").addClass("marginclass2").removeClass("marginclass");
-
-      } else {
-        $("#socialshare").removeClass("socialshare");
-        $("#marginparrafo").addClass("marginclass").removeClass("marginclass2");
-
-      }
-  });
-  </script>
 
 <br><br><br>
 
@@ -275,7 +261,7 @@ var frank = new Vue({
           <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
     <br>
          <div class="button-grid">
-		 <button class="btn colored" data-modal="1">🍜| Noodles</button>
+		 <a class="btn colored" data-modal="1">🍜| Noodles</a>
 		 <a class="btn colored" data-modal="2">Ouvrir Page 2</a>
 		 <a class="btn colored" data-modal="3">Ouvrir Page 3</a>
 		 <a class="btn colored" data-modal="4">Ouvrir Page 4</a>
