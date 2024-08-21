@@ -1,115 +1,48 @@
-<html lang="en" class="no-js"><head></head><body>
+<html lang="fr" class="no-js"><head></head><body>
 
   <title>Prise de service</title>
   <meta name="description" content="Tablette de formation. Il est seulement complèmentaire a la formation.">
-
-
-<link href="https://fonts.googleapis.com/css?family=David+Libre|Hind:400,700" rel="stylesheet">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="./boost.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="/tt/css/reset.css"> <!-- CSS reset -->
-<link rel="stylesheet" href="/tt/css/style.css"> <!-- Resource style -->
-<script src="/js/scrolltop.js"></script>
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/img/htmlcolorsappgrande.png">
-<script src="/tt/js/main.js"></script>
-<script src="https://htmlcolors.com/vue-scripts/vue@2.6.14.js"></script>
-<script src="https://htmlcolors.com/vue-scripts/axios.min.js"></script>
-
-
- <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-113637426-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-113637426-1');
-</script>
-
-<script>
-$(function() {
-    var wrap = $(".wrap.fixed");
-    $(window).scroll(function() {
-        var scroll = $(window).scrollTop();
-        if (scroll >= 50) wrap.addClass("sticky");
-        else wrap.removeClass("sticky");
-    });
-});
-
-$(document).ready(function() {
-
-  $(window).scroll(function() {
-      if ($(window).scrollTop() >= ($(document).height() - $(window).height())) {
-        $('.popup').css( "left", "20px" )
-        $('.arrow').hide();
-      }else{
-        $('.popup').css( "left", "-380px" );
-        $('.arrow').show();
-    }
-  });
-
-  $('.closeaparece').click(function(){
-    $('.popup').hide();
-  });
-
-
-});
-
-
-$('.arrow').click(function(){
-   $("html").animate({ scrollTop: $('html').prop("scrollHeight")}, 1200);
-   $('.popup').show();
-});
-</script>
-<script>
-var frank = new Vue({
-  el:'#subscribe',
-  data:{
-		email: "",
-    code: "pvgknaxndfmzxgipdehrgyxmriyeqg",
-    submit: "insert",
-    showinvalid: false,
-    showalready: false,
-    showsuccess: false
-  },
-  methods: {
-           enviaremail() {
-            axios.post('/validaremail.php', {
-                email: this.email,
-                code: this.code,
-                submit: this.submit
-              })
-              .then(function (response) {
-                if(response.data == 'invalid'){
-                frank.showinvalid = true;
-                frank.showalready = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'This email is already subscribed'){
-                frank.showalready = true;
-                frank.showinvalid = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'You have been succesfully subscribed to our newsletter'){
-                frank.showsuccess = true;
-                frank.showinvalid = false;
-                frank.showalready = false;
-                    }
-              console.log(response.data);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
-        }
-});
-</script>
   <style>
- .modal {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Grid for buttons */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 295px); /* 3 colonnes */
+            grid-template-rows: repeat(4, 50px);    /* 4 lignes */
+            gap: 10px; /* Espacement entre les boutons */
+        }
+        
+        /* Button style */
+        .btn {
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+
+        /* Alternating color */
+        .colored {
+            background-color: #8f3985;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Modal styles */
+        .modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -124,17 +57,15 @@ var frank = new Vue({
         }
 
         .modal-content {
-            background-color: white; /* Fond blanc pour la modal */
+            background-color: #fff;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 600px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            text-align: left; /* Alignement du texte à gauche */
+            text-align: left; /* Aligner le texte à gauche */
             color: black;
-            overflow-y: auto;
-            max-height: 80vh; /* Pour éviter que la modal ne dépasse l'écran */
         }
 
         .modal img {
@@ -156,45 +87,12 @@ var frank = new Vue({
             padding: 10px 20px;
             cursor: pointer;
             font-size: 14px;
+            border-radius: 5px;
         }
 
         .close {
             background-color: red;
         }
-
-        pre {
-            white-space: pre-wrap; /* Préserve les retours à la ligne et l'espacement */
-            word-wrap: break-word; /* Évite le débordement des mots trop longs */
-            font-family: inherit;
-            line-height: 1.5;
-        }
-
-
-	  
-.button-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 295px); /* 3 colonnes */
-    grid-template-rows: repeat(4, 50px);    /* 4 lignes */
-    gap: 10px; /* Espacement entre les boutons */
-}
-	  
-.btn {
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    color: white;
-    text-align: center;
-}
-  
-.colored {
-    background-color: #8f050c;
-}
-.btn:hover {
-    opacity: 0.8;
-}
-
 .tt {
     font-weight: bold; /* Met le texte en gras */
     text-decoration: underline; /* Souligne le texte */
@@ -203,61 +101,9 @@ var frank = new Vue({
 .bgcolor {
 	background-color: #8f050c;
 }	  
-@media (max-width:1080px) {
-  .eltextoindex{
-    margin-left:20px!important;
-  }
-}
-@media (max-width:720px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:25px!important;
-  }
-}
-@media (max-width:440px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:20px!important;
-  }
-}
-@media (max-width:374px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:18px!important;
-  }
-}
+
 </style>
 
-<style>
-@media (max-width:1265px) {
-	.dropprofile{min-width:130px!important;}
-}
-@media (max-width:991px) {
-	.phcardmobile{
-		margin-top:60px!important;
-	}
-}
-</style>
- <!-- .cd-auto-hide-header -->
-<script src="/js/googlepicker.js"></script>
-
-
-
-
-<br><br><br>
-
-<div class="container containerblanco">
-  <div class="segundanav" style="width:100%;background-color:#ffffff;border-bottom:1px solid #fff;height:78px;display: table;z-index:3" id="fixnavid">
-<div class="bgcolor" style="vertical-align: middle;display: table-cell;"><svg style="margin-left:43px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" width="50px" height="50px" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path style="fill:#698F92;" d="M431.854,0H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409 c0,15.352,12.444,27.795,27.794,27.795h351.708c15.348,0,27.794-12.444,27.794-27.795v-345.8v-26.609v-84 C459.648,12.444,447.203,0,431.854,0z"></path> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M70.172,484.205V27.795C70.172,12.444,82.616,0,97.966,0 H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409c0,15.352,12.444,27.795,27.794,27.795h17.82 C82.616,512,70.172,499.556,70.172,484.205z"></path> <path style="fill:#53CAF9;" d="M419.567,410.557c0,7.348-5.957,13.306-13.306,13.306H105.739c-7.349,0-13.306-5.958-13.306-13.306 V80.067c0-7.348,5.957-13.306,13.306-13.306h300.521c7.349,0,13.306,5.958,13.306,13.306V410.557z"></path> <g> <path style="fill:#8AACAD;" d="M301.14,468.153c0,7.348-5.957,13.305-13.305,13.305h-66.527c-7.348,0-13.305-5.957-13.305-13.305 l0,0c0-7.348,5.957-13.305,13.305-13.305h66.527C295.183,454.848,301.14,460.805,301.14,468.153L301.14,468.153z"></path> <path style="fill:#8AACAD;" d="M259.814,40.704h-50.491c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h50.49 c4.593,0,8.316,3.723,8.316,8.316S264.406,40.704,259.814,40.704z"></path> <path style="fill:#8AACAD;" d="M284.724,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.681-2.439-5.877 c0-2.184,0.887-4.335,2.439-5.877c1.541-1.552,3.68-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877s-0.887,4.335-2.439,5.877C289.059,39.817,286.908,40.704,284.724,40.704z"></path> <path style="fill:#8AACAD;" d="M309.118,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.692-2.439-5.877 s0.887-4.335,2.439-5.877c1.541-1.552,3.692-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877c0,2.195-0.887,4.335-2.439,5.877C313.454,39.817,311.302,40.704,309.118,40.704z"></path> </g> <rect x="133.535" y="151.354" style="fill:#98DEF4;" width="244.428" height="46.238"></rect> <path style="fill:#F5F5F5;" d="M406.261,66.761H105.739c-7.349,0-13.306,5.958-13.306,13.306v24.557h327.133V80.067 C419.567,72.719,413.61,66.761,406.261,66.761z"></path> <path style="fill:#F74848;" d="M142.188,66.761h-36.449c-7.349,0-13.306,5.958-13.306,13.306v24.557h49.755L142.188,66.761 L142.188,66.761z"></path> <g> <path style="fill:#98DEF4;" d="M372.546,246.258H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,242.534,377.14,246.258,372.546,246.258z"></path> <path style="fill:#98DEF4;" d="M372.546,281.273H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,277.55,377.14,281.273,372.546,281.273z"></path> <path style="fill:#98DEF4;" d="M372.546,316.287H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,312.563,377.14,316.287,372.546,316.287z"></path> <path style="fill:#98DEF4;" d="M372.546,351.301H139.694c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h232.852 c4.594,0,8.316,3.723,8.316,8.316S377.14,351.301,372.546,351.301z"></path> <path style="fill:#98DEF4;" d="M372.546,386.315H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,382.592,377.14,386.315,372.546,386.315z"></path> </g> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M110.175,410.557V80.067c0-7.348,5.957-13.306,13.306-13.306 h-17.741c-7.349,0-13.306,5.958-13.306,13.306v330.491c0,7.348,5.957,13.306,13.306,13.306h17.741 C116.131,423.863,110.175,417.906,110.175,410.557z"></path> </g></svg> <h1 class="eltextoindex" style="margin-left:6.3%;display: initial;font-size:40px;font-weight:400";>Prise de service</h1>
-</div>
-
-</div>
-<div class="container">
-  <br>
-
-           
-
-  <div id="marginparrafo" class="marginclass margindeadentro">
           <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
     <br>
          <div class="button-grid">
@@ -331,7 +177,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     
 
 
-</div></div></div>
+
  <script>
         let currentModal = null;
 
