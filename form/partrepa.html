@@ -108,6 +108,75 @@ var frank = new Vue({
 });
 </script>
   <style>
+ .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+            text-align: center;
+        }
+
+        .modal-content {
+            background-color: white; /* Fond blanc pour la modal */
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: left; /* Alignement du texte à gauche */
+            color: black;
+            overflow-y: auto;
+            max-height: 80vh; /* Pour éviter que la modal ne dépasse l'écran */
+        }
+
+        .modal img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .close, .prev, .next {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .close {
+            background-color: red;
+        }
+
+        pre {
+            white-space: pre-wrap; /* Préserve les retours à la ligne et l'espacement */
+            word-wrap: break-word; /* Évite le débordement des mots trop longs */
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+
+	  
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 295px); /* 3 colonnes */
+    grid-template-rows: repeat(4, 50px);    /* 4 lignes */
+    gap: 10px; /* Espacement entre les boutons */
+}
+	  
 .btn {
     border: none;
     padding: 15px;
@@ -204,45 +273,71 @@ var frank = new Vue({
   <div id="marginparrafo" class="marginclass margindeadentro">
           <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
     <br>
-        <h3>Pour les réparations et la facturation, nous suivons une procédure très stricte. Vous avez deux manières d'accéder au TPE pour facturer notre client. La première méthode, que nous recommandons fortement pour éviter certains problèmes, consiste à interagir avec le client en utilisant ALT avec vos mains, puis à lui faire une facture. La deuxième méthode se fait sur votre tablette F1 : allez dans "Facture", puis "Créer une facture". Suivez ensuite les étapes et assurez-vous de sélectionner un client proche de vous. Nous vous conseillons fortement d'utiliser la première méthode.</h3>
-    <div class="image-container">
-        <img src="https://i.postimg.cc/Y2bBdZNX/Sans-titre-5-1.png" alt="altfact" class="image">
-        <div class="overlay">
-            <div class="text">1 Méthode (Recommander)</div>
-        </div>
-    </div>
-    <div class="image-container">
-        <img src="https://i.postimg.cc/qRX5YhPf/TYse-SMJC-2x.png" alt="creerfact" class="image">
-        <div class="overlay">
-            <div class="text">2 Méthode (Déconseiller)</div>
-        </div>
-    </div>
-    <h1 class="tt">⚠️ Il est important de respecter les mots exacts qui vous ont été enseignés lors de votre formation et qui seront rappelés dans cette partie. ⚠️</h1>
- <h3>Pour une réparation complète en garage, vous la facturerez comme indiqué dans le module précédent, soit 550 $. La raison que vous devrez inscrire est "total", bien en minuscule. Pour une réparation moteur, répétez le même processus en inscrivant "moteur", également en minuscule.
-Voici un exemple de facturation que nous appliquerons à un client.</h3>
-    <div class="image-container">
-        <img src="https://i.postimg.cc/Bv0M2ZzX/garage-1.png" alt="garage" class="image">
-        <div class="overlay">
-            <div class="text">Facturation garage</div>
-        </div>
-    </div>
- <h3>Lorsque vous serez en déplacement pour effectuer un dépannage, vous devrez indiquer comme raison "moteur ext" si le client demande une réparation moteur, ou "total ext" pour une réparation complète.</h3>
-    <div class="image-container">
-        <img src="https://i.postimg.cc/t44XpPyz/ext-1.png" alt="ext" class="image">
-        <div class="overlay">
-            <div class="text">Facturation deplacement</div>
-        </div>
-    </div>
- <h3>Pour le nettoyage de véhicule ou la vente de kits de nettoyage, vous devrez indiquer comme raison "nettoyage" si vous effectuez un nettoyage immédiat. Si vous vendez directement des kits à l'unité, vous devez écrire "nettoyage x5" pour 5 kits de nettoyage, par exemple.</h3>
-    <div class="image-container">
-        <img src="https://i.postimg.cc/mrqMQBV0/nettoyage.png" alt="nettoyage" class="image">
-        <div class="overlay">
-            <div class="text">Facturation nettoyage</div>
-        </div>
-    </div>
+         <div class="button-grid">
+		 <a class="btn colored" data-modal="1">🍜| Noodles</a>
+		 <a class="btn colored" data-modal="2">Ouvrir Page 2</a>
+		 <a class="btn colored" data-modal="3">Ouvrir Page 3</a>
+		 <a class="btn colored" data-modal="4">Ouvrir Page 4</a>
+
+		 <a class="btn colored" data-modal="5">Ouvrir Page 5</a>
+		 <a class="btn colored" data-modal="6">Ouvrir Page 6</a>
+		 <a class="btn colored" data-modal="7">Ouvrir Page 7</a>
+		 <a class="btn colored" data-modal="8">Ouvrir Page 8</a>
+		 
+		 <a class="btn colored" data-modal="9">Ouvrir Page 9</a>
+		 <a class="btn colored" data-modal="10">Ouvrir Page 10</a>
+		 <a class="btn colored" data-modal="11">Ouvrir Page 11</a>
+		 <a class="btn colored" data-modal="12">Ouvrir Page 12</a>
+	 </div>
 	  <br>
       <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
-    
+
+<!--------------------------------------------- Modal --------------------------------------------------------------------------------------------->
+	  <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h2>🍜| Noodles</h2>
+            <pre>
+🤝 Déroulement Réparations :
+
+🛢️ I Au Garage :
+- Je retrouve le partenaire sur un pont.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 1$ la moteur garage
+- 1$ la total garage
+
+
+( ⚠️ A payer obligatoirement ⚠️ ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- NDL total garage
+- NDL moteur garage
+
+🗺️ I A l'extérieur :
+- Je retrouve le partenaire sur la position GPS.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 1$ l'extérieur moteur
+- 1$ l'extérieur total
+
+( ⚠️ A payer obligatoirement ⚠️ ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- NDL total ext
+- NDL moteur ext
+
+Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
+            </pre>
+            <img src="https://i.postimg.cc/15r6XVqF/image.png" alt="ndl">
+            <div class="modal-footer">
+                <button class="prev" onclick="changeModal(-1)">🔙| Précédent</button>
+		<button class="close" onclick="closeModal()">✖️| Fermer</button>
+                <button class="next" onclick="changeModal(1)">🔜| Suivant</button>
+            </div>
+        </div>
+    </div>
     
  
 
