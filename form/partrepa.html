@@ -345,4 +345,39 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     
 
 
-</div></div></div></body></html>
+</div></div></div>
+ <script>
+        let currentModal = null;
+
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', function() {
+                currentModal = parseInt(this.getAttribute('data-modal'));
+                openModal(currentModal);
+            });
+        });
+
+        function openModal(modalNumber) {
+            closeModal();
+            document.getElementById('modal' + modalNumber).style.display = 'block';
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+
+        function changeModal(direction) {
+            const totalModals = 12; // Mettez à jour en fonction du nombre total de modales
+            currentModal = (currentModal + direction + totalModals - 1) % totalModals + 1;
+            openModal(currentModal);
+        }
+
+        // Fermer la modale en cliquant en dehors de son contenu
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body></html>
