@@ -37,17 +37,20 @@
             background-color: rgba(0, 0, 0, 0.8);
             padding-top: 60px;
             text-align: center;
-            color: white;
         }
 
         .modal-content {
-            background-color: #333;
+            background-color: white; /* Fond blanc pour la modal */
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 600px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: left; /* Alignement du texte à gauche */
+            color: black;
+            overflow-y: auto;
+            max-height: 80vh; /* Pour éviter que la modal ne dépasse l'écran */
         }
 
         .modal img {
@@ -74,6 +77,13 @@
         .close {
             background-color: red;
         }
+
+        pre {
+            white-space: pre-wrap; /* Préserve les retours à la ligne et l'espacement */
+            word-wrap: break-word; /* Évite le débordement des mots trop longs */
+            font-family: inherit;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +97,52 @@
     <div id="modal1" class="modal">
         <div class="modal-content">
             <h2>Page 1</h2>
-            <p>Ceci est le contenu de la première page.</p>
+            <pre>🤝 Déroulement Customisations :
+- Je retrouve le partenaire sur un pont.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+- Une fois la réponse donnée j'applique la custom sur le véhicule et lui applique la facture en ayant calculer les -0% de réduction.
+
+:RVT_warning: Des tablettes sont à votre disposition pour vous faciliter la tâches lors des calculs custom. :RVT_warning:
+
+🤝 Déroulement Réparations :
+
+🛢️ I Au Garage :
+- Je retrouve le partenaire sur un pont.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 1$ la moteur garage
+- 150$ la total garage
+- 150$ la perso total
+
+( :RVT_warning: A payer obligatoirement :RVT_warning: ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- GBF total garage
+- GBF moteur garage
+
+🗺️ I A l'extérieur :
+- Je retrouve le partenaire sur la position GPS.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 100$ l'extérieur moteur
+- 250$ l'extérieur total
+- 150$ la perso total
+
+( :RVT_warning: A payer obligatoirement :RVT_warning: ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- GBF total ext
+- GBF moteur ext
+
+Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
+
+👏 Et enfin vous avez terminé votre intervention. Bon service !
+
+Cordialement,
+Hendrix Adam I RH.
+            </pre>
             <img src="https://via.placeholder.com/600x300" alt="Image 1">
             <div class="modal-footer">
                 <button class="prev" onclick="changeModal(-1)">Précédent</button>
@@ -100,7 +155,7 @@
     <div id="modal2" class="modal">
         <div class="modal-content">
             <h2>Page 2</h2>
-            <p>Ceci est le contenu de la deuxième page.</p>
+            <pre>Contenu de la page 2 ici...</pre>
             <img src="https://via.placeholder.com/600x300" alt="Image 2">
             <div class="modal-footer">
                 <button class="prev" onclick="changeModal(-1)">Précédent</button>
@@ -113,7 +168,7 @@
     <div id="modal3" class="modal">
         <div class="modal-content">
             <h2>Page 3</h2>
-            <p>Ceci est le contenu de la troisième page.</p>
+            <pre>Contenu de la page 3 ici...</pre>
             <img src="https://via.placeholder.com/600x300" alt="Image 3">
             <div class="modal-footer">
                 <button class="prev" onclick="changeModal(-1)">Précédent</button>
