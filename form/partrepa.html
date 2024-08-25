@@ -122,6 +122,7 @@
         <button class="btn colored" data-modal="10">⚙️| Grand Banks Foundry</button>
         <button class="btn colored" data-modal="11">🚗| Premium Deluxe Motors</button>
         <button class="btn colored" data-modal="12">🚛| Heavy Duty Motors</button>
+        <button class="btn colored" data-modal="13">🗽| IRS</button>
     </div>
 <br>
 <h3>Crédit: Hendrix Adam.</h3>
@@ -729,6 +730,50 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
         </div>
     </div>
     
+        <!-- Fenêtres modales -->
+    <div id="modal13" class="modal">
+        <div class="modal-content">
+            <h2>🗽| IRS</h2>
+            <pre>🤝 Déroulement Réparations :
+
+🛢️ I Au Garage :
+- Je retrouve le partenaire sur un pont.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 1$ la moteur garage
+- 1$ la total garage
+
+( ⚠️ A payer obligatoirement ⚠️ ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- IRS total garage
+- IRS moteur garage
+                
+🗺️ I A l'extérieur :
+- Je retrouve le partenaire sur la position GPS.
+- Je le salue et lui demande de quel service as-t'il besoins ?.
+
+Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+- 1$ l'extérieur moteur
+- 1$ l'extérieur total
+
+( ⚠️ A payer obligatoirement ⚠️ ).
+
+🧾 Mots clés facture ( raison ) OBLIGATOIRE :
+- IRS total ext
+- IRS moteur ext
+                
+Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
+            </pre>
+            <img src="https://i.postimg.cc/m2D7y0fc/image.png" alt="IRS">
+            <div class="modal-footer">
+                <button class="prev" onclick="changeModal(-1)">🔙| Précédent</button>
+                <button class="close" onclick="closeModal()">✖️| Fermer</button>
+                <button class="next" onclick="changeModal(1)">🔜| Suivant</button>
+            </div>
+        </div>
+    </div>
     <script>
         let currentModal = null;
 
