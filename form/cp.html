@@ -29,7 +29,7 @@
   gtag('config', 'UA-113637426-1');
 </script>
 
-    <script>
+   <script>
         async function fetchCSVData() {
             const response = await fetch('https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=632166819');
             const data = await response.text();
@@ -38,13 +38,14 @@
 
         function parseCSV(csv) {
             const lines = csv.split("\n");
-            // Sélectionner les lignes de 3 à 18 (index 2 à 17)
-            const selectedLines = lines.slice(2, 18);
-
-            // Pour chaque ligne, sélectionner les colonnes B à J (index 1 à 9)
-            const headers = selectedLines[0].split(",").slice(1, 9);
-            const rows = selectedLines.slice(1).map(line => line.split(",").slice(1, 9));
-
+            const filteredLines = lines.slice(2, 18); // Ligne 3 à 18 (index 2 à 17)
+            
+            // Récupère les colonnes B et J
+            const headers = [filteredLines[0].split(",")[1], filteredLines[0].split(",")[9]]; // Colonnes B et J
+            const rows = filteredLines.slice(1).map(line => {
+                const cells = line.split(",");
+                return [cells[1], cells[9]]; // Colonnes B et J
+            });
             return { headers, rows };
         }
 
@@ -276,7 +277,7 @@ var frank = new Vue({
 
 <div class="container containerblanco">
   <div class="segundanav" style="width:100%;background-color:#ffffff;border-bottom:1px solid #fff;height:78px;display: table;z-index:3" id="fixnavid">
-<div class="bgcolor" style="vertical-align: middle;display: table-cell;"><svg style="margin-left:43px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" width="50px" height="50px" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path style="fill:#698F92;" d="M431.854,0H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409 c0,15.352,12.444,27.795,27.794,27.795h351.708c15.348,0,27.794-12.444,27.794-27.795v-345.8v-26.609v-84 C459.648,12.444,447.203,0,431.854,0z"></path> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M70.172,484.205V27.795C70.172,12.444,82.616,0,97.966,0 H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409c0,15.352,12.444,27.795,27.794,27.795h17.82 C82.616,512,70.172,499.556,70.172,484.205z"></path> <path style="fill:#53CAF9;" d="M419.567,410.557c0,7.348-5.957,13.306-13.306,13.306H105.739c-7.349,0-13.306-5.958-13.306-13.306 V80.067c0-7.348,5.957-13.306,13.306-13.306h300.521c7.349,0,13.306,5.958,13.306,13.306V410.557z"></path> <g> <path style="fill:#8AACAD;" d="M301.14,468.153c0,7.348-5.957,13.305-13.305,13.305h-66.527c-7.348,0-13.305-5.957-13.305-13.305 l0,0c0-7.348,5.957-13.305,13.305-13.305h66.527C295.183,454.848,301.14,460.805,301.14,468.153L301.14,468.153z"></path> <path style="fill:#8AACAD;" d="M259.814,40.704h-50.491c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h50.49 c4.593,0,8.316,3.723,8.316,8.316S264.406,40.704,259.814,40.704z"></path> <path style="fill:#8AACAD;" d="M284.724,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.681-2.439-5.877 c0-2.184,0.887-4.335,2.439-5.877c1.541-1.552,3.68-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877s-0.887,4.335-2.439,5.877C289.059,39.817,286.908,40.704,284.724,40.704z"></path> <path style="fill:#8AACAD;" d="M309.118,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.692-2.439-5.877 s0.887-4.335,2.439-5.877c1.541-1.552,3.692-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877c0,2.195-0.887,4.335-2.439,5.877C313.454,39.817,311.302,40.704,309.118,40.704z"></path> </g> <rect x="133.535" y="151.354" style="fill:#98DEF4;" width="244.428" height="46.238"></rect> <path style="fill:#F5F5F5;" d="M406.261,66.761H105.739c-7.349,0-13.306,5.958-13.306,13.306v24.557h327.133V80.067 C419.567,72.719,413.61,66.761,406.261,66.761z"></path> <path style="fill:#F74848;" d="M142.188,66.761h-36.449c-7.349,0-13.306,5.958-13.306,13.306v24.557h49.755L142.188,66.761 L142.188,66.761z"></path> <g> <path style="fill:#98DEF4;" d="M372.546,246.258H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,242.534,377.14,246.258,372.546,246.258z"></path> <path style="fill:#98DEF4;" d="M372.546,281.273H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,277.55,377.14,281.273,372.546,281.273z"></path> <path style="fill:#98DEF4;" d="M372.546,316.287H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,312.563,377.14,316.287,372.546,316.287z"></path> <path style="fill:#98DEF4;" d="M372.546,351.301H139.694c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h232.852 c4.594,0,8.316,3.723,8.316,8.316S377.14,351.301,372.546,351.301z"></path> <path style="fill:#98DEF4;" d="M372.546,386.315H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,382.592,377.14,386.315,372.546,386.315z"></path> </g> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M110.175,410.557V80.067c0-7.348,5.957-13.306,13.306-13.306 h-17.741c-7.349,0-13.306,5.958-13.306,13.306v330.491c0,7.348,5.957,13.306,13.306,13.306h17.741 C116.131,423.863,110.175,417.906,110.175,410.557z"></path> </g></svg> <h1 class="eltextoindex" style="margin-left:6.3%;display: initial;font-size:40px;font-weight:400";>Prise de service</h1>
+<div class="bgcolor" style="vertical-align: middle;display: table-cell;"><svg style="margin-left:43px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" width="50px" height="50px" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path style="fill:#698F92;" d="M431.854,0H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409 c0,15.352,12.444,27.795,27.794,27.795h351.708c15.348,0,27.794-12.444,27.794-27.795v-345.8v-26.609v-84 C459.648,12.444,447.203,0,431.854,0z"></path> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M70.172,484.205V27.795C70.172,12.444,82.616,0,97.966,0 H80.146C64.796,0,52.352,12.444,52.352,27.795v456.409c0,15.352,12.444,27.795,27.794,27.795h17.82 C82.616,512,70.172,499.556,70.172,484.205z"></path> <path style="fill:#53CAF9;" d="M419.567,410.557c0,7.348-5.957,13.306-13.306,13.306H105.739c-7.349,0-13.306-5.958-13.306-13.306 V80.067c0-7.348,5.957-13.306,13.306-13.306h300.521c7.349,0,13.306,5.958,13.306,13.306V410.557z"></path> <g> <path style="fill:#8AACAD;" d="M301.14,468.153c0,7.348-5.957,13.305-13.305,13.305h-66.527c-7.348,0-13.305-5.957-13.305-13.305 l0,0c0-7.348,5.957-13.305,13.305-13.305h66.527C295.183,454.848,301.14,460.805,301.14,468.153L301.14,468.153z"></path> <path style="fill:#8AACAD;" d="M259.814,40.704h-50.491c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h50.49 c4.593,0,8.316,3.723,8.316,8.316S264.406,40.704,259.814,40.704z"></path> <path style="fill:#8AACAD;" d="M284.724,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.681-2.439-5.877 c0-2.184,0.887-4.335,2.439-5.877c1.541-1.552,3.68-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877s-0.887,4.335-2.439,5.877C289.059,39.817,286.908,40.704,284.724,40.704z"></path> <path style="fill:#8AACAD;" d="M309.118,40.704c-2.184,0-4.335-0.887-5.877-2.439c-1.552-1.541-2.439-3.692-2.439-5.877 s0.887-4.335,2.439-5.877c1.541-1.552,3.692-2.439,5.877-2.439c2.184,0,4.336,0.887,5.877,2.439 c1.552,1.541,2.439,3.692,2.439,5.877c0,2.195-0.887,4.335-2.439,5.877C313.454,39.817,311.302,40.704,309.118,40.704z"></path> </g> <rect x="133.535" y="151.354" style="fill:#98DEF4;" width="244.428" height="46.238"></rect> <path style="fill:#F5F5F5;" d="M406.261,66.761H105.739c-7.349,0-13.306,5.958-13.306,13.306v24.557h327.133V80.067 C419.567,72.719,413.61,66.761,406.261,66.761z"></path> <path style="fill:#F74848;" d="M142.188,66.761h-36.449c-7.349,0-13.306,5.958-13.306,13.306v24.557h49.755L142.188,66.761 L142.188,66.761z"></path> <g> <path style="fill:#98DEF4;" d="M372.546,246.258H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,242.534,377.14,246.258,372.546,246.258z"></path> <path style="fill:#98DEF4;" d="M372.546,281.273H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,277.55,377.14,281.273,372.546,281.273z"></path> <path style="fill:#98DEF4;" d="M372.546,316.287H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,312.563,377.14,316.287,372.546,316.287z"></path> <path style="fill:#98DEF4;" d="M372.546,351.301H139.694c-4.593,0-8.316-3.723-8.316-8.316s3.723-8.316,8.316-8.316h232.852 c4.594,0,8.316,3.723,8.316,8.316S377.14,351.301,372.546,351.301z"></path> <path style="fill:#98DEF4;" d="M372.546,386.315H139.694c-4.593,0-8.316-3.723-8.316-8.316c0-4.593,3.723-8.316,8.316-8.316 h232.852c4.594,0,8.316,3.723,8.316,8.316C380.862,382.592,377.14,386.315,372.546,386.315z"></path> </g> <path style="opacity:0.15;fill:#231F20;enable-background:new ;" d="M110.175,410.557V80.067c0-7.348,5.957-13.306,13.306-13.306 h-17.741c-7.349,0-13.306,5.958-13.306,13.306v330.491c0,7.348,5.957,13.306,13.306,13.306h17.741 C116.131,423.863,110.175,417.906,110.175,410.557z"></path> </g></svg> <h1 class="eltextoindex" style="margin-left:6.3%;display: initial;font-size:40px;font-weight:400";>Custom Partenaire</h1>
 </div>
 
 </div>
@@ -288,24 +289,34 @@ var frank = new Vue({
   <div id="marginparrafo" class="marginclass margindeadentro">
           <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
     <br>
-        <h3>Dans ce module, nous allons apprendre à facturer correctement nos partenaires. Certains d'entre eux bénéficient de réductions pour leurs réparations personnelles, tandis que d'autres vous demanderont parfois de vous facturer vous-même. Voici le tableau qui vous permettra de connaître la facturation à appliquer à nos partenaires. Un bouton de redirection vers le salon partenaire de l'intranet vous permettra de bien comprendre tous les types de facturation détaillés.</h3>
+        <h3>Dans ce module, nous allons parler des réductions custom pour nos partenaires. Il est important de savoir que leur réduction s'applique uniquement sur leurs véhicules personnels, sous présentation d'un justificatif de travail (contrat, carte professionnelle) et de leur carte d'identité. Voici le tableau indiquant les réductions auxquelles nos partenaires ont droit.</h3>
     <table id="data-table" border="1">
         <thead>
             <tr id="header-row"></tr>
         </thead>
         <tbody id="table-body"></tbody>
     </table>
+    <h1 class="tt">⚠️ Pensez bien à avoir une tablette de calcul, sinon vous serez obligé de recommencer et de trouver un(e) collègue dans les environs qui pourra vous aider. ⚠️</h1>
     <div class="image-container">
-        <img src="https://i.postimg.cc/7hwtybhw/Sans-titre-1-1-2.png" alt="Tableau grap" class="image">
+        <img src="https://i.postimg.cc/MKScyfwH/tab.png" alt="tab cal" class="image">
         <div class="overlay">
-            <div class="text">Tableau Grapseed</div>
+            <div class="text">Tablette calcul</div>
         </div>
     </div>
-    <br>
-  <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/form/partrepa.html" class="btn colored">🖥️| Contenu Intanet Patenaire</a>
-<br>
-    <h1 class="tt">⚠️ N'appliquez aucun frais de déplacement en plus de la facturation. Tout est déjà calculé. Référez-vous au prix "ext" sur le tableau ou sur l'intranet. ⚠️</h1>
- <h3>Pour la raison de facturation, veillez à bien indiquer le code partenaire en premier, suivi du type de réparation. Voici des exemples pour nos partenaires. La seule exception concerne la ferme Grapeseed, où il faut impérativement indiquer le numéro de châssis du véhicule. Si l'un de nos partenaires refuse la facture d'un dollar, vous devrez la facturer à vous-même. Référez-vous à l'intranet pour obtenir les raisons détaillées de la facturation de nos partenaires.</h3>
+	  <h3>Pour pouvoir facilement calculer la réduction custom de notre partenaire à la fin de ses choix, vous pouvez commencer par retenir le prix d'usine, par exemple 2543 $, puis l'accepter. Une fois dans le menu de facturation, ouvrez vos poches et utilisez la tablette. Cela ouvrira une feuille de calcul avec plusieurs colonnes. Entrez votre prix d'usine, sélectionnez le type de véhicule ainsi que le pourcentage de réduction du partenaire.</h3>
+	    <div class="image-container">
+        <img src="https://i.postimg.cc/ZYQM5NG9/tab1.png" alt="tab cal" class="image">
+        <div class="overlay">
+            <div class="text">Tablette réduction</div>
+        </div>
+    </div>
+	  <h3>Cela vous donnera directement le prix à appliquer en marge. Retenez le prix de la marge ainsi que le total de la facturation. Fermez ensuite la tablette en appuyant en dehors de celle-ci. Entrez la marge et vérifiez que le prix de facturation correspond bien à celui indiqué sur la tablette.</h3>
+	      <div class="image-container">
+        <img src="https://i.postimg.cc/g0GMTHZ7/tab2.png" alt="tab cal" class="image">
+        <div class="overlay">
+            <div class="text">facture avec réduc</div>
+        </div>
+    </div>
 	  <br>
       <a  href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="btn colored">↩️| Retour</a>
     
