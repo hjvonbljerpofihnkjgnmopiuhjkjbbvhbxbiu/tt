@@ -3,11 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afficher les données du Google Sheet (B3:J18)</title>
+    <title>Afficher les données du Google Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            overflow-wrap: break-word; /* Pour gérer les textes longs */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
-    <h1>Les données du Google Sheet (B3:J18)</h1>
-    <table id="data-table" border="1">
+    <h1>Les données du Google Sheet (B3 à B18 et J3 à J18)</h1>
+    <table id="data-table">
         <thead>
             <tr id="header-row"></tr>
         </thead>
@@ -23,13 +62,14 @@
 
         function parseCSV(csv) {
             const lines = csv.split("\n");
-            // Sélectionner les lignes de 3 à 18 (index 2 à 17)
-            const selectedLines = lines.slice(2, 18);
-
-            // Pour chaque ligne, sélectionner les colonnes B à J (index 1 à 9)
-            const headers = selectedLines[0].split(",").slice(1, 10);
-            const rows = selectedLines.slice(1).map(line => line.split(",").slice(1, 10));
-
+            const filteredLines = lines.slice(2, 18); // Ligne 3 à 18 (index 2 à 17)
+            
+            // Récupère les colonnes B et J
+            const headers = [filteredLines[0].split(",")[1], filteredLines[0].split(",")[9]]; // Colonnes B et J
+            const rows = filteredLines.slice(1).map(line => {
+                const cells = line.split(",");
+                return [cells[1], cells[9]]; // Colonnes B et J
+            });
             return { headers, rows };
         }
 
