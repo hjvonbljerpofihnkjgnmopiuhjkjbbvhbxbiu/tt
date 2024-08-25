@@ -42,7 +42,7 @@
             const selectedLines = lines.slice(2, 18);
 
             // Pour chaque ligne, sélectionner les colonnes B à J (index 1 à 9)
-            const headers = selectedLines[0].split(",").slice(1, 10);
+            const headers = selectedLines[0].split(",").slice(1, 9);
             const rows = selectedLines.slice(1).map(line => line.split(",").slice(1, 10));
 
             return { headers, rows };
