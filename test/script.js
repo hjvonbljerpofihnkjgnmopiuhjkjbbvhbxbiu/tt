@@ -7,10 +7,14 @@ const colors = [
     {name: "Exposed Red Carbon", hex: "#250D12", type: "Rouge", image: "https://i.postimg.cc/6qYQX25N/250D12.png"},
     {name: "Wine Red", hex: "#48161B", type: "Rouge", image: "https://i.postimg.cc/j5f8mPcL/48161B.png"},
     {name: "Rosso Magma", hex: "#410409", type: "Rouge", image: "https://i.postimg.cc/KYdjrqNk/410409.png"},
-    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
-    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
-    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
-    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
+    {name: "Riverside Red", hex: "#6E1A1A", type: "Rouge", image: "https://i.postimg.cc/2yRL7JhS/6E1A1A.png"},
+    {name: "Flame Red '88", hex: "#692500", type: "Rouge", image: "https://i.postimg.cc/yWqdHSv6/692500.png"},
+    {name: "Rally Red", hex: "#7B1516", type: "Rouge", image: "https://i.postimg.cc/5N6P6Qp9/7B1516.png"},
+    {name: "Rosso Corsa", hex: "#8E1013", type: "Rouge", image: "https://i.postimg.cc/t4TwhCbD/8E1013.png"},
+    {name: "Rosso Fuoco", hex: "#2F090A", type: "Rouge", image: "https://i.postimg.cc/vTHYdwRB/2F090A.png"},
+    
+    {name: "Rally Red", hex: "#7B1516", type: "Rouge", image: "https://i.postimg.cc/5N6P6Qp9/7B1516.png"},
+    {name: "Rosso Corsa", hex: "#8E1013", type: "Rouge", image: "https://i.postimg.cc/t4TwhCbD/8E1013.png"},
 ];
 
 // Populate the color list
