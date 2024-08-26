@@ -2,19 +2,25 @@
 
 // Example data (could be fetched from an API or database)
 const colors = [
-    {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/sf83j441/3C0612.png"},
-    {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/28scSVt4/60050C.png"},
-    {name: "Exposed Red Carbon", hex: "#250D12", type: "Rouge", image: "https://i.postimg.cc/6qYQX25N/250D12.png"},
-    {name: "Wine Red", hex: "#48161B", type: "Rouge", image: "https://i.postimg.cc/j5f8mPcL/48161B.png"},
-    {name: "Rosso Magma", hex: "#410409", type: "Rouge", image: "https://i.postimg.cc/KYdjrqNk/410409.png"},
-    {name: "Riverside Red", hex: "#6E1A1A", type: "Rouge", image: "https://i.postimg.cc/2yRL7JhS/6E1A1A.png"},
-    {name: "Flame Red '88", hex: "#692500", type: "Rouge", image: "https://i.postimg.cc/yWqdHSv6/692500.png"},
-    {name: "Rally Red", hex: "#7B1516", type: "Rouge", image: "https://i.postimg.cc/5N6P6Qp9/7B1516.png"},
-    {name: "Rosso Corsa", hex: "#8E1013", type: "Rouge", image: "https://i.postimg.cc/t4TwhCbD/8E1013.png"},
-    {name: "Rosso Fuoco", hex: "#2F090A", type: "Rouge", image: "https://i.postimg.cc/vTHYdwRB/2F090A.png"},
+    {name: "Alpina Purple", hex: "#0E0A19", type: "Violet", image: "https://i.postimg.cc/SxYqFXpt/image.png"},
+    {name: "Atlantis Blue", hex: "#002845", type: "Bleu", image: "https://i.postimg.cc/63FR52mb/image.png"},
+    {name: "Atlantis Blue II", hex: "#02334E", type: "Bleu", image: "https://i.postimg.cc/wTYzDxKC/image.png"},
+    {name: "Baby Blue", hex: "#3961B2", type: "Bleu", image: "https://i.postimg.cc/fTBhp6gy/image.png"},
+    {name: "Brillant Red", hex: "#BB000A", type: "Rouge", image: "https://i.postimg.cc/B6RQkRhR/image.png"},
+    {name: "Fire Orange", hex: "#8A2B03", type: "Orange", image: "https://i.postimg.cc/mrG3f6nz/image.png"},
+    {name: "Fire Red", hex: "#A70A00", type: "Rouge", image: "https://i.postimg.cc/FRXhx07Q/image.png"},
+    {name: "Hockenheim Silver", hex: "#7885A2", type: "Gris", image: "https://i.postimg.cc/BQpc9g0M/image.png"},
     
-    {name: "Rally Red", hex: "#7B1516", type: "Rouge", image: "https://i.postimg.cc/5N6P6Qp9/7B1516.png"},
-    {name: "Rosso Corsa", hex: "#8E1013", type: "Rouge", image: "https://i.postimg.cc/t4TwhCbD/8E1013.png"},
+    {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/6pFGhNYD/3C0612.png"},
+    {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/3xq2bGJf/60050C.png"},
+    {name: "Exposed Red Carbon", hex: "#250D12", type: "Rouge", image: "https://i.postimg.cc/tJdzK4mZ/250D12.png"},
+    {name: "Wine Red", hex: "#48161B", type: "Rouge", image: "https://i.postimg.cc/GhrKkvHk/48161B.png"},
+    {name: "Rosso Magma", hex: "#410409", type: "Rouge", image: "https://i.postimg.cc/j2v76wFX/410409.png"},
+    {name: "Riverside Red", hex: "#6E1A1A", type: "Rouge", image: "https://i.postimg.cc/9QCkFvdH/6E1A1A.png"},
+    {name: "Flame Red '88", hex: "#692500", type: "Rouge", image: "https://i.postimg.cc/FsscrpYn/692500.png"},
+    {name: "Rally Red", hex: "#7B1516", type: "Rouge", image: "https://i.postimg.cc/9M7bBpdB/7B1516.png"},
+    {name: "Rosso Corsa", hex: "#8E1013", type: "Rouge", image: "https://i.postimg.cc/ZY6jBwKb/8E1013.png"},
+    {name: "Rosso Fuoco", hex: "#2F090A", type: "Rouge", image: "https://i.postimg.cc/5N7z6zv9/2F090A.png"},
 ];
 
 // Populate the color list
