@@ -3,191 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Picker and Display</title>
-    <style>
-        body {
-            background-color: #1e1e2f;
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            display: flex;
-            width: 90%;
-            margin-top: 20px;
-        }
-        .sidebar {
-            flex: 1;
-            padding: 10px;
-        }
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 10px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .sidebar ul li span {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .content {
-            flex: 2;
-            padding: 20px;
-            border-left: 1px solid #444;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .search-bar {
-            width: 80%;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #2a2a3b;
-            color: #e0e0e0;
-        }
-        .color-info {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .color-info img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .color-info p {
-            margin: 5px 0;
-        }
-        .color-picker {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .color-picker input[type="color"] {
-            width: 150px;
-            height: 150px;
-            border: none;
-            margin-bottom: 20px;
-        }
-        .color-picker input[type="text"] {
-            padding: 10px;
-            width: 200px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #2a2a3b;
-            color: #e0e0e0;
-            text-align: center;
-        }
-    </style>
+    <title>Color Picker Example</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="search-bar">
-        <input type="text" id="search" placeholder="Search color by name, hex or type...">
-    </div>
     <div class="container">
-        <div class="sidebar">
-            <ul id="colorList">
-                <!-- Colors will be injected here by JavaScript -->
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search by name, hex code, or type">
+        </div>
+        <div class="color-list-container">
+            <ul id="color-list">
+                <!-- Color list items will be generated dynamically -->
             </ul>
         </div>
-        <div class="content">
-            <div class="color-info" id="colorInfo">
-                <p>Select a color to see details.</p>
+        <div class="color-display-container">
+            <div id="color-info">
+                <img id="color-image" src="" alt="Color Image">
+                <p id="color-name"></p>
+                <p id="color-hex"></p>
+                <p id="color-type"></p>
             </div>
-            <div class="color-picker">
-                <input type="color" id="colorPicker" value="#000000">
-                <input type="text" id="hexValue" placeholder="Hex value" readonly>
-                <input type="text" id="rgbValue" placeholder="RGB value" readonly>
+            <div class="color-picker-container">
+                <input type="color" id="color-picker">
+                <div>
+                    <p id="picked-hex"></p>
+                    <p id="picked-rgb"></p>
+                </div>
             </div>
         </div>
     </div>
-
-    <script>
-        const colors = [
-            { name: 'Red', hex: '#FF0000', type: 'Primary', image: 'https://via.placeholder.com/300/FF0000' },
-            { name: 'Green', hex: '#00FF00', type: 'Primary', image: 'https://via.placeholder.com/300/00FF00' },
-            { name: 'Blue', hex: '#0000FF', type: 'Primary', image: 'https://via.placeholder.com/300/0000FF' },
-            { name: 'Yellow', hex: '#FFFF00', type: 'Secondary', image: 'https://via.placeholder.com/300/FFFF00' },
-            { name: 'Cyan', hex: '#00FFFF', type: 'Secondary', image: 'https://via.placeholder.com/300/00FFFF' },
-            { name: 'Magenta', hex: '#FF00FF', type: 'Secondary', image: 'https://via.placeholder.com/300/FF00FF' }
-        ];
-
-        const colorList = document.getElementById('colorList');
-        const colorInfo = document.getElementById('colorInfo');
-        const search = document.getElementById('search');
-        const colorPicker = document.getElementById('colorPicker');
-        const hexValue = document.getElementById('hexValue');
-        const rgbValue = document.getElementById('rgbValue');
-
-        // Populate the color list
-        function populateColorList(filteredColors = colors) {
-            colorList.innerHTML = '';
-            filteredColors.forEach(color => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span style="background-color: ${color.hex};"></span>${color.name}`;
-                li.addEventListener('click', () => displayColorInfo(color));
-                colorList.appendChild(li);
-            });
-        }
-
-        // Display color information
-        function displayColorInfo(color) {
-            colorInfo.innerHTML = `
-                <img src="${color.image}" alt="${color.name}">
-                <p><strong>Name:</strong> ${color.name}</p>
-                <p><strong>Hex:</strong> ${color.hex}</p>
-                <p><strong>Type:</strong> ${color.type}</p>
-            `;
-        }
-
-        // Search functionality
-        search.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filteredColors = colors.filter(color => 
-                color.name.toLowerCase().includes(query) || 
-                color.hex.toLowerCase().includes(query) || 
-                color.type.toLowerCase().includes(query)
-            );
-            populateColorList(filteredColors);
-        });
-
-        // Color picker functionality
-        colorPicker.addEventListener('input', (e) => {
-            const color = e.target.value;
-            hexValue.value = color;
-            rgbValue.value = hexToRgb(color);
-        });
-
-        // Convert hex to RGB
-        function hexToRgb(hex) {
-            const bigint = parseInt(hex.slice(1), 16);
-            const r = (bigint >> 16) & 255;
-            const g = (bigint >> 8) & 255;
-            const b = bigint & 255;
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-
-        // Initial population
-        populateColorList();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
