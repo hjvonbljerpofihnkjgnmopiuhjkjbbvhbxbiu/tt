@@ -4,8 +4,13 @@
 const colors = [
     {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/sf83j441/3C0612.png"},
     {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/28scSVt4/60050C.png"},
-    {name: "Blue", hex: "#0000FF", type: "Rouge", image: "blue.png"},
-    // Add more colors here
+    {name: "Exposed Red Carbon", hex: "#250D12", type: "Rouge", image: "https://i.postimg.cc/6qYQX25N/250D12.png"},
+    {name: "Wine Red", hex: "#48161B", type: "Rouge", image: "https://i.postimg.cc/j5f8mPcL/48161B.png"},
+    {name: "Rosso Magma", hex: "#410409", type: "Rouge", image: "https://i.postimg.cc/KYdjrqNk/410409.png"},
+    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
+    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
+    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
+    {name: "Exposed Red Carbon", hex: "#0000FF", type: "Rouge", image: "blue.png"},
 ];
 
 // Populate the color list
