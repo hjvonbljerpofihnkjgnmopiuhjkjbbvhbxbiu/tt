@@ -3,35 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Picker Example</title>
+    <title>Color Picker and Color List</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
+        <!-- Barre de recherche -->
         <div class="search-bar">
-            <input type="text" id="search" placeholder="Search by name, hex code, or type">
+            <input type="text" id="search" placeholder="Search by name, hex, or type...">
         </div>
-        <div class="color-list-container">
-            <ul id="color-list">
-                <!-- Color list items will be generated dynamically -->
-            </ul>
-        </div>
-        <div class="color-display-container">
-            <div id="color-info">
-                <img id="color-image" src="" alt="Color Image">
-                <p id="color-name"></p>
-                <p id="color-hex"></p>
-                <p id="color-type"></p>
+        
+        <div class="main-content">
+            <!-- Liste des couleurs -->
+            <div class="color-list">
+                <ul id="color-list">
+                    <!-- Les éléments de la liste seront injectés ici par JavaScript -->
+                </ul>
             </div>
-            <div class="color-picker-container">
-                <input type="color" id="color-picker">
-                <div>
-                    <p id="picked-hex"></p>
-                    <p id="picked-rgb"></p>
+
+            <!-- Affichage des détails de la couleur -->
+            <div class="color-display">
+                <div class="color-image">
+                    <img id="color-img" src="" alt="Color Image">
+                </div>
+                <div class="color-info">
+                    <p id="color-name">Name: </p>
+                    <p id="color-hex">Hex: </p>
+                    <p id="color-type">Type: </p>
                 </div>
             </div>
         </div>
+
+        <!-- Color picker et affichage des valeurs -->
+        <div class="color-picker-section">
+            <input type="color" id="color-picker">
+            <div class="color-values">
+                <p id="picked-hex">Hex: </p>
+                <p id="picked-rgb">RGB: </p>
+            </div>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
