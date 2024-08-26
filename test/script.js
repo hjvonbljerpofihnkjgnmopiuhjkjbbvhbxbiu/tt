@@ -1,66 +1,63 @@
+// script.js
+
+// Example data (could be fetched from an API or database)
 const colors = [
-    { name: "Red", hex: "#FF0000", type: "Primary", image: "path_to_red_image.jpg" },
-    { name: "Green", hex: "#00FF00", type: "Primary", image: "path_to_green_image.jpg" },
-    { name: "Blue", hex: "#0000FF", type: "Primary", image: "path_to_blue_image.jpg" },
-    // Add more colors as needed
+    {name: "Red", hex: "#FF0000", type: "Primary", image: "red.png"},
+    {name: "Green", hex: "#00FF00", type: "Secondary", image: "green.png"},
+    {name: "Blue", hex: "#0000FF", type: "Primary", image: "blue.png"},
+    // Add more colors here
 ];
 
+// Populate the color list
 const colorList = document.getElementById('color-list');
-const colorName = document.getElementById('color-name');
-const colorHex = document.getElementById('color-hex');
-const colorType = document.getElementById('color-type');
-const colorImage = document.getElementById('color-image');
-const colorPicker = document.getElementById('color-picker');
-const pickedHex = document.getElementById('picked-hex');
-const pickedRgb = document.getElementById('picked-rgb');
-const searchInput = document.getElementById('search');
+colors.forEach(color => {
+    const li = document.createElement('li');
+    li.innerHTML = `<div class="color-dot" style="background-color: ${color.hex};"></div>${color.name}`;
+    li.addEventListener('click', () => displayColorDetails(color));
+    colorList.appendChild(li);
+});
 
+// Display color details when a color is selected
 function displayColorDetails(color) {
-    colorName.textContent = `Name: ${color.name}`;
-    colorHex.textContent = `Hex: ${color.hex}`;
-    colorType.textContent = `Type: ${color.type}`;
-    colorImage.src = color.image;
+    document.getElementById('color-img').src = color.image;
+    document.getElementById('color-name').textContent = `Name: ${color.name}`;
+    document.getElementById('color-hex').textContent = `Hex: ${color.hex}`;
+    document.getElementById('color-type').textContent = `Type: ${color.type}`;
 }
 
-function generateColorList() {
-    colors.forEach(color => {
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="color-dot" style="background-color: ${color.hex};"></div> ${color.name}`;
-        li.addEventListener('click', () => displayColorDetails(color));
-        colorList.appendChild(li);
-    });
+// Handle color picker changes
+const colorPicker = document.getElementById('color-picker');
+colorPicker.addEventListener('input', () => {
+    const hex = colorPicker.value;
+    const rgb = hexToRgb(hex);
+    document.getElementById('picked-hex').textContent = `Hex: ${hex}`;
+    document.getElementById('picked-rgb').textContent = `RGB: ${rgb}`;
+});
+
+// Convert HEX to RGB
+function hexToRgb(hex) {
+    let r = 0, g = 0, b = 0;
+    if (hex.length === 7) {
+        r = parseInt(hex.slice(1, 3), 16);
+        g = parseInt(hex.slice(3, 5), 16);
+        b = parseInt(hex.slice(5, 7), 16);
+    }
+    return `${r}, ${g}, ${b}`;
 }
 
-function searchColors() {
-    const query = searchInput.value.toLowerCase();
+// Search functionality
+document.getElementById('search').addEventListener('input', function() {
+    const searchValue = this.value.toLowerCase();
     const filteredColors = colors.filter(color => 
-        color.name.toLowerCase().includes(query) ||
-        color.hex.toLowerCase().includes(query) ||
-        color.type.toLowerCase().includes(query)
+        color.name.toLowerCase().includes(searchValue) ||
+        color.hex.toLowerCase().includes(searchValue) ||
+        color.type.toLowerCase().includes(searchValue)
     );
     colorList.innerHTML = '';
     filteredColors.forEach(color => {
         const li = document.createElement('li');
-        li.innerHTML = `<div class="color-dot" style="background-color: ${color.hex};"></div> ${color.name}`;
+        li.innerHTML = `<div class="color-dot" style="background-color: ${color.hex};"></div>${color.name}`;
         li.addEventListener('click', () => displayColorDetails(color));
         colorList.appendChild(li);
     });
-}
-
-function hexToRgb(hex) {
-    const bigint = parseInt(hex.slice(1), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `rgb(${r}, ${g}, ${b})`;
-}
-
-colorPicker.addEventListener('input', (e) => {
-    const color = e.target.value;
-    pickedHex.textContent = `Hex: ${color}`;
-    pickedRgb.textContent = `RGB: ${hexToRgb(color)}`;
 });
-
-searchInput.addEventListener('input', searchColors);
-
-window.onload = generateColorList;
