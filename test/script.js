@@ -2,9 +2,9 @@
 
 // Example data (could be fetched from an API or database)
 const colors = [
-    {name: "Red", hex: "#FF0000", type: "Primary", image: "red.png"},
-    {name: "Green", hex: "#00FF00", type: "Secondary", image: "green.png"},
-    {name: "Blue", hex: "#0000FF", type: "Primary", image: "blue.png"},
+    {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/sf83j441/3C0612.png"},
+    {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/28scSVt4/60050C.png"},
+    {name: "Blue", hex: "#0000FF", type: "Rouge", image: "blue.png"},
     // Add more colors here
 ];
 
@@ -20,7 +20,7 @@ colors.forEach(color => {
 // Display color details when a color is selected
 function displayColorDetails(color) {
     document.getElementById('color-img').src = color.image;
-    document.getElementById('color-name').textContent = `Name: ${color.name}`;
+    document.getElementById('color-name').textContent = `Nom: ${color.name}`;
     document.getElementById('color-hex').textContent = `Hex: ${color.hex}`;
     document.getElementById('color-type').textContent = `Type: ${color.type}`;
 }
