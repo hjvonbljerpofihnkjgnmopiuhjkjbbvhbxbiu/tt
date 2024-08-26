@@ -1,59 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
     margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2E3440;
+    color: #D8DEE9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 20px;
+    width: 80%;
+    height: 90%;
+    background-color: #3B4252;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-#search {
-    width: 60%;
+.search-bar {
     padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #333;
-    background-color: #333;
-    color: #ffffff;
-    font-size: 16px;
+    background-color: #4C566A;
     text-align: center;
 }
 
-.content {
-    display: flex;
-    width: 100%;
+.search-bar input {
+    width: 50%;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
 }
 
-.color-list {
-    width: 30%;
-    max-height: 400px;
+.color-list-container {
+    flex: 1;
     overflow-y: auto;
+    background-color: #434C5E;
+    padding: 10px;
 }
 
-.color-list ul {
+.color-list-container ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.color-list li {
-    padding: 10px;
-    margin: 5px 0;
-    background-color: #1f1f1f;
-    border: 1px solid #333;
-    border-radius: 5px;
-    cursor: pointer;
+.color-list-container li {
     display: flex;
     align-items: center;
+    padding: 5px;
+    cursor: pointer;
 }
 
-.color-list li:hover {
-    background-color: #333;
+.color-list-container li:hover {
+    background-color: #4C566A;
 }
 
 .color-dot {
@@ -63,35 +64,36 @@ body {
     margin-right: 10px;
 }
 
-.color-display {
-    width: 70%;
-    padding: 20px;
-    background-color: #1f1f1f;
-    border-radius: 5px;
-    margin-left: 20px;
-    text-align: center;
-}
-
-#colorSample {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 20px auto;
-    border-radius: 50%;
-}
-
-#colorImage {
-    max-width: 100%;
-    max-height: 200px;
-    margin-top: 20px;
-    border-radius: 10px;
-}
-
-#colorPicker {
-    margin-top: 20px;
+.color-display-container {
+    display: flex;
+    flex-direction: row;
     padding: 10px;
-    background-color: #333;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    background-color: #3B4252;
+}
+
+#color-info {
+    flex: 2;
+    text-align: left;
+}
+
+#color-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.color-picker-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.color-picker-container input {
+    margin-bottom: 10px;
+}
+
+.color-picker-container div {
+    text-align: center;
 }
