@@ -147,6 +147,12 @@ const colors = [
     {name: "Sunstone", hex: "#918B88", type: "Gris", image: "https://i.postimg.cc/bv9kwzFZ/image.png"},
     {name: "Floret Silver", hex: "#3F4855", type: "Gris", image: "https://i.postimg.cc/4NRVCL5L/image.png"},
     {name: "Brown", hex: "#3E1C0B", type: "Marron", image: "https://i.postimg.cc/4xmJWZ9r/image.png"},
+    {name: "Gentian Blue", hex: "#000517", type: "Bleu", image: "https://i.postimg.cc/L5fsPkNm/image.png"},
+    {name: "Dove Grey / Powder Grey", hex: "#596177", type: "Gris", image: "https://i.postimg.cc/rs1NJPJm/image.png"},
+    {name: "Alpina Purple", hex: "#0E0A19", type: "Violet", image: "https://i.postimg.cc/RVhkg1tR/image.png"},
+    {name: "Montego Blue Mica", hex: "#00080D", type: "Bleu", image: "https://i.postimg.cc/gkPW2LLq/image.png"},
+    {name: "Vintage Red", hex: "#62090B", type: "Rouge", image: "https://i.postimg.cc/SK7nsbDD/image.png"},
+    {name: "Sunburst Yellow", hex: "#B47400", type: "Jaune", image: "https://i.postimg.cc/d010qZZt/image.png"},
     
     {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/6pFGhNYD/3C0612.png"},
     {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/3xq2bGJf/60050C.png"},
@@ -178,24 +184,7 @@ function displayColorDetails(color) {
 }
 
 // Handle color picker changes
-const colorPicker = document.getElementById('color-picker');
-colorPicker.addEventListener('input', () => {
-    const hex = colorPicker.value;
-    const rgb = hexToRgb(hex);
-    document.getElementById('picked-hex').textContent = `Hex: ${hex}`;
-    document.getElementById('picked-rgb').textContent = `RGB: ${rgb}`;
-});
 
-// Convert HEX to RGB
-function hexToRgb(hex) {
-    let r = 0, g = 0, b = 0;
-    if (hex.length === 7) {
-        r = parseInt(hex.slice(1, 3), 16);
-        g = parseInt(hex.slice(3, 5), 16);
-        b = parseInt(hex.slice(5, 7), 16);
-    }
-    return `${r}, ${g}, ${b}`;
-}
 
 // Search functionality
 document.getElementById('search').addEventListener('input', function() {
@@ -212,4 +201,511 @@ document.getElementById('search').addEventListener('input', function() {
         li.addEventListener('click', () => displayColorDetails(color));
         colorList.appendChild(li);
     });
+});
+
+
+
+$(document).ready(function() {
+  jQuery.fn.pickify = function() {
+    return this.each(function() {
+      $picker = $(this);
+      $selector = $picker.children('.selector_color');
+
+      $icon = $picker.children('.icon');
+      $inputContainer = $icon.children('.inputContainer');
+      $input = $inputContainer.children('input.change');
+
+      $inputContainerRGB = $icon.children('.inputContainerRGB');
+      $inputRGB = $inputContainerRGB.children('input.changeRGB');
+
+      $board = $selector.children('.board');
+      $choice = $board.children();
+      $rainbow = $selector.children('.rainbow');
+      $change = $board.children('.choice');
+
+      var coefX = ($board.width()-10)/100;
+      var coefY = ($board.height()-10)/100;
+
+      var colors = $picker.attr('data-hsv').split(',');
+      $picker.data('hsv', {
+        h: colors[0],
+        s: colors[1],
+        v: colors[2]
+      })
+      var hex = '#' + rgb2hex(hsv2rgb({
+        h: colors[0],
+        s: colors[1],
+        v: colors[2]
+      }));
+
+      var hue = colors[0];
+      var rgb = str_hex2rgb(hex);
+      var hsv = "hsv(" + colors[0] + "°, " + colors[1] + "%, " + colors[2] + "%" + ")";
+
+      //hsv(180°, 60%, 78%)
+
+      $("#mainHEX").html(hex);
+      $("#mainRGB").html(rgb);
+      $("#mainHSV").html(hsv);
+
+      $input.val(hex);
+      $inputRGB.val(rgb);
+      //$('body').add($icon).css('background-color', hex);
+      $icon.css('background-color', hex);
+      $rainbow.slider().find(".ui-slider-handle").css('background-color', hex);
+      $change.css('background-color', hex);
+
+      // making things happen
+      $rainbow.slider({
+        value: colors[0],
+        min: 0,
+        max: 359,
+        slide: function(event, ui) {
+          changeHue(ui.value)
+        },
+        stop: function() {
+          changeColour($picker.data('hsv'), true)
+        }
+      })
+      $choice.draggable({
+        containment: '.board',
+        cursor: 'crosshair',
+        create: function() {
+          $choice.css({
+            'left': colors[1] * coefX,
+            'top': 180 - colors[2] * coefY
+          });
+        },
+        drag: function(event, ui) {
+          changeSatVal(ui.position.left, ui.position.top)
+        },
+        stop: function() {
+          changeColour($picker.data('hsv'), true)
+        }
+
+      });
+
+      /*Changing the style of input when I click outside them*/
+      $(document).click(function() {
+        $input.css("font-weight", "normal");
+        /*Changing Input Line Opacity*/
+        if($input.css("color")=="rgb(255, 255, 255)")
+          $input.css("border-bottom-color", "rgba(255,255,255,0.2)");
+        else
+          $input.css("border-bottom-color", "rgba(0, 0, 0, 0.2)");
+
+        $inputRGB.css("font-weight", "normal");
+        /*Changing Input Line Opacity*/
+        if($inputRGB.css("color")=="rgb(255, 255, 255)")
+          $inputRGB.css("border-bottom-color", "rgba(255,255,255,0.2)");
+        else
+          $inputRGB.css("border-bottom-color", "rgba(0, 0, 0, 0.2)");
+      });
+
+      /*Changing the input style when I click on it*/
+      $input.click( function(e){
+        if($input.css("color")=="rgb(255, 255, 255)")
+          $input.css("border-bottom-color", "rgba(255, 255, 255, 1)");
+        else
+          $input.css("border-bottom-color", "rgba(0, 0, 0, 1)");
+        $input.css("font-weight", "bold");
+        $inputRGB.css("font-weight", "normal");
+        if($inputRGB.css("color")=="rgb(255, 255, 255)")
+          $inputRGB.css("border-bottom-color", "rgba(255,255,255,0.2)");
+        else
+          $inputRGB.css("border-bottom-color", "rgba(0, 0, 0, 0.2)");
+        event.stopPropagation();
+      });
+
+      $inputRGB.click( function(e){
+        if($inputRGB.css("color")=="rgb(255, 255, 255)")
+          $inputRGB.css("border-bottom-color", "rgba(255, 255, 255, 1)");
+        else
+          $inputRGB.css("border-bottom-color", "rgba(0, 0, 0, 1)");
+        $inputRGB.css("font-weight", "bold");
+        $input.css("font-weight", "normal");
+        if($input.css("color")=="rgb(255, 255, 255)")
+          $input.css("border-bottom-color", "rgba(255,255,255,0.2)");
+        else
+          $input.css("border-bottom-color", "rgba(0, 0, 0, 0.2)");
+        event.stopPropagation();
+      });
+
+      $board.on('click', function(e) {
+        var left = e.pageX - $board.offset().left;
+        var top = e.pageY - $board.offset().top;
+        $choice.css({
+          'left': left,
+          'top': top
+        });
+        changeSatVal(left, top);
+        changeColour($picker.data('hsv'), true);
+      });
+
+      // drag var actions
+      function changeHue(hue) {
+        $board.css('background-color', 'hsl(' + hue + ',100%,50%)');
+        var hsv = $picker.data('hsv');
+        hsv.h = hue;
+        changeColour(hsv);
+
+        /*Changing the color of the handle in the hue bar*/
+        var hsl = 'hsl(' + hue + ',100%,50%)';
+        $rainbow.slider().find(".ui-slider-handle").css('background-color', '#' + hsl);
+      }
+
+      function changeSatVal(sat, val) {
+        sat = Math.floor(sat / coefX);
+        val = Math.floor(100 - val / coefY);
+        var hsv = $picker.data('hsv');
+        hsv.s = sat;
+        hsv.v = val;
+        changeColour(hsv);
+      }
+
+      // changing the colours
+      function changeColour(hsv, restyle, hex, input) {
+        var rgb = hsv2rgb(hsv);
+        if (!hex) {
+          var hex = rgb2hex(rgb)
+        }
+
+        if(!input&&hex=="ff0004") hex="ff0000";
+
+        $picker.data('hsv', hsv).data('hex', hex).data('rgb', rgb);
+        $icon.css('background-color', '#' + hex);
+        $input.val('#' + hex);
+
+        var rgb = $icon.css('background-color');
+
+        if(input!="RGB")
+          $inputRGB.val(rgb);
+
+        $change.css('background-color', '#' + hex);
+        if (restyle) {
+          changeStyle(rgb);
+        }
+
+        var rgbObj = getRGBobj(rgb);
+        var hsl = rgb2hsl(rgbObj);
+        console.log(hsl);
+        /*HERE*/
+
+        checkLightHue(hsv);
+        colorValues(rgb, "hsv(" + hsv.h + "°, " + hsv.s + "%, " + hsv.v + "%" + ")" );
+      }
+
+      function changeStyle(rgb) {
+        var rgb = 'rgb(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ')';
+        //$('body').css('background-color', rgb);
+      }
+
+      /*CHANGE VALUES
+      whenever I change the color is chaned, the color values are updated
+    */
+    function colorValues(rgb,hsv){
+      var hex = str_rgb2hex(rgb);
+      $("#mainHEX").html(hex);
+      $("#mainRGB").html(rgb);
+      $("#mainHSV").html(hsv);
+    }
+
+      // input change at each key pressed
+      $input.keyup(function(e) {
+        if (e.which != (37 || 39)) {
+          var coursorPosition=$input[0].selectionStart;
+          inputChange($input.val());
+          $input[0].selectionStart=coursorPosition;
+          $input[0].selectionEnd=coursorPosition;
+        }
+      });
+
+      function inputChange(val) {
+        var hex = val.replace(/[^A-F0-9]/ig, '');
+        if (hex.length > 6) {
+          hex = hex.slice(0, 6);
+        }
+        $input.val('#' + hex);
+        if (hex.length == 6) {
+          inputColour(hex, "HEX");
+        }
+
+        var hsl = 'hsl(' + hue + ',100%,50%)';
+        $rainbow.slider().find(".ui-slider-handle").css('background-color', '#' + hsl);
+      }
+
+      //input change at each key pressed
+      $inputRGB.keyup(function(e) {
+        /*37 and 39 are the ASCII for the arrows left and right */
+        if (e.which != (37 || 39)) {
+          var coursorPosition=$inputRGB[0].selectionStart;
+          inputChangeRGB($inputRGB.val());
+          //Moving the cursor at the end
+          $inputRGB[0].selectionStart = coursorPosition;
+          $inputRGB[0].selectionEnd = coursorPosition;
+        }
+      });
+
+      function inputChangeRGB(rgb) {
+        /*cheching if rgb has "rgb()" otherwise I add it*/
+        if(rgb.indexOf("rgb(")==-1){
+          rgb="rgb(" + rgb + ")";
+          }
+
+        var hex = str_rgb2hex(rgb);
+        var hex_value = hex.replace('#','');
+        //hex_from_rgb = rgb.replace(/[^A-F0-9]/ig, '');
+        if (hex_value.length > 6) {
+          hex_value = hex_value.slice(0, 6);
+        }
+        //$inputRGB.val(rgb);
+        $input.val('#' + hex_value);
+        if (hex_value.length == 6) {
+          inputColour(hex_value, "RGB");
+        }
+
+        var hsl = 'hsl(' + hue + ',100%,50%)';
+        $rainbow.slider().find(".ui-slider-handle").css('background-color', '#' + hsl);
+      }
+
+      function inputColour(hex, input) {
+        var hsv = hex2hsv(hex);
+        $icon.css('background-color', '#' + hex);
+
+        var newX = (hsv.s * coefX)+10;
+        var newY = (hsv.v * coefY)-10;
+
+        $choice.css({
+          left: newX,
+          top: 180 - newY
+        });
+
+        $rainbow.children().css('left', hsv.h / 3.6 + '%');
+        $board.css('background-color', 'hsl(' + hue + ',100%,50%)');
+        changeColour(hsv, true, hex, input);
+      }
+
+      function hex2hsv(hex) {
+        var r = parseInt(hex.substring(0, 2), 16) / 255;
+        var g = parseInt(hex.substring(2, 4), 16) / 255;
+        var b = parseInt(hex.substring(4, 6), 16) / 255;
+        var max = Math.max.apply(Math, [r, g, b]);
+        var min = Math.min.apply(Math, [r, g, b]);
+        var chr = max - min;
+        hue = 0;
+        val = max;
+        sat = 0;
+        if (val > 0) {
+          sat = chr / val;
+          if (sat > 0) {
+            if (r == max) {
+              hue = 60 * (((g - min) - (b - min)) / chr);
+              if (hue < 0) {
+                hue += 360;
+              }
+            } else if (g == max) {
+              hue = 120 + 60 * (((b - min) - (r - min)) / chr);
+            } else if (b == max) {
+              hue = 250 + 60 * (((r - min) - (g - min)) / chr);
+            }
+          }
+        }
+        return {
+          h: hue,
+          s: Math.round(sat * 100),
+          v: Math.round(val * 100)
+        }
+      }
+
+      function hsv2rgb(hsv) {
+        h = hsv.h;
+        s = hsv.s;
+        v = hsv.v;
+        var r, g, b;
+        var i;
+        var f, p, q, t;
+        h = Math.max(0, Math.min(360, h));
+        s = Math.max(0, Math.min(100, s));
+        v = Math.max(0, Math.min(100, v));
+        s /= 100;
+        v /= 100;
+        if (s == 0) {
+          r = g = b = v;
+          return {
+            r: Math.round(r * 255),
+            g: Math.round(g * 255),
+            b: Math.round(b * 255)
+          };
+        }
+        h /= 60;
+        i = Math.floor(h);
+        f = h - i; // factorial part of h
+        p = v * (1 - s);
+        q = v * (1 - s * f);
+        t = v * (1 - s * (1 - f));
+        switch (i) {
+          case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+          case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+          case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+          case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+          case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+          default:
+            r = v;
+            g = p;
+            b = q;
+        }
+        return {
+          r: Math.round(r * 255),
+          g: Math.round(g * 255),
+          b: Math.round(b * 255)
+        };
+      }
+
+      function rgb2hex(rgb) {
+        function hex(x) {
+          return ("0" + parseInt(x).toString(16)).slice(-2);
+        }
+        return hex(rgb.r) + hex(rgb.g) + hex(rgb.b);
+      }
+
+      /******************************/
+      function rgb2hsl(rgb) {
+
+          var r = rgb.r, g = rgb.g, b = rgb.b;
+
+          r /= 255, g /= 255, b /= 255;
+
+          var max = Math.max(r, g, b), min = Math.min(r, g, b);
+          var h, s, l = (max + min) / 2;
+
+          if (max == min) {
+          h = s = 0; // achromatic
+          } else {
+          var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+          }
+
+          h /= 6;
+      }
+
+      return {
+        h: h,
+        s: s,
+        l: l
+      }
+        //[ h, s, l ];
+    }
+
+
+
+
+      /*String rgb/hex converter*/
+      function str_rgb2hex(rgb) {
+        rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        return "#" + str_hex(rgb[1]) + str_hex(rgb[2]) + str_hex(rgb[3]);
+        }
+
+      function str_hex(x) {
+          var hexDigits = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
+          return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+      }
+
+      function str_hex2rgb(hex){
+          hex = hex.replace('#','');
+          r = parseInt(hex.substring(0,2), 16);
+          g = parseInt(hex.substring(2,4), 16);
+          b = parseInt(hex.substring(4,6), 16);
+
+          result = 'rgb('+r+','+g+','+b+')';
+          return result;
+      }
+
+
+      /*get RGB OBJ from string*/
+      function getRGBobj(str){
+        var match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
+        return match ? {
+          r: match[1],
+          g: match[2],
+          b: match[3]
+        } : {};
+      }
+
+
+      /* Changing the input color depending on the light of the color selected
+      color: white-> light>50
+      color: black-> light<50
+      */
+      function checkLightHue(hsv){
+        if(hsv.h>=205&&hsv.s>=50||hsv.v<=50){
+          $input.css("color", "white");
+          $inputContainer.css("color", "white");
+          $input.css("border-bottom-color", "rgba(255,255,255,0.2)");
+
+          $inputRGB.css("color", "white");
+          $inputContainerRGB.css("color", "white");
+          $inputRGB.css("border-bottom-color", "rgba(255,255,255,0.2)");
+          }
+        else{
+          $input.css("color", "black");
+          $inputContainer.css("color", "black");
+          $input.css("border-bottom-color", "rgba(0,0,0,0.2)");
+
+          $inputRGB.css("color", "black");
+          $inputContainerRGB.css("color", "black");
+          $inputRGB.css("border-bottom-color", "rgba(0,0,0,0.2)");
+          }
+         $input.css("font-weight", "normal");
+         $inputRGB.css("font-weight", "normal");
+      }
+    });
+  };
+
+  $('.picker').pickify();
+
+});
+
+
+/*Expanded Menu Functions*/
+$expandContainer = $("#allColorCodes");
+$mainBar = $("#ColourExpandBar");
+$secondaryBars = $expandContainer.children(".secondaryBar");
+$iconExpendadMenuColors = $mainBar.find("i");
+
+$mainBar.on("click", function(){
+  if($secondaryBars.height()=="0"){
+    $iconExpendadMenuColors.addClass("collapsed_icon_active");
+    $mainBar.children(".txtCollapse").html("Show Less");
+    $secondaryBars.removeClass("collapsedBar");
+      }
+  else{
+    $secondaryBars.addClass("collapsedBar");
+    $iconExpendadMenuColors.removeClass("collapsed_icon_active");
+    $mainBar.children(".txtCollapse").html("Show colour values");
+      }
 });
