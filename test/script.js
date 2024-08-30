@@ -212,9 +212,11 @@ document.getElementById('search').addEventListener('input', function() {
             layout: [
                 { 
                     component: iro.ui.Box, // Composant roue de couleur
+                },
+                { 
+                    component: iro.ui.Slider, // Composant slider
                     options: {
-                        boxLightness: false, // Désactive la lumière pour un format carré
-                        boxDirection: 'clockwise' // Direction de la roue
+                        sliderType: 'hue' // Type de slider pour la teinte
                     }
                 }
             ]
