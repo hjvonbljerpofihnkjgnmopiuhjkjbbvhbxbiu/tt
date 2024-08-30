@@ -211,10 +211,10 @@ document.getElementById('search').addEventListener('input', function() {
             color: "#f00", // Couleur initiale (rouge)
             layout: [
                 { 
-                    component: iro.ui.Wheel, // Composant roue de couleur
+                    component: iro.ui.Box, // Composant roue de couleur
                     options: {
-                        wheelLightness: false, // Désactive la lumière pour un format carré
-                        wheelDirection: 'clockwise' // Direction de la roue
+                        boxLightness: false, // Désactive la lumière pour un format carré
+                        boxDirection: 'clockwise' // Direction de la roue
                     }
                 }
             ]
