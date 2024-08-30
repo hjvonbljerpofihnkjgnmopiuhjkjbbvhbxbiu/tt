@@ -86,7 +86,7 @@ body {
     text-align: left;
 }
 
-        #color-picker-container {
+        .color-picker-container {
             border: 1px solid #ddd;
             padding: 20px;
             background-color: white;
