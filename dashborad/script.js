@@ -1,11 +1,10 @@
-document.addEventListener('DOMContentLoaded', function () {
+
+   document.addEventListener('DOMContentLoaded', function () {
     const caTable = document.getElementById('ca-table');
     const resultatRecherche = document.getElementById('resultat-recherche');
 
-    // URL des CSV
     const urlChiffreAffaire = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
     const urlRecherche = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
-
     // Fonction pour récupérer les données CSV
     function fetchCSV(url) {
         return fetch(url).then(response => response.text());
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const tr = document.createElement('tr');
             cols.slice(24, 28).forEach(col => { // Y à AB
                 const td = document.createElement('td');
-                td.textContent = col.trim();
+                td.textContent = col ? col.trim() : ''; // Vérifie que col n'est pas undefined
                 tr.appendChild(td);
             });
             caTable.appendChild(tr);
@@ -31,14 +30,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const rows = csvData.split('\n').slice(4, 36); // B5 à W36
         const targetNumber = '57755';
         let found = false;
-        
+
         rows.forEach(row => {
             const cols = row.split(',');
-            if (cols[2].trim() === targetNumber) { // Colonne C (index 2)
+            if (cols[2] && cols[2].trim() === targetNumber) { // Vérifie que cols[2] n'est pas undefined
                 found = true;
                 resultatRecherche.innerHTML = `
                     <p>Numéro trouvé :</p>
-                    <p>B: ${cols[1]}, C: ${cols[2]}, D: ${cols[3]}, ..., W: ${cols[22]}</p>
+                    <p>B: ${cols[1] || ''}, C: ${cols[2] || ''}, D: ${cols[3] || ''}, ..., W: ${cols[22] || ''}</p>
                 `;
             }
         });
@@ -48,3 +47,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
