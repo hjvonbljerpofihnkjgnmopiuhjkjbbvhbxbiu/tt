@@ -8,14 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <style>
         /* Style du conteneur du color picker */
-#picker-container {
-  display: flex; /* Aligne le picker et l'affichage de la couleur en ligne */
-  align-items: center; /* Aligne verticalement au centre */
+#picker {
+    display: flex; /* Utiliser Flexbox pour centrer les éléments à l'intérieur */
+    flex-direction: column; /* Aligne les éléments en colonne */
+    align-items: center; /* Centre horizontalement le contenu */
+    justify-content: center; /* Centre verticalement le contenu */
+    height: 320px; /* Hauteur du color picker */
+    margin-bottom: 20px; /* Espace en bas pour le conteneur des valeurs */
 }
 
-#picker {
-  width: 320px; /* Largeur de la roue du color picker */
-  height: 320px; /* Hauteur de la roue du color picker */
+/* Style pour le conteneur des valeurs de couleur */
+#color-values {
+    text-align: center; /* Centre le texte à l'intérieur */
+    font-size: 18px; /* Taille de police pour les valeurs */
 }
 
 #color-display {
@@ -25,8 +30,6 @@
   background-color: #ffffff; /* Couleur initiale (blanc) */
   border: 1px solid #000; /* Bordure noire pour l'affichage de la couleur */
 }
-
-
         /* Style pour afficher les valeurs de couleur */
         #color-values {
             text-align: center;
@@ -63,16 +66,14 @@
         </div>
     </div>
 
-<div id="picker-container">
   <div id="picker"></div>
-  <div id="color-display"></div>
-</div>
-    
     <!-- Conteneur pour afficher les valeurs de couleur -->
     <div id="color-values">
         <p>HEX: <span id="hex-value">#ff0000</span></p>
         <p>RGB: <span id="rgb-value">rgb(255, 0, 0)</span></p>
     </div>
+     <div id="color-display"></div>
+    
 
 
 
