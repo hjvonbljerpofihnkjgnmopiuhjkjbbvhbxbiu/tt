@@ -3,32 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mode Nuit</title>
+    <title>Dashboard en Night Mode</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #121212;
-            color: #E0E0E0;
+            color: #ffffff;
             margin: 20px;
         }
 
-        h1 {
+        h1, h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .dashboard {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            color: #e0e0e0;
         }
 
         .module {
-            background-color: #1E1E1E;
+            background-color: #1e1e1e;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
 
         table {
@@ -36,41 +29,62 @@
             border-collapse: collapse;
             margin: 0 auto;
             table-layout: fixed;
-            color: #ffffff;
         }
 
         th, td {
             border: 1px solid #333;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
+            color: #e0e0e0;
         }
 
         th {
-            background-color: #333333;
-            font-weight: bold;
+            background-color: #333;
         }
 
         tr:nth-child(even) {
-            background-color: #252525;
+            background-color: #2e2e2e;
         }
 
         tr:hover {
-            background-color: #333333;
+            background-color: #444;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #2e2e2e;
+        }
+
+        .data-cell {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            flex-grow: 1;
+            margin: 0 5px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Dashboard - Mode Nuit</h1>
-    <div class="dashboard">
-        <div class="module" id="chiffre-affaire">
-            <h2>Chiffre d'affaire du jour et du précédent</h2>
-            <table id="table-chiffre-affaire"></table>
-        </div>
-        <div class="module" id="ligne-speciale">
-            <h2>Détails du numéro 57755</h2>
-            <table id="table-ligne-speciale"></table>
-        </div>
+    <h1>Tableau de Bord</h1>
+
+    <!-- Module 1: Chiffre d'Affaires -->
+    <div class="module">
+        <h2>Chiffre d'Affaires du Jour et du Précédent</h2>
+        <table id="ca-table">
+            <tbody id="ca-table-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Module 2: Recherche et Affichage des Informations Spécifiques -->
+    <div class="module">
+        <h2>Détails de l'Entrée Correspondant au Numéro 57755</h2>
+        <div id="searched-data" class="data-row"></div>
     </div>
 
     <script>
@@ -80,48 +94,59 @@
             return data;
         }
 
-        function parseCSVForRange(csv, startRow, endRow, startCol, endCol) {
+        function parseAndDisplayCATable(csv) {
             const lines = csv.split("\n");
-            const filteredLines = lines.slice(startRow, endRow);
-            return filteredLines.map(line => line.split(",").slice(startCol, endCol));
-        }
+            const filteredLines = lines.slice(28, 34); // Y29 à AB34
 
-        function displayTableData(tableId, data) {
-            const table = document.getElementById(tableId);
-            table.innerHTML = "";  // Clear existing table data
-
-            data.forEach((row, index) => {
+            const tableBody = document.getElementById("ca-table-body");
+            filteredLines.forEach(line => {
+                const cells = line.split(",").slice(24, 28); // Colonnes Y à AB
                 const tr = document.createElement("tr");
-                row.forEach(cell => {
-                    const td = document.createElement(index === 0 ? "th" : "td");
-                    td.textContent = cell.trim();
+                cells.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.textContent = cell;
                     tr.appendChild(td);
                 });
-                table.appendChild(tr);
+                tableBody.appendChild(tr);
             });
         }
 
-        async function loadDashboard() {
-            const url = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+        function parseAndSearchForNumber(csv, searchNumber) {
+            const lines = csv.split("\n");
+            const filteredLines = lines.slice(4, 36); // B5 à W36
 
-            const csvData = await fetchCSVData(url);
+            const searchIndex = filteredLines.findIndex(line => line.split(",")[2].trim() === searchNumber);
+            if (searchIndex !== -1) {
+                const row = filteredLines[searchIndex].split(",").slice(1, 23); // Colonnes B à W
+                const dataRow = document.getElementById("searched-data");
+                dataRow.innerHTML = ""; // Clear any previous content
 
-            // Chiffre d'affaire du jour et du précédent (Y29 à AB34)
-            const chiffreAffaireData = parseCSVForRange(csvData, 28, 34, 24, 28);
-            displayTableData("table-chiffre-affaire", chiffreAffaireData);
-
-            // Recherche du numéro 57755 dans la section C (B5 à W36)
-            const tableauData = parseCSVForRange(csvData, 4, 36, 1, 23); // B5 à W36
-            const headerRow = tableauData[0]; // Get the headers
-            const ligneSpeciale = tableauData.find(row => row[2] && row[2].trim() === "57755");
-
-            if (ligneSpeciale) {
-                displayTableData("table-ligne-speciale", [headerRow, ligneSpeciale]);
+                row.forEach(cell => {
+                    const div = document.createElement("div");
+                    div.textContent = cell;
+                    div.classList.add("data-cell");
+                    dataRow.appendChild(div);
+                });
             } else {
-                document.getElementById("table-ligne-speciale").innerHTML = "<tr><td colspan='23'>Aucune donnée trouvée pour le numéro 57755.</td></tr>";
+                document.getElementById("searched-data").textContent = "Numéro non trouvé.";
             }
         }
 
+        async function loadDashboard() {
+            // URL pour récupérer les données CSV
+            const sheetUrl1 = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+
+            // Récupération des données CSV
+            const csvData1 = await fetchCSVData(sheetUrl1);
+
+            // Affichage des données du tableau Chiffre d'Affaires
+            parseAndDisplayCATable(csvData1);
+
+            // Recherche et affichage des informations pour le numéro 57755
+            parseAndSearchForNumber(csvData1, "57755");
+        }
+
+        // Charger les données à l'initialisation
         loadDashboard();
     </script>
 </body>
