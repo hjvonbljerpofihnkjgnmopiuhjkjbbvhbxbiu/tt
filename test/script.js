@@ -152,6 +152,9 @@ const colors = [
     {name: "Montego Blue Mica", hex: "#00080D", type: "Bleu", image: "https://i.postimg.cc/gkPW2LLq/image.png"},
     {name: "Vintage Red", hex: "#62090B", type: "Rouge", image: "https://i.postimg.cc/SK7nsbDD/image.png"},
     {name: "Sunburst Yellow", hex: "#B47400", type: "Jaune", image: "https://i.postimg.cc/d010qZZt/image.png"},
+    {name: "Titanium Grey", hex: "#1B1E23", type: "Gris", image: "https://i.postimg.cc/ydDXSNt7/image.png"},
+    {name: "Sunlight Silver", hex: "#545C6C", type: "Gris", image: "https://i.postimg.cc/y6r26Mw5/image.png"},
+    {name: "Innocent Blue Mica", hex: "#031745", type: "Bleu", image: "https://i.postimg.cc/1t42pSTL/image.png"},
     
     {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/6pFGhNYD/3C0612.png"},
     {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/3xq2bGJf/60050C.png"},
