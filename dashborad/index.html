@@ -3,157 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord - Mode Nuit</title>
+    <title>Dashboard Simple</title>
     <style>
         body {
-            background-color: #121212;
-            color: #e0e0e0;
             font-family: Arial, sans-serif;
+            background-color: #121212; /* Couleur de fond en mode nuit */
+            color: #ffffff; /* Couleur du texte */
             margin: 20px;
         }
 
-        h1, h2 {
+        h1 {
             text-align: center;
-            color: #ffffff;
+            margin-bottom: 20px;
         }
 
         .dashboard {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
-        }
-
-        .module {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 800px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         table {
-            width: 100%;
+            width: 80%;
             border-collapse: collapse;
             margin: 20px 0;
+            table-layout: auto;
         }
 
         th, td {
-            border: 1px solid #444;
+            border: 1px solid #ddd;
             padding: 12px;
             text-align: center;
             font-size: 16px;
-            overflow-wrap: break-word;
         }
 
         th {
-            background-color: #333;
-            color: #fff;
+            background-color: #1e1e1e; /* Couleur d'en-tête */
+            font-weight: bold;
         }
 
         tr:nth-child(even) {
-            background-color: #2b2b2b;
+            background-color: #282828; /* Couleur des lignes paires */
         }
 
         tr:hover {
-            background-color: #373737;
+            background-color: #444444; /* Couleur des lignes au survol */
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            width: 80%;
+        }
+
+        .result h2 {
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <h1>Tableau de Bord</h1>
     <div class="dashboard">
-        <!-- Module 1: Chiffre d'affaires -->
-        <div class="module" id="module-ca">
-            <h2>Chiffre d'Affaires</h2>
-            <table id="ca-table">
-                <!-- Les données seront insérées ici -->
-            </table>
-        </div>
-
-        <!-- Module 2: Recherche du numéro 57755 -->
-        <div class="module" id="module-search">
-            <h2>Détails du numéro 57755</h2>
-            <table id="search-result-table">
-                <!-- Les données seront insérées ici -->
-            </table>
-        </div>
+        <h1>Dashboard Simple</h1>
+        <div id="sales-data"></div>
+        <div id="data-table"></div>
+        <div id="search-result" class="result"></div>
     </div>
 
     <script>
         async function fetchCSVData(url) {
             const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.text();
+            if (!response.ok) throw new Error('Erreur de récupération des données');
+            const data = await response.text();
+            return data;
         }
 
-        function parseCAData(csv) {
+        function parseSalesData(csv) {
             const lines = csv.split("\n");
-            return lines.slice(28, 34).map(line => line.split(",").slice(24, 28));
+            const filteredLines = lines.slice(28, 34); // Ligne Y29 à AB34 (index 28 à 33)
+            const headers = filteredLines[0].split(",");
+            const rows = filteredLines.slice(1).map(line => line.split(","));
+            return { headers, rows };
         }
 
-        function displayCAData(caData) {
-            const table = document.getElementById("ca-table");
-            caData.forEach(row => {
+        function parseAndCleanData(csv) {
+            const lines = csv.split("\n");
+            const filteredLines = lines.slice(4, 36); // Ligne B5 à W36 (index 4 à 35)
+            const cleanedData = filteredLines.map(line => {
+                const cells = line.split(",");
+                // Supprimer les colonnes vides G, I, M, P, U
+                return [cells[0], cells[1], cells[2], cells[3], cells[4], cells[5], cells[6], cells[7], cells[8], cells[9], cells[10], cells[11], cells[12], cells[13], cells[14], cells[15], cells[16], cells[17], cells[18], cells[19], cells[20], cells[21], cells[22], cells[23], cells[24]];
+            }).filter(row => row.some(cell => cell.trim() !== "")); // Ne garder que les lignes non vides
+
+            return cleanedData;
+        }
+
+        function displaySalesData({ headers, rows }) {
+            const salesDataDiv = document.getElementById("sales-data");
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+
+            headers.forEach(header => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+
+            table.appendChild(headerRow);
+            rows.forEach(row => {
                 const tr = document.createElement("tr");
                 row.forEach(cell => {
                     const td = document.createElement("td");
-                    td.textContent = cell.trim();
+                    td.textContent = cell;
                     tr.appendChild(td);
                 });
                 table.appendChild(tr);
             });
+
+            salesDataDiv.appendChild(table);
         }
 
-        function parseAndSearchForNumber(csv, searchNumber) {
-            const lines = csv.split("\n");
-            const data = lines.slice(4, 36).map(line => line.split(",").slice(1, 23));
+        function displayCleanedData(data) {
+            const dataTableDiv = document.getElementById("data-table");
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
 
-            const index = data.findIndex(row => row[1].trim() === searchNumber);
-
-            if (index !== -1) {
-                return data[index];
-            } else {
-                return null;
-            }
-        }
-
-        function displaySearchResult(rowData) {
-            const table = document.getElementById("search-result-table");
-            const tr = document.createElement("tr");
-            rowData.forEach(cell => {
-                const td = document.createElement("td");
-                td.textContent = cell.trim();
-                tr.appendChild(td);
+            const headers = ["Colonne A", "Colonne B", "Colonne C", "Colonne D", "Colonne E", "Colonne F", "Colonne H", "Colonne J", "Colonne K", "Colonne L", "Colonne N", "Colonne O", "Colonne Q", "Colonne R", "Colonne S", "Colonne T", "Colonne V", "Colonne W"];
+            headers.forEach(header => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                headerRow.appendChild(th);
             });
-            table.appendChild(tr);
+
+            table.appendChild(headerRow);
+            data.forEach(row => {
+                const tr = document.createElement("tr");
+                row.forEach(cell => {
+                    const td = document.createElement("td");
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+
+            dataTableDiv.appendChild(table);
+        }
+
+        function searchForNumber(data, numberToSearch) {
+            const index = data.findIndex(row => row[2].trim() === numberToSearch); // Recherche dans la colonne C
+            const resultDiv = document.getElementById("search-result");
+            if (index !== -1) {
+                const foundRow = data[index];
+                resultDiv.innerHTML = `<h2>Résultats pour ${numberToSearch} :</h2><p>${foundRow.join(", ")}</p>`;
+            } else {
+                resultDiv.innerHTML = `<h2>Aucun résultat trouvé pour ${numberToSearch}.</h2>`;
+            }
         }
 
         async function loadDashboard() {
             try {
-                // URL de la feuille Google Sheet en CSV
-                const sheetURL = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+                // URL de la première feuille (Chiffre d'affaires)
+                const salesDataUrl = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+                const salesDataCSV = await fetchCSVData(salesDataUrl);
+                const salesData = parseSalesData(salesDataCSV);
+                displaySalesData(salesData);
 
-                const csvData = await fetchCSVData(sheetURL);
+                // URL de la deuxième feuille (Données à nettoyer)
+                const cleanDataUrl = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+                const cleanDataCSV = await fetchCSVData(cleanDataUrl);
+                const cleanedData = parseAndCleanData(cleanDataCSV);
+                displayCleanedData(cleanedData);
 
-                // Module 1: Chiffre d'Affaires
-                const caData = parseCAData(csvData);
-                displayCAData(caData);
-
-                // Module 2: Recherche du numéro 57755
-                const searchNumber = "57755";
-                const rowData = parseAndSearchForNumber(csvData, searchNumber);
-                if (rowData) {
-                    displaySearchResult(rowData);
-                } else {
-                    document.getElementById("search-result-table").textContent = "Numéro non trouvé.";
-                }
+                // Recherche pour le numéro 57755
+                searchForNumber(cleanedData, '57755');
 
             } catch (error) {
-                console.error("Erreur lors du chargement des données:", error);
+                console.error('Erreur lors du chargement du tableau de bord :', error);
             }
         }
 
