@@ -155,6 +155,7 @@ const colors = [
     {name: "Titanium Grey", hex: "#1B1E23", type: "Gris", image: "https://i.postimg.cc/ydDXSNt7/image.png"},
     {name: "Sunlight Silver", hex: "#545C6C", type: "Gris", image: "https://i.postimg.cc/y6r26Mw5/image.png"},
     {name: "Innocent Blue Mica", hex: "#031745", type: "Bleu", image: "https://i.postimg.cc/1t42pSTL/image.png"},
+    {name: "Glacier White", hex: "#8590A6", type: "Gris", image: "https://i.postimg.cc/xCR7DCmJ/image.png"},
     
     {name: "Hyper Red", hex: "#3C0612", type: "Rouge", image: "https://i.postimg.cc/6pFGhNYD/3C0612.png"},
     {name: "Satin Red", hex: "#60050C", type: "Rouge", image: "https://i.postimg.cc/3xq2bGJf/60050C.png"},
