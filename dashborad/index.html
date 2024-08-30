@@ -164,13 +164,13 @@
         async function loadDashboard() {
             try {
                 // URL de la première feuille (Chiffre d'affaires)
-                const salesDataUrl = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+                const salesDataUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
                 const salesDataCSV = await fetchCSVData(salesDataUrl);
                 const salesData = parseSalesData(salesDataCSV);
                 displaySalesData(salesData);
 
                 // URL de la deuxième feuille (Données à nettoyer)
-                const cleanDataUrl = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+                const cleanDataUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
                 const cleanDataCSV = await fetchCSVData(cleanDataUrl);
                 const cleanedData = parseAndCleanData(cleanDataCSV);
                 displayCleanedData(cleanedData);
