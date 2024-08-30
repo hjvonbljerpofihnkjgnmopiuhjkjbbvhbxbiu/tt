@@ -205,50 +205,24 @@ document.getElementById('search').addEventListener('input', function() {
 
 
 
-// Créer un nouvel objet Pickr pour initialiser le color picker
-const pickr = Pickr.create({
-    el: '#color-picker-container',
-    theme: 'classic', // Ou 'monolith', 'nano'
-    swatches: [
-        'rgba(244, 67, 54, 1)',
-        'rgba(233, 30, 99, 1)',
-        'rgba(156, 39, 176, 1)',
-        'rgba(103, 58, 183, 1)',
-        'rgba(63, 81, 181, 1)',
-        'rgba(33, 150, 243, 1)',
-        'rgba(3, 169, 244, 1)',
-        'rgba(0, 188, 212, 1)',
-        'rgba(0, 150, 136, 1)',
-        'rgba(76, 175, 80, 1)',
-        'rgba(139, 195, 74, 1)',
-        'rgba(205, 220, 57, 1)',
-        'rgba(255, 235, 59, 1)',
-        'rgba(255, 193, 7, 1)'
-    ],
+      // Initialisation du color picker
+        var colorPicker = new iro.ColorPicker("#picker", {
+            width: 320, // Largeur du color picker
+            color: "#f00", // Couleur initiale (rouge)
+            layout: [
+                { 
+                    component: iro.ui.Wheel, // Composant roue de couleur
+                    options: {
+                        wheelLightness: false, // Désactive la lumière pour un format carré
+                        wheelDirection: 'clockwise' // Direction de la roue
+                    }
+                }
+            ]
+        });
 
-    components: {
-
-        // Palette de couleurs
-        preview: true,
-        opacity: true,
-        hue: true,
-
-        // Input / output Options
-        interaction: {
-            hex: true,
-            rgba: true,
-            hsva: true,
-            input: true,
-            clear: true,
-            save: true
-        }
-    }
-});
-
-// Écouter les événements pour obtenir les valeurs HEX et RGB
-pickr.on('change', (color, instance) => {
-    const hexColor = color.toHEXA().toString();
-    const rgbColor = color.toRGBA().toString();
-    console.log('HEX:', hexColor);
-    console.log('RGB:', rgbColor);
-});
+        // Écouteur d'événements pour les changements de couleur
+        colorPicker.on('color:change', function(color) {
+            // Met à jour les valeurs HEX et RGB en temps réel
+            document.getElementById('hex-value').textContent = color.hexString; // Affiche la valeur HEX
+            document.getElementById('rgb-value').textContent = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`; // Affiche la valeur RGB
+        });
