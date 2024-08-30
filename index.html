@@ -3,40 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Picker</title>
-    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-    <style>
-        #picker {
-            width: 300px; /* Largeur du picker */
-            height: 300px; /* Hauteur du picker pour le rendre carré */
-            margin: 20px auto;
-        }
-        .color-values {
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+    <title>Rien</title>
+<style>
+body{
+background-color: #333;
+}
+</style>
+
 </head>
 <body>
-    <div id="picker"></div>
-    <div class="color-values">
-        <p>Hex: <span id="hex-value">#ffffff</span></p>
-        <p>RGB: <span id="rgb-value">rgb(255, 255, 255)</span></p>
-    </div>
-
-    <script>
-        // Initialisation du color picker
-        var colorPicker = new iro.ColorPicker("#picker", {
-            width: 300,
-            color: "#ffffff" // Couleur initiale blanche
-        });
-
-        // Écouter les changements de couleur
-        colorPicker.on(['color:change'], function(color) {
-            // Mettre à jour les valeurs hex et RGB
-            document.getElementById('hex-value').innerText = color.hexString;
-            document.getElementById('rgb-value').innerText = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
-        });
-    </script>
+Rien.
 </body>
 </html>
