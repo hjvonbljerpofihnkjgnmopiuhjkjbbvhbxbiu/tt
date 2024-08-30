@@ -224,6 +224,7 @@ document.getElementById('search').addEventListener('input', function() {
         // Écouteur d'événements pour les changements de couleur
         colorPicker.on('color:change', function(color) {
             // Met à jour les valeurs HEX et RGB en temps réel
+            document.getElementById('color-display').style.backgroundColor = color.hexString;
             document.getElementById('hex-value').textContent = color.hexString; // Affiche la valeur HEX
             document.getElementById('rgb-value').textContent = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`; // Affiche la valeur RGB
         });
