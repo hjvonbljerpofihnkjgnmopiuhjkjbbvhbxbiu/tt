@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Picker and Color List</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <style>
+        /* Style du conteneur du color picker */
+        #picker {
+            margin: 20px;
+            width: 320px; /* Largeur du color picker */
+            height: 320px; /* Hauteur du color picker */
+        }
+
+        /* Style pour afficher les valeurs de couleur */
+        #color-values {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -35,9 +50,15 @@
         </div>
     </div>
 
-     <div id="color-picker-container"></div>
+    <div id="picker"></div>
+    
+    <!-- Conteneur pour afficher les valeurs de couleur -->
+    <div id="color-values">
+        <p>HEX: <span id="hex-value">#ff0000</span></p>
+        <p>RGB: <span id="rgb-value">rgb(255, 0, 0)</span></p>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+
 
 
     <script src="script.js"></script>
