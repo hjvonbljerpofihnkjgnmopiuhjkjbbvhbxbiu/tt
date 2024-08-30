@@ -3,54 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Picker Example</title>
+    <title>Color Picker</title>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <style>
-        /* Style du conteneur du color picker */
         #picker {
-            margin: 20px;
-            width: 320px; /* Largeur du color picker */
-            height: 320px; /* Hauteur du color picker */
+            width: 300px; /* Largeur du picker */
+            height: 300px; /* Hauteur du picker pour le rendre carré */
+            margin: 20px auto;
         }
-
-        /* Style pour afficher les valeurs de couleur */
-        #color-values {
+        .color-values {
+            text-align: center;
             margin-top: 10px;
-            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <!-- Conteneur pour le color picker -->
     <div id="picker"></div>
-    
-    <!-- Conteneur pour afficher les valeurs de couleur -->
-    <div id="color-values">
-        <p>HEX: <span id="hex-value">#ff0000</span></p>
-        <p>RGB: <span id="rgb-value">rgb(255, 0, 0)</span></p>
+    <div class="color-values">
+        <p>Hex: <span id="hex-value">#ffffff</span></p>
+        <p>RGB: <span id="rgb-value">rgb(255, 255, 255)</span></p>
     </div>
 
     <script>
         // Initialisation du color picker
         var colorPicker = new iro.ColorPicker("#picker", {
-            width: 320, // Largeur du color picker
-            color: "#f00", // Couleur initiale (rouge)
-            layout: [
-                { 
-                    component: iro.ui.Wheel, // Composant roue de couleur
-                    options: {
-                        wheelLightness: false, // Désactive la lumière pour un format carré
-                        wheelDirection: 'clockwise' // Direction de la roue
-                    }
-                }
-            ]
+            width: 300,
+            color: "#ffffff" // Couleur initiale blanche
         });
 
-        // Écouteur d'événements pour les changements de couleur
-        colorPicker.on('color:change', function(color) {
-            // Met à jour les valeurs HEX et RGB en temps réel
-            document.getElementById('hex-value').textContent = color.hexString; // Affiche la valeur HEX
-            document.getElementById('rgb-value').textContent = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`; // Affiche la valeur RGB
+        // Écouter les changements de couleur
+        colorPicker.on(['color:change'], function(color) {
+            // Mettre à jour les valeurs hex et RGB
+            document.getElementById('hex-value').innerText = color.hexString;
+            document.getElementById('rgb-value').innerText = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
         });
     </script>
 </body>
