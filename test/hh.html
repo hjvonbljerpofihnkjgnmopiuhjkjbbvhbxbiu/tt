@@ -9,14 +9,18 @@
     <style>
         /* Style du conteneur du color picker */
         #picker {
-            margin: 20px;
+            margin-bottom: 20px;
             width: 320px; /* Largeur du color picker */
             height: 320px; /* Hauteur du color picker */
+    display: flex; /* Utiliser Flexbox pour centrer les éléments à l'intérieur */
+    flex-direction: column; /* Aligne les éléments en colonne */
+    align-items: center; /* Centre horizontalement le contenu */
+    justify-content: center; /* Centre verticalement le contenu */
         }
 
         /* Style pour afficher les valeurs de couleur */
         #color-values {
-            margin-top: 10px;
+            text-align: center;
             font-size: 18px;
         }
     </style>
