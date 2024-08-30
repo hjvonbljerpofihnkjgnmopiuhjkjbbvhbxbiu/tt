@@ -1,183 +1,62 @@
-<html lang="en" class="no-js"><head></head><body style="cursor: auto;">
-
-  <title>Color perso Custom</title>
-  <meta name="description" content="Tablette servant a personnaliser les couleurs pour les véhicules">
-  
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="Htmlcolors.com">
-<meta name="twitter:title" content="Html Colors">
-<meta name="twitter:description" content="Get your Html Color codes with our color tools, HEX code, RGB, RGBA, HSL and HSLA values, including HSV, HWB and CMYK. Go pick!">
-<meta name="twitter:image" content="https://i.imgur.com/fWH7K9d.png">
-
-<link href="https://fonts.googleapis.com/css?family=David+Libre|Hind:400,700" rel="stylesheet">
-<link rel="stylesheet" href="css/w3.css">
-<link rel="stylesheet" href="css/font-awesome.min.css">
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-<script src="js/scrolltop.js"></script>
-<link rel="icon" type="image/png" href="images/favicon.png">
-<link rel="apple-touch-icon" href="images/htmlcolorsappgrande.png">
-<script src="js/main.js"></script>
-<script src="js/vue%402.6.14.js"></script>
-<script src="js/axios.min.js"></script>
-
- <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-113637426-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-113637426-1');
-</script>
-<div id="subscribe"></div>
-<script>
-$(function() {
-    var wrap = $(".wrap.fixed");
-    $(window).scroll(function() {
-        var scroll = $(window).scrollTop();
-        if (scroll >= 50) wrap.addClass("sticky");
-        else wrap.removeClass("sticky");
-    });
-});
-
-$(document).ready(function() {
-
-  $(window).scroll(function() {
-      if ($(window).scrollTop() >= ($(document).height() - $(window).height())) {
-        $('.popup').css( "left", "20px" )
-        $('.arrow').hide();
-      }else{
-        $('.popup').css( "left", "-380px" );
-        $('.arrow').show();
-    }
-  });
-
-  $('.closeaparece').click(function(){
-    $('.popup').hide();
-  });
-
-
-});
-
-
-$('.arrow').click(function(){
-   $("html").animate({ scrollTop: $('html').prop("scrollHeight")}, 1200);
-   $('.popup').show();
-});
-</script>
-<script>
-var frank = new Vue({
-  el:'#subscribe',
-  data:{
-		email: "",
-    code: "hyunyealvypnivjwnohgphqcineaub",
-    submit: "insert",
-    showinvalid: false,
-    showalready: false,
-    showsuccess: false
-  },
-  methods: {
-           enviaremail() {
-            axios.post('/validaremail.php', {
-                email: this.email,
-                code: this.code,
-                submit: this.submit
-              })
-              .then(function (response) {
-                if(response.data == 'invalid'){
-                frank.showinvalid = true;
-                frank.showalready = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'This email is already subscribed'){
-                frank.showalready = true;
-                frank.showinvalid = false;
-                frank.showsuccess = false;
-                    }
-                if(response.data == 'You have been succesfully subscribed to our newsletter'){
-                frank.showsuccess = true;
-                frank.showinvalid = false;
-                frank.showalready = false;
-                    }
-              console.log(response.data);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
-});
-</script>
-  <style>
-@media (max-width:1080px) {
-  .eltextoindex{
-    margin-left:20px!important;
-  }
-}
-@media (max-width:720px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:25px!important;
-  }
-}
-@media (max-width:440px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:20px!important;
-  }
-}
-@media (max-width:374px) {
-  .eltextoindex{
-    margin-left:10px!important;
-    font-size:18px!important;
-  }
-}
-</style>
+        #color-picker {
+            width: 620px;
+            height: 230px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            background-image: linear-gradient(to right, red, yellow, green, cyan, blue, magenta);
+            position: relative;
+        }
+        #color-info {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="color-picker"></div>
+    <div id="color-info">Code HEX: <span id="hex-code">#FFFFFF</span>, RGB: <span id="rgb-code">rgb(255, 255, 255)</span></div>
 
-<style>
-@media (max-width:1265px) {
-	.dropprofile{min-width:130px!important;}
-}
-@media (max-width:991px) {
-	.phcardmobile{
-		margin-top:60px!important;
-	}
-}
-</style>
- <!-- .cd-auto-hide-header -->
-<script src="js/googlepicker.js"></script>
+    <script>
+        const colorPicker = document.getElementById('color-picker');
+        const hexCode = document.getElementById('hex-code');
+        const rgbCode = document.getElementById('rgb-code');
 
+        colorPicker.addEventListener('click', function(event) {
+            const rect = colorPicker.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
 
+            const canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            const context = canvas.getContext('2d');
+            context.drawImage(colorPicker, -x, -y, 1, 1);
+            const pixel = context.getImageData(0, 0, 1, 1).data;
 
+            const r = pixel[0];
+            const g = pixel[1];
+            const b = pixel[2];
+            const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 
-
-
-<div class="container containerblanco">
-  <div class="segundanav" style="width:100%;background-color:#ffffff;border-bottom:1px solid #eaeaea;height:78px;display: table;z-index:3" id="fixnavid">
-<div style="vertical-align: middle;display: table-cell;"><svg style="margin-left:43px" version="1.1" class="button-svg svgtutorials" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="16px" viewBox="-0.5 21.5 24 16" enable-background="new -0.5 21.5 24 16" xml:space="preserve">
-<path class="fill" d="M1,37.5c-0.829,0-1.5-0.672-1.5-1.5v-4c0-0.828,0.671-1.5,1.5-1.5s1.5,0.672,1.5,1.5v4
-C2.5,36.828,1.829,37.5,1,37.5z M9.5,36v-8c0-0.828-0.671-1.5-1.5-1.5S6.5,27.172,6.5,28v8c0,0.828,0.671,1.5,1.5,1.5
-S9.5,36.828,9.5,36z M16.5,36v-6c0-0.828-0.672-1.5-1.5-1.5s-1.5,0.672-1.5,1.5v6c0,0.828,0.672,1.5,1.5,1.5S16.5,36.828,16.5,36z
-M23.5,36V25c0-0.828-0.672-1.5-1.5-1.5s-1.5,0.672-1.5,1.5v11c0,0.828,0.672,1.5,1.5,1.5S23.5,36.828,23.5,36z"></path></svg> <h1 class="eltextoindex" style="margin-left:6.3%;display: initial;font-size:40px;font-weight:400">Palette Couleur Perso</h1>
-</div>
-
-
-</div>
-<div class="container">
-  <br>
-
-              
-
-  <div id="marginparrafo" class="marginclass margindeadentro">
-
-
-    <h3>AUCUN ACCES</h3>
-
-
-  </div></div></div></body></html>
+            hexCode.textContent = hex;
+            rgbCode.textContent = `rgb(${r}, ${g}, ${b})`;
+        });
+    </script>
+</body>
+</html>
