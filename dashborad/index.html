@@ -3,150 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard en Night Mode</title>
+    <title>Tableau de Bord - Mode Nuit</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #121212;
-            color: #ffffff;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
             margin: 20px;
         }
 
         h1, h2 {
             text-align: center;
-            color: #e0e0e0;
+            color: #ffffff;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
         .module {
             background-color: #1e1e1e;
-            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0 auto;
-            table-layout: fixed;
+            margin: 20px 0;
         }
 
         th, td {
-            border: 1px solid #333;
-            padding: 10px;
+            border: 1px solid #444;
+            padding: 12px;
             text-align: center;
-            font-size: 14px;
-            color: #e0e0e0;
+            font-size: 16px;
+            overflow-wrap: break-word;
         }
 
         th {
             background-color: #333;
+            color: #fff;
         }
 
         tr:nth-child(even) {
-            background-color: #2e2e2e;
+            background-color: #2b2b2b;
         }
 
         tr:hover {
-            background-color: #444;
-        }
-
-        .data-row {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #333;
-            background-color: #2e2e2e;
-        }
-
-        .data-cell {
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-            flex-grow: 1;
-            margin: 0 5px;
-            text-align: center;
+            background-color: #373737;
         }
     </style>
 </head>
 <body>
     <h1>Tableau de Bord</h1>
+    <div class="dashboard">
+        <!-- Module 1: Chiffre d'affaires -->
+        <div class="module" id="module-ca">
+            <h2>Chiffre d'Affaires</h2>
+            <table id="ca-table">
+                <!-- Les données seront insérées ici -->
+            </table>
+        </div>
 
-    <!-- Module 1: Chiffre d'Affaires -->
-    <div class="module">
-        <h2>Chiffre d'Affaires du Jour et du Précédent</h2>
-        <table id="ca-table">
-            <tbody id="ca-table-body"></tbody>
-        </table>
-    </div>
-
-    <!-- Module 2: Recherche et Affichage des Informations Spécifiques -->
-    <div class="module">
-        <h2>Détails de l'Entrée Correspondant au Numéro 57755</h2>
-        <div id="searched-data" class="data-row"></div>
+        <!-- Module 2: Recherche du numéro 57755 -->
+        <div class="module" id="module-search">
+            <h2>Détails du numéro 57755</h2>
+            <table id="search-result-table">
+                <!-- Les données seront insérées ici -->
+            </table>
+        </div>
     </div>
 
     <script>
         async function fetchCSVData(url) {
             const response = await fetch(url);
-            const data = await response.text();
-            return data;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.text();
         }
 
-        function parseAndDisplayCATable(csv) {
+        function parseCAData(csv) {
             const lines = csv.split("\n");
-            const filteredLines = lines.slice(28, 34); // Y29 à AB34
+            return lines.slice(28, 34).map(line => line.split(",").slice(24, 28));
+        }
 
-            const tableBody = document.getElementById("ca-table-body");
-            filteredLines.forEach(line => {
-                const cells = line.split(",").slice(24, 28); // Colonnes Y à AB
+        function displayCAData(caData) {
+            const table = document.getElementById("ca-table");
+            caData.forEach(row => {
                 const tr = document.createElement("tr");
-                cells.forEach(cell => {
+                row.forEach(cell => {
                     const td = document.createElement("td");
-                    td.textContent = cell;
+                    td.textContent = cell.trim();
                     tr.appendChild(td);
                 });
-                tableBody.appendChild(tr);
+                table.appendChild(tr);
             });
         }
 
         function parseAndSearchForNumber(csv, searchNumber) {
             const lines = csv.split("\n");
-            const filteredLines = lines.slice(4, 36); // B5 à W36
+            const data = lines.slice(4, 36).map(line => line.split(",").slice(1, 23));
 
-            const searchIndex = filteredLines.findIndex(line => line.split(",")[2].trim() === searchNumber);
-            if (searchIndex !== -1) {
-                const row = filteredLines[searchIndex].split(",").slice(1, 23); // Colonnes B à W
-                const dataRow = document.getElementById("searched-data");
-                dataRow.innerHTML = ""; // Clear any previous content
+            const index = data.findIndex(row => row[1].trim() === searchNumber);
 
-                row.forEach(cell => {
-                    const div = document.createElement("div");
-                    div.textContent = cell;
-                    div.classList.add("data-cell");
-                    dataRow.appendChild(div);
-                });
+            if (index !== -1) {
+                return data[index];
             } else {
-                document.getElementById("searched-data").textContent = "Numéro non trouvé.";
+                return null;
             }
         }
 
-        async function loadDashboard() {
-            // URL pour récupérer les données CSV
-            const sheetUrl1 = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
-
-            // Récupération des données CSV
-            const csvData1 = await fetchCSVData(sheetUrl1);
-
-            // Affichage des données du tableau Chiffre d'Affaires
-            parseAndDisplayCATable(csvData1);
-
-            // Recherche et affichage des informations pour le numéro 57755
-            parseAndSearchForNumber(csvData1, "57755");
+        function displaySearchResult(rowData) {
+            const table = document.getElementById("search-result-table");
+            const tr = document.createElement("tr");
+            rowData.forEach(cell => {
+                const td = document.createElement("td");
+                td.textContent = cell.trim();
+                tr.appendChild(td);
+            });
+            table.appendChild(tr);
         }
 
-        // Charger les données à l'initialisation
+        async function loadDashboard() {
+            try {
+                // URL de la feuille Google Sheet en CSV
+                const sheetURL = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+
+                const csvData = await fetchCSVData(sheetURL);
+
+                // Module 1: Chiffre d'Affaires
+                const caData = parseCAData(csvData);
+                displayCAData(caData);
+
+                // Module 2: Recherche du numéro 57755
+                const searchNumber = "57755";
+                const rowData = parseAndSearchForNumber(csvData, searchNumber);
+                if (rowData) {
+                    displaySearchResult(rowData);
+                } else {
+                    document.getElementById("search-result-table").textContent = "Numéro non trouvé.";
+                }
+
+            } catch (error) {
+                console.error("Erreur lors du chargement des données:", error);
+            }
+        }
+
         loadDashboard();
     </script>
 </body>
