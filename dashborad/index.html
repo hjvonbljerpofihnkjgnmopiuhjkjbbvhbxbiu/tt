@@ -112,7 +112,8 @@
 
             // 2. Recherche du numéro 57755 dans la section C (B5 à W36)
             const tableauData = parseCSVForRange(csvData, 4, 36, 1, 23); // B5 à W36
-            const ligneSpeciale = tableauData.find(row => row[1].trim() === "57755"); // Colonne C est à l'index 1
+
+            const ligneSpeciale = tableauData.find(row => row[1] && row[1].trim() === "57755"); // Vérification que row[1] existe
             if (ligneSpeciale) {
                 displayTableData("table-ligne-speciale", [tableauData[0], ligneSpeciale]); // Affiche l'entête et la ligne trouvée
             } else {
