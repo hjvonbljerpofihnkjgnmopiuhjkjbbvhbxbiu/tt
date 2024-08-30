@@ -12,7 +12,6 @@
             margin: 20px;
         }
 
-        
         h1 {
             text-align: center;
             margin-bottom: 20px;
@@ -95,7 +94,7 @@
                 const tr = document.createElement("tr");
                 row.forEach(cell => {
                     const td = document.createElement(index === 0 ? "th" : "td");
-                    td.textContent = cell;
+                    td.textContent = cell.trim();
                     tr.appendChild(td);
                 });
                 table.appendChild(tr);
@@ -114,7 +113,7 @@
             // Recherche du numéro 57755 dans la section C (B5 à W36)
             const tableauData = parseCSVForRange(csvData, 4, 36, 1, 23); // B5 à W36
             const headerRow = tableauData[0]; // Get the headers
-            const ligneSpeciale = tableauData.find(row => row[1] && row[1].trim() === "57755");
+            const ligneSpeciale = tableauData.find(row => row[2] && row[2].trim() === "57755");
 
             if (ligneSpeciale) {
                 displayTableData("table-ligne-speciale", [headerRow, ligneSpeciale]);
