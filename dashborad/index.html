@@ -88,6 +88,8 @@
 
         function displayTableData(tableId, data) {
             const table = document.getElementById(tableId);
+            table.innerHTML = "";  // Clear existing table data
+
             data.forEach((row, index) => {
                 const tr = document.createElement("tr");
                 row.forEach(cell => {
@@ -100,28 +102,26 @@
         }
 
         async function loadDashboard() {
-            // URL du Google Sheet
             const url = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
 
-            // Récupération des données CSV
             const csvData = await fetchCSVData(url);
 
-            // 1. Chiffre d'affaire du jour et du précédent (Y29 à AB34)
+            // Chiffre d'affaire du jour et du précédent (Y29 à AB34)
             const chiffreAffaireData = parseCSVForRange(csvData, 28, 34, 24, 28);
             displayTableData("table-chiffre-affaire", chiffreAffaireData);
 
-            // 2. Recherche du numéro 57755 dans la section C (B5 à W36)
+            // Recherche du numéro 57755 dans la section C (B5 à W36)
             const tableauData = parseCSVForRange(csvData, 4, 36, 1, 23); // B5 à W36
+            const headerRow = tableauData[0]; // Get the headers
+            const ligneSpeciale = tableauData.find(row => row[1] && row[1].trim() === "57755");
 
-            const ligneSpeciale = tableauData.find(row => row[1] && row[1].trim() === "57755"); // Vérification que row[1] existe
             if (ligneSpeciale) {
-                displayTableData("table-ligne-speciale", [tableauData[0], ligneSpeciale]); // Affiche l'entête et la ligne trouvée
+                displayTableData("table-ligne-speciale", [headerRow, ligneSpeciale]);
             } else {
-                document.getElementById("table-ligne-speciale").innerHTML = "<tr><td>Aucune donnée trouvée pour le numéro 57755.</td></tr>";
+                document.getElementById("table-ligne-speciale").innerHTML = "<tr><td colspan='23'>Aucune donnée trouvée pour le numéro 57755.</td></tr>";
             }
         }
 
-        // Charger le dashboard au chargement de la page
         loadDashboard();
     </script>
 </body>
