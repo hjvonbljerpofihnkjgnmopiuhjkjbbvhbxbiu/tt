@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultatRecherche = document.getElementById('resultat-recherche');
 
     // URL des CSV
-    const urlChiffreAffaire = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTojLuKf6yD5c2xHBzE1ApfSBf_3gNZpiD7SKmnyMUmKoNzHqddpU5fZ1N0YeCbAQGZw/pub?gid=0&single=true&output=csv';
-    const urlRecherche = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTojLuKf6yD5c2xHBzE1ApfSBf_3gNZpiD7SKmnyMUmKoNzHqddpU5fZ1N0YeCbAQGZw/pub?gid=0&single=true&output=csv';
+    const urlChiffreAffaire = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
+    const urlRecherche = 'https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/export?format=csv&gid=0';
 
     // Fonction pour récupérer les données CSV
     function fetchCSV(url) {
