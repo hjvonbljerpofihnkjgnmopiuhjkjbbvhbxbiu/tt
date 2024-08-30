@@ -12,11 +12,23 @@
             width: 320px; /* Largeur du color picker */
             height: 320px; /* Hauteur du color picker */
         }
+
+        /* Style pour afficher les valeurs de couleur */
+        #color-values {
+            margin-top: 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <!-- Conteneur pour le color picker -->
     <div id="picker"></div>
+    
+    <!-- Conteneur pour afficher les valeurs de couleur -->
+    <div id="color-values">
+        <p>HEX: <span id="hex-value">#ff0000</span></p>
+        <p>RGB: <span id="rgb-value">rgb(255, 0, 0)</span></p>
+    </div>
 
     <script>
         // Initialisation du color picker
@@ -26,11 +38,9 @@
             layout: [
                 { 
                     component: iro.ui.Wheel, // Composant roue de couleur
-                },
-                { 
-                    component: iro.ui.Slider, // Composant slider
                     options: {
-                        sliderType: 'hue' // Type de slider pour la teinte
+                        wheelLightness: false, // Désactive la lumière pour un format carré
+                        wheelDirection: 'clockwise' // Direction de la roue
                     }
                 }
             ]
@@ -38,8 +48,9 @@
 
         // Écouteur d'événements pour les changements de couleur
         colorPicker.on('color:change', function(color) {
-            // Afficher la couleur actuelle en hex
-            console.log(color.hexString); // ex: #ff0000
+            // Met à jour les valeurs HEX et RGB en temps réel
+            document.getElementById('hex-value').textContent = color.hexString; // Affiche la valeur HEX
+            document.getElementById('rgb-value').textContent = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`; // Affiche la valeur RGB
         });
     </script>
 </body>
