@@ -1,5 +1,4 @@
 // script.js
-
 // Example data (could be fetched from an API or database)
 const colors = [
     {name: "Alpina Purple", hex: "#0E0A19", type: "Violet", image: "https://i.postimg.cc/SxYqFXpt/image.png"},
