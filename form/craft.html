@@ -39,11 +39,11 @@
         function parseCSV(csv) {
             const lines = csv.split("\n");
     // Sélectionner les lignes de 6 à 9 (index 5 à 8)
-        const selectedLines = lines.slice(5, 9);
+        const selectedLines = lines.slice(5, 10);
 
         // Pour chaque ligne, sélectionner les colonnes AP (index 41) à AQ (index 42)
-        const headers = selectedLines[0].split(",").slice(41, 43);
-        const rows = selectedLines.slice(1).map(line => line.split(",").slice(41, 43));
+        const headers = selectedLines[0].split(",").slice(42, 44);
+        const rows = selectedLines.slice(1).map(line => line.split(",").slice(42, 44));
 
             return { headers, rows };
         }
