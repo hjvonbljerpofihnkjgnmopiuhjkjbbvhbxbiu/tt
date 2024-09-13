@@ -215,12 +215,14 @@
         };
 
         // Update modals with values
+        // Update modals with values
         Object.keys(modalValues).forEach(modalId => {
             updateModalContent(modalId, modalValues[modalId]);
         });
     })
     .catch(error => console.error('Error fetching the CSV data:', error));
 </script>
+
 
 
     <!-- Grid of buttons -->
@@ -249,7 +251,7 @@
     <div id="modal1" class="modal">
         <div id="modal1-content" class="modal-content">
             <h2>🍜| Noodles</h2>
-                   <pre>🤝 Déroulement Réparations :
+                   <pre id="modal1">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -301,17 +303,17 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     <div id="modal2" class="modal">
         <div id="modal2-content" class="modal-content">
             <h2>🏡| Dynasty8</h2>
-<pre>🤝 Déroulement Réparations :
+<pre id="modal2">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- *Cellule D16* la moteur garage 
-- *Cellule E16* la total garage 
-- *Cellule I16* la moteur garage (réparation perso)
-- *Cellule H16* la total garage (réparation perso)
+- {{Cellule D16}} la moteur garage 
+- {{Cellule E16* la total garage 
+- {{Cellule I16}} la moteur garage (réparation perso)
+- {{Cellule H16}} la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
@@ -350,7 +352,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     <div id="modal3" class="modal">
         <div id="modal3-content" class="modal-content">
 <h2>🍷| Vignerons</h2>
-<pre>🤝 Déroulement Réparations :
+<pre id="modal3">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -403,7 +405,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     <div id="modal4" class="modal">
         <div id="modal4-content" class="modal-content">
 <h2>🍔| Burger Shot</h2>
-<pre>🤝 Déroulement Réparations :
+<pre id="modal4">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -456,7 +458,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     <div id="modal5" class="modal">
         <div id="modal5-content" class="modal-content">
 <h2>🚔| San Andreas State Police</h2>
-<pre>🤝 Déroulement Réparations :
+<pre id="modal5">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -508,7 +510,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
     <div id="modal6" class="modal">
         <div id="modal6-content" class="modal-content">
 <h2>🚑| San Andreas Médical Company</h2>
-<pre>🤝 Déroulement Réparations :
+<pre id="modal1">🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -937,40 +939,18 @@ Une fois la facture est noté dans le salon requis j'applique la réparation dem
             </div>
         </div>
     </div>
-    <script>
-        let currentModal = null;
-
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', function() {
-                currentModal = parseInt(this.getAttribute('data-modal'));
-                openModal(currentModal);
-            });
-        });
-
-        function openModal(modalNumber) {
-            closeModal();
-            document.getElementById('modal' + modalNumber).style.display = 'block';
-        }
-
-        function closeModal() {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.style.display = 'none';
-            });
-        }
-
-        function changeModal(direction) {
-            const totalModals = 12; // Mettez à jour en fonction du nombre total de modales
-            currentModal = (currentModal + direction + totalModals - 1) % totalModals + 1;
-            openModal(currentModal);
-        }
-
-        // Fermer la modale en cliquant en dehors de son contenu
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                closeModal();
-            }
-        }
-    </script>
+<script>
+    // Rendre les modales interactives
+    document.querySelectorAll('.modal').forEach(modal => {
+        const modalId = modal.id;
+        document.querySelector(`[data-modal="${modalId.replace('modal', '')}"]`).onclick = function() {
+            modal.style.display = "block";
+        };
+        modal.onclick = function() {
+            modal.style.display = "none";
+        };
+    });
+</script>
 
 </body>
 </html>
