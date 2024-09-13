@@ -106,36 +106,88 @@
 </head>
 <body>
 <script>
-const csvUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=571124766'; // Remplacez par le lien CSV correct
+    // Fetch CSV data from Google Sheets
+    fetch('https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=571124766')
+    .then(response => response.text())
+    .then(data => {
+        // Convert CSV to array
+        let rows = data.split('\n').map(row => row.split(','));
 
-// Fonction pour récupérer et parser le CSV
-async function fetchAndDisplayCSV() {
-    const response = await fetch(csvUrl);
-    const csvData = await response.text();
+        // Extract data for the range D4 to I18
+        const extractData = (startRow, endRow, startCol, endCol) => {
+            let extractedData = [];
+            for (let i = startRow; i <= endRow; i++) {
+                extractedData.push(rows[i].slice(startCol, endCol + 1));
+            }
+            return extractedData;
+        };
 
-    // Convertir le CSV en tableau d'objets
-    const rows = csvData.split('\n').map(row => row.split(','));
+        // Define the range
+        let rangeData = extractData(3, 17, 3, 8); // D4=3, H18=17, I=8 (0-indexed)
 
-    // Exemple de récupération des cellules spécifiques (D17, E17, H17, I17)
-    const d17 = rows[16][3]; // Cellule D17
-    const e17 = rows[16][4]; // Cellule E17
-    const h17 = rows[16][7]; // Cellule H17
-    const i17 = rows[16][8]; // Cellule I17
+        // Map data to modals
+        let modalData = {
+            1: rangeData[0], // D4 to I4
+            2: rangeData[1], // D5 to I5
+            3: rangeData[2], // D6 to I6
+            4: rangeData[3], // D7 to I7
+            5: rangeData[4], // D8 to I8
+            6: rangeData[5], // D9 to I9
+            7: rangeData[6], // D10 to I10
+            8: rangeData[7], // D11 to I11
+            9: rangeData[8], // D12 to I12
+            10: rangeData[9], // D13 to I13
+            11: rangeData[10], // D14 to I14
+            12: rangeData[11], // D15 to I15
+            13: rangeData[12]  // D16 to I16
+        };
 
-    // Remplacer les valeurs dans le modal
-    let modalContent = document.getElementById('modal-content-1').innerHTML;
-    modalContent = modalContent.replace('*Cellule D17*', d17)
-                               .replace('*Cellule E17*', e17)
-                               .replace('*Cellule H17*', h17)
-                               .replace('*Cellule I17*', i17);
+        // Update modals with data
+        for (let modalNum in modalData) {
+            let data = modalData[modalNum];
+            let modalContent = document.getElementById(`modal${modalNum}`).innerHTML;
+            modalContent = modalContent.replace('*Cellule D4*', data[0])
+                                       .replace('*Cellule E4*', data[1])
+                                       .replace('*Cellule I4*', data[5])
+                                       .replace('*Cellule H4*', data[4]);
+            document.getElementById(`modal${modalNum}`).innerHTML = modalContent;
+        }
 
-    document.getElementById('modal-ndl').innerHTML = modalContent;
-}
+        // Open the first modal (for demonstration)
+        openModal(1);
+    })
+    .catch(error => console.error('Error fetching the CSV data:', error));
 
-// Appel de la fonction au chargement de la page
-window.onload = fetchAndDisplayCSV;
+    function openModal(modalNumber) {
+        closeModal();
+        document.getElementById('modal' + modalNumber).style.display = 'block';
+    }
+
+    function closeModal() {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
+
+    function changeModal(direction) {
+        const totalModals = 13; // Mettez à jour en fonction du nombre total de modales
+        currentModal = (currentModal + direction + totalModals - 1) % totalModals + 1;
+        openModal(currentModal);
+    }
+
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function() {
+            currentModal = parseInt(this.getAttribute('data-modal'));
+            openModal(currentModal);
+        });
+    });
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            closeModal();
+        }
+    }
 </script>
-
 
 
     <!-- Grid of buttons -->
@@ -164,7 +216,7 @@ window.onload = fetchAndDisplayCSV;
     <div id="modal1" class="modal">
         <div class="modal-content">
             <h2>🍜| Noodles</h2>
-                   <pre id="modal-ndl">🤝 Déroulement Réparations :
+                   <pre>🤝 Déroulement Réparations :
 
 🛢️ I Au Garage :
 - Je retrouve le partenaire sur un pont.
@@ -173,8 +225,8 @@ window.onload = fetchAndDisplayCSV;
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - *Cellule D17* la moteur garage 
 - *Cellule E17* la total garage 
-- *Cellule I17* la moteur personnel
-- *Cellule H17* la total personnel
+- *Cellule I17* la moteur garage (réparation perso)
+- *Cellule H17* la total garage (réparation perso)
 
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
@@ -184,15 +236,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - NDL moteur garage
 - NDL perso moteur
 - NDL perso total
+
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- *Cellule D17* l'extérieur moteur 
-- *Cellule E17* l'extérieur total 
-- *Cellule I17* + prix déplacement : l'extérieur moteur personnel
-- *Cellule H17* + prix déplacement : l'extérieur total personnel
+- *Cellule F17* l'extérieur moteur 
+- *Cellule G17* l'extérieur total 
+- *Cellule I17* + prix déplacement : l'extérieur moteur (réparation perso)
+- *Cellule H17* + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
@@ -222,9 +275,10 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 200$ la moteur garage
-- 350$ la total garage
-
+- *Cellule D16* la moteur garage 
+- *Cellule E16* la total garage 
+- *Cellule I16* la moteur garage (réparation perso)
+- *Cellule H16* la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
@@ -237,8 +291,10 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 250$ l'extérieur moteur
-- 450$ l'extérieur total
+- *Cellule F16* l'extérieur moteur 
+- *Cellule G16* l'extérieur total 
+- *Cellule I16* + prix déplacement : l'extérieur moteur (réparation perso)
+- *Cellule H16* + prix déplacement : l'extérieur total (réparation perso)
 
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
@@ -268,30 +324,36 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 1$ la moteur garage
-- 1$ la total garage
-
+- *Cellule D15* la moteur garage 
+- *Cellule E15* la total garage 
+- *Cellule I15* la moteur garage (réparation perso)
+- *Cellule H15* la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - VGN total garage
 - VGN moteur garage
+- VGN perso moteur
+- VGN perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 1$ l'extérieur moteur
-- 1$ l'extérieur total
-
+- *Cellule F15* l'extérieur moteur 
+- *Cellule G15* l'extérieur total 
+- *Cellule I15* + prix déplacement : l'extérieur moteur (réparation perso)
+- *Cellule H15* + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - VGN total ext
 - VGN moteur ext
+- VGN perso moteur ext
+- VGN perso total ext
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -315,30 +377,36 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 1$ la moteur garage
-- 1$ la total garage
-
+- *Cellule D14* la moteur garage 
+- *Cellule E14* la total garage 
+- *Cellule I14* la moteur garage (réparation perso)
+- *Cellule H14* la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - BGS total garage
 - BGS moteur garage
+- BGS perso moteur
+- BGS perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
-- 1$ l'extérieur moteur
-- 1$ l'extérieur total
-
+-- *Cellule F14* l'extérieur moteur 
+- *Cellule G14* l'extérieur total 
+- *Cellule I14* + prix déplacement : l'extérieur moteur (réparation perso)
+- *Cellule H14* + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - BGS total ext
 - BGS moteur ext
+- BGS perso moteur ext
+- BGS perso total ext
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -364,13 +432,16 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
-
+- 350$ la moteur garage (réparation perso)
+- 400$ la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - SASP total garage
 - SASP moteur garage
+- SASP perso moteur
+- SASP perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -379,13 +450,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - SASP total ext
 - SASP moteur ext
+- SASP perso moteur ext
+- SASP perso total ext
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -411,13 +485,16 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
-
+- 350$ la moteur garage (réparation perso)
+- 400$ la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - SAMC total garage
 - SAMC moteur garage
+- SAMC perso moteur
+- SAMC perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -426,13 +503,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - SAMC total ext
 - SAMC moteur ext
+- SAMC perso moteur ext
+- SAMC perso total ext
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -458,13 +538,16 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
-
+- 350$ la moteur garage (réparation perso)
+- 400$ la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - MIL total garage
 - MIL moteur garage
+- MIL perso moteur
+- MIL perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -473,13 +556,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - MILEXT total 
 - MILEXT moteur 
+- MILEXT perso moteur
+- MILEXT perso total 
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -505,13 +591,16 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
-
+- 350$ la moteur garage (réparation perso)
+- 400$ la total garage (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
-- GRP total garage
-- GRP moteur garage
+- GRP (n° chassis) total 
+- GRP (n° chassis) moteur
+- GRP perso moteur
+- GRP perso total
 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -520,45 +609,30 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - GRPEXT (n° chassis) total
 - GRPEXT (n° chassis) moteur
+- GRPEXT perso moteur
+- GRPEXT perso total
 
 🚙| VEHICULES PARTENAIRES :
 
-Benson - 226301 - XR06Q3L8
-Speedo - 476875 - 4K0KPK74
+Mule2 - 577469 - 5XTUFKGE
 Mule - 87770 - 0B0MKM9R
-Mule - 214561 - T9YQGYZX
-Mule4 - 496081 - 6EU1P6WE
-Rumpobox - 147709 - LW80VS1W
-Rumpobox - 170614 - A3NBA9SR
-Rumpobox - 197483 - 2D0HPX06
-Rumpobox - 197490 - QEASAXFE
-Rumpobox - 202934 - 1J3KCK1X
-Rumpobox - 215015 - 4FJK4TV0
-Rumpobox - 215297 - J6SAZDNI
-Rumpobox - 235961 - 07SGJ074
-Rumpobox - 308879 - YBVUUQZ0
-Rumpobox - 308897 - 0BZJXDQL
-Rumpobox - 420609 - Z6NCTUH7
-Rumpobox - 420616 - 1PRYYEZQ
-Rumpobox - 430563    76RGGMFL
-Rumpobox - 430566 - MQLU6POL
-Rumpobox - 442725    - PFV9AQIZ
-Rumpobox - 442731 - M5WQ0NRE
-Rumpobox - 453242 - 1820NWWZ
-Rumpobox - 453245 - WYS8NM1K
-Bison - 29436 - 86JFB901
-Bison3 - 121223 - 4GNS0V6X
+Mule - 576238 - DCAS22YQ
+Mule - 586782 - 9PFCT8RI
+Mule - 586788 - AE40DB2M
+Jogger - 572677 - 2BBPLQII
+Jogger - 576212 - M0LPFAR8
 
 Exemple: 
-- GRPEXT 121223 total
-- GRPEXT 170614 moteur
+- GRPEXT 577469 total
+- GRPEXT 572677 moteur
 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -584,14 +658,17 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
-- 1$ la total perso
+- 350$ la perso moteur (réparation perso)
+- 400$ la total perso (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - BOU total garage
 - BOU moteur garage
-- BOU total garage (réparation perso)
+- BOU perso moteur
+- BOU perso total
+
                 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -600,14 +677,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-- 1$ la total garage
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - BOU total ext
 - BOU moteur ext
-- BOU total ext (réparation perso)
+- BOU perso moteur ext
+- BOU perso total ext
                 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -633,14 +712,15 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 150$ la total garage
-- 150$ la perso total
+- 150$ la perso total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - GBF total garage
 - GBF moteur garage
-- GBF total garage (réparation perso)
+- GBF perso total 
+
                 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -649,14 +729,14 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 100$ l'extérieur moteur
 - 250$ l'extérieur total
-- 150$ la perso total
+- 250$ l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - GBF total ext
 - GBF moteur ext
-- GBF total ext (réparation perso)
+- GBF perso total ext
                 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -682,6 +762,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
+- 350$ la perso moteur
 - 400$ la perso total
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
@@ -689,7 +770,9 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - PDM total garage
 - PDM moteur garage
-- PDM total garage (réparation perso)
+- PDM perso moteur
+- PDM perso total
+
                 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -698,14 +781,16 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-- 400$ la perso total
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - PDM total ext
 - PDM moteur ext
-- PDM total ext (réparation perso)
+- PDM perso moteur ext
+- PDM perso total ext
                 
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
@@ -731,6 +816,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
+- 350$ la perso moteur
 - 400$ la perso total
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
@@ -738,7 +824,9 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - HDM total garage
 - HDM moteur garage
-- HDM total garage (réparation perso)
+- HDM perso moteur
+- HDM perso total
+
                 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
@@ -747,15 +835,17 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
-- 400$ la perso total
+- 350$ + prix déplacement : l'extérieur moteur (réparation perso)
+- 400$ + prix déplacement : l'extérieur total (réparation perso)
 
 ( ⚠️ A payer obligatoirement ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - HDM total ext
 - HDM moteur ext
-- HDM total ext (réparation perso)
-                
+- HDM perso moteur ext
+- HDM perso total ext
+       
 Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
             <img src="https://i.postimg.cc/d09CLZFW/image.png" alt="HDM">
@@ -781,27 +871,27 @@ Une fois la réponse donnée j'applique la facture au partenaire qui est de :
 - 1$ la moteur garage
 - 1$ la total garage
 
-( ⚠️ A payer obligatoirement ⚠️ ).
+( ⚠️ Aucune facture à leur appliquer (Référez-vous à votre direction) ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
-- IRS total garage
-- IRS moteur garage
+- IRS total 
+- IRS moteur 
                 
 🗺️ I A l'extérieur :
 - Je retrouve le partenaire sur la position GPS.
 - Je le salue et lui demande de quel service as-t'il besoins ?.
 
-Une fois la réponse donnée j'applique la facture au partenaire qui est de :
+Une fois la réponse donnée je note la facture dans le salon du partenaire qui est de :
 - 1$ l'extérieur moteur
 - 1$ l'extérieur total
 
-( ⚠️ A payer obligatoirement ⚠️ ).
+( ⚠️ Aucune facture à leur appliquer (Référez-vous à votre direction) ⚠️ ).
 
 🧾 Mots clés facture ( raison ) OBLIGATOIRE :
 - IRS total ext
 - IRS moteur ext
                 
-Une fois la facture payée j'applique la réparation demander par le partenaire sur son véhicule.
+Une fois la facture est noté dans le salon requis j'applique la réparation demander par le partenaire sur son véhicule.
             </pre>
             <img src="https://i.postimg.cc/m2D7y0fc/image.png" alt="IRS">
             <div class="modal-footer">
@@ -811,7 +901,7 @@ Une fois la facture payée j'applique la réparation demander par le partenaire 
         </div>
     </div>
     <script>
-        let currentModal = null;
+        let currentModal = 1;
 
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('click', function() {
