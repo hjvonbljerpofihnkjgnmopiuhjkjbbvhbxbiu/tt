@@ -106,25 +106,55 @@
 </head>
 <body>
 <script>
+    // JavaScript pour gérer l'ouverture et la fermeture des modales
+    function openModal(modalId) {
+        document.getElementById('modal' + modalId).style.display = "block";
+    }
+
+    function closeModal() {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.style.display = "none";
+        });
+    }
+
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal');
+            openModal(modalId);
+        });
+    });
+
+    function changeModal(direction) {
+        const currentModalId = parseInt(document.querySelector('.modal:visible').id.replace('modal', ''));
+        const newModalId = currentModalId + direction;
+
+        closeModal(); // Ferme la modal actuelle
+        
+        // Ouvre la nouvelle modal si elle est dans les limites
+        if (newModalId >= 1 && newModalId <= 13) {
+            openModal(newModalId);
+        }
+    }
+
+    // Code pour charger les données CSV
     fetch('https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=571124766')
     .then(response => response.text())
     .then(data => {
-        // Convert CSV to array
+        // Conversion CSV en tableau
         let rows = data.split('\n').map(row => row.split(','));
-
-        // Function to get cell value
         const getCellValue = (row, col) => rows[row][col] || '';
-
-        // Modal content update
         const updateModalContent = (modalId, cellValues) => {
             let modalContent = document.getElementById(modalId).innerHTML;
             Object.keys(cellValues).forEach(key => {
-                modalContent = modalContent.replace(`*${key}*`, cellValues[key]);
+                modalContent = modalContent.replace(new RegExp('\\*\\$\\{'+ key +'\\}\\*', 'g'), cellValues[key]);
             });
             document.getElementById(modalId + '-content').innerHTML = modalContent;
         };
 
-        // Define cell values for each modal
+        // Définition des valeurs des cellules pour chaque modal
+        // ...
+                // Define cell values for each modal
         const modalValues = {
             'modal1': {
                 'Cellule D4': getCellValue(16, 3),
@@ -213,15 +243,14 @@
                 'Cellule H18': getCellValue(17, 7)
             }
         };
-
-        // Update modals with values
-        // Update modals with values
+        // Mettez à jour les modales avec les valeurs
         Object.keys(modalValues).forEach(modalId => {
             updateModalContent(modalId, modalValues[modalId]);
         });
     })
-    .catch(error => console.error('Error fetching the CSV data:', error));
+    .catch(error => console.error('Erreur lors de la récupération des données CSV :', error));
 </script>
+
 
 
 
@@ -939,18 +968,7 @@ Une fois la facture est noté dans le salon requis j'applique la réparation dem
             </div>
         </div>
     </div>
-<script>
-    // Rendre les modales interactives
-    document.querySelectorAll('.modal').forEach(modal => {
-        const modalId = modal.id;
-        document.querySelector(`[data-modal="${modalId.replace('modal', '')}"]`).onclick = function() {
-            modal.style.display = "block";
-        };
-        modal.onclick = function() {
-            modal.style.display = "none";
-        };
-    });
-</script>
+
 
 </body>
 </html>
