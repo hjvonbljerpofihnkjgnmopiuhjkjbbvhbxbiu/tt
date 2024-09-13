@@ -106,50 +106,114 @@
 </head>
 <body>
 <script>
-    // Fetch CSV data from Google Sheets
     fetch('https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=571124766')
     .then(response => response.text())
     .then(data => {
         // Convert CSV to array
         let rows = data.split('\n').map(row => row.split(','));
 
-        // Extract data for modals
-        let modalData = {
-            1: rows[3].slice(3, 9),  // Modal 1: D4 to I4
-            2: rows[15].slice(3, 9), // Modal 2: D16 to I16
-            3: rows[14].slice(3, 9), // Modal 3: D15 to I15
-            4: rows[13].slice(3, 9), // Modal 4: D14 to I14
-            5: rows[12].slice(3, 9), // Modal 5: D13 to I13
-            6: rows[11].slice(3, 9), // Modal 6: D12 to I12
-            7: rows[9].slice(3, 9).concat(rows[10].slice(3, 9)), // Modal 7: D10 to I10 and D11 to I11
-            8: rows[7].slice(3, 9).concat(rows[8].slice(3, 9)), // Modal 8: D8 to I8 and D9 to I9
-            9: rows[6].slice(3, 9),  // Modal 9: D7 to I7
-            10: rows[5].slice(3, 9), // Modal 10: D6 to I6
-            11: rows[4].slice(3, 9), // Modal 11: D5 to I5
-            12: rows[3].slice(3, 9), // Modal 12: D4 to I4
-            13: rows[17].slice(3, 9) // Modal 13: D18 to I18
+        // Function to get cell value
+        const getCellValue = (row, col) => rows[row][col] || '';
+
+        // Modal content update
+        const updateModalContent = (modalId, cellValues) => {
+            let modalContent = document.getElementById(modalId).innerHTML;
+            Object.keys(cellValues).forEach(key => {
+                modalContent = modalContent.replace(`*${key}*`, cellValues[key]);
+            });
+            document.getElementById(modalId + '-content').innerHTML = modalContent;
         };
 
-        // Function to update modal content
-        function updateModal(modalNumber, data) {
-            let modalContent = document.getElementById('modal' + modalNumber).innerHTML;
-            modalContent = modalContent.replace(/\*Cellule [D-I]\d+\*/g, (match) => {
-                let col = match[9]; // Column letter (D, E, F, etc.)
-                let row = parseInt(match[11]); // Row number (4, 5, 6, etc.)
-                let index = col.charCodeAt(0) - 'D'.charCodeAt(0);
-                return data[row - 4][index] || match;
-            });
+        // Define cell values for each modal
+        const modalValues = {
+            'modal1': {
+                'Cellule D4': getCellValue(3, 3),
+                'Cellule E4': getCellValue(3, 4),
+                'Cellule I4': getCellValue(3, 8),
+                'Cellule H4': getCellValue(3, 7)
+            },
+            'modal2': {
+                'Cellule D16': getCellValue(15, 3),
+                'Cellule E16': getCellValue(15, 4),
+                'Cellule I16': getCellValue(15, 8),
+                'Cellule H16': getCellValue(15, 7)
+            },
+            'modal3': {
+                'Cellule D15': getCellValue(14, 3),
+                'Cellule E15': getCellValue(14, 4),
+                'Cellule I15': getCellValue(14, 8),
+                'Cellule H15': getCellValue(14, 7)
+            },
+            'modal4': {
+                'Cellule D14': getCellValue(13, 3),
+                'Cellule E14': getCellValue(13, 4),
+                'Cellule I14': getCellValue(13, 8),
+                'Cellule H14': getCellValue(13, 7)
+            },
+            'modal5': {
+                'Cellule D13': getCellValue(12, 3),
+                'Cellule E13': getCellValue(12, 4),
+                'Cellule I13': getCellValue(12, 8),
+                'Cellule H13': getCellValue(12, 7)
+            },
+            'modal6': {
+                'Cellule D12': getCellValue(11, 3),
+                'Cellule E12': getCellValue(11, 4),
+                'Cellule I12': getCellValue(11, 8),
+                'Cellule H12': getCellValue(11, 7)
+            },
+            'modal7': {
+                'Cellule D10': getCellValue(9, 3),
+                'Cellule E10': getCellValue(9, 4),
+                'Cellule I10': getCellValue(9, 8),
+                'Cellule H10': getCellValue(9, 7)
+            },
+            'modal8': {
+                'Cellule D8': getCellValue(7, 3),
+                'Cellule E8': getCellValue(7, 4),
+                'Cellule I8': getCellValue(7, 8),
+                'Cellule H8': getCellValue(7, 7),
+                'Cellule D9': getCellValue(8, 3),
+                'Cellule E9': getCellValue(8, 4),
+                'Cellule I9': getCellValue(8, 8),
+                'Cellule H9': getCellValue(8, 7)
+            },
+            'modal9': {
+                'Cellule D7': getCellValue(6, 3),
+                'Cellule E7': getCellValue(6, 4),
+                'Cellule I7': getCellValue(6, 8),
+                'Cellule H7': getCellValue(6, 7)
+            },
+            'modal10': {
+                'Cellule D6': getCellValue(5, 3),
+                'Cellule E6': getCellValue(5, 4),
+                'Cellule I6': getCellValue(5, 8),
+                'Cellule H6': getCellValue(5, 7)
+            },
+            'modal11': {
+                'Cellule D5': getCellValue(4, 3),
+                'Cellule E5': getCellValue(4, 4),
+                'Cellule I5': getCellValue(4, 8),
+                'Cellule H5': getCellValue(4, 7)
+            },
+            'modal12': {
+                'Cellule D4': getCellValue(3, 3),
+                'Cellule E4': getCellValue(3, 4),
+                'Cellule I4': getCellValue(3, 8),
+                'Cellule H4': getCellValue(3, 7)
+            },
+            'modal13': {
+                'Cellule D18': getCellValue(17, 3),
+                'Cellule E18': getCellValue(17, 4),
+                'Cellule I18': getCellValue(17, 8),
+                'Cellule H18': getCellValue(17, 7)
+            }
+        };
 
-            document.getElementById('modal' + modalNumber + '-content').innerHTML = modalContent;
-        }
-
-        // Update all modals
-        for (let i = 1; i <= 13; i++) {
-            updateModal(i, modalData[i]);
-        }
-
-        // Open the first modal as default
-        document.getElementById('modal1').style.display = 'block';
+        // Update modals with values
+        Object.keys(modalValues).forEach(modalId => {
+            updateModalContent(modalId, modalValues[modalId]);
+        });
     })
     .catch(error => console.error('Error fetching the CSV data:', error));
 </script>
