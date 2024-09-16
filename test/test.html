@@ -3,111 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets Data Viewer</title>
+    <title>Google Sheet Selector</title>
     <style>
         body {
-            background-color: #1e1e1e;
-            color: #fff;
+            background-color: #121212;
+            color: white;
             font-family: Arial, sans-serif;
-            padding: 20px;
         }
+
         table {
-            border-collapse: collapse;
             width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
+            padding: 10px;
             border: 1px solid #444;
-            padding: 8px;
             text-align: left;
         }
+
         th {
-            background-color: #333;
-        }
-        select {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 8px;
-            font-size: 16px;
-        }
-        #header-row {
+            background-color: #1e1e1e;
             position: sticky;
             top: 0;
+        }
+
+        select {
             background-color: #333;
+            color: white;
+            border: 1px solid #444;
+            padding: 5px;
+        }
+
+        #container {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <h1>Google Sheet Selector</h1>
 
-<h1>Google Sheets Data Viewer</h1>
-<label for="select-row">Sélectionner un élément:</label>
-<select id="select-row"></select>
+    <!-- Dropdown list -->
+    <label for="selector">Sélectionnez un nom :</label>
+    <select id="selector">
+        <!-- Options will be populated dynamically -->
+    </select>
 
-<table>
-    <thead>
-        <tr id="header-row"></tr>
-    </thead>
-    <tbody id="data-rows"></tbody>
-</table>
+    <!-- Container to display selected row -->
+    <div id="container">
+        <table id="data-table">
+            <thead>
+                <tr id="header-row">
+                    <!-- Header cells will be populated dynamically -->
+                </tr>
+            </thead>
+            <tbody id="selected-row">
+                <!-- Selected row will appear here -->
+            </tbody>
+            <tbody id="last-rows">
+                <!-- Last 5 rows will be displayed here -->
+            </tbody>
+        </table>
+    </div>
 
-<script>
-    // URL de ton fichier Google Sheets publié en CSV
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
+    <script>
+        const sheetUrl1 = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=582059801';
+        const sheetUrl2 = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=946596354';
 
-    // Fonction pour charger le CSV et convertir en tableau
-    async function loadCsv(url) {
-        const response = await fetch(url);
-        const data = await response.text();
-        const rows = data.split('\n').map(row => row.split(','));
-        return rows;
-    }
-
-    // Fonction pour remplir la liste déroulante et afficher les données
-    async function populateDropdown() {
-        const data = await loadCsv(csvUrl);
-
-        const headerRow = document.getElementById('header-row');
-        const dataRows = document.getElementById('data-rows');
-        const select = document.getElementById('select-row');
-
-        // Afficher l'en-tête de B5 à X5
-        const headers = data[4].slice(1, 24); // B5 à X5
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
-
-        // Ajouter les options dans la liste déroulante (D6 à D35)
-        for (let i = 5; i < 35; i++) {
-            const option = document.createElement('option');
-            option.value = i;  // index de la ligne
-            option.textContent = data[i][3]; // D6 à D35
-            select.appendChild(option);
+        // Load CSV data and parse it
+        async function fetchCsv(url) {
+            const response = await fetch(url);
+            const data = await response.text();
+            return data.split('\n').map(row => row.split(','));
         }
 
-        // Lors de la sélection dans la liste déroulante
-        select.addEventListener('change', () => {
-            const selectedRow = select.value;
-            const rowData = data[selectedRow].slice(1, 24); // B6 à X6 par exemple
+        // Populate the dropdown and table
+        async function initialize() {
+            const data1 = await fetchCsv(sheetUrl1);
+            const data2 = await fetchCsv(sheetUrl2);
 
-            // Nettoyer le tableau avant de remplir
-            dataRows.innerHTML = '';
+            const header = data1[4]; // B5 to X5
+            const rows = data1.slice(5, 35); // B6 to X35
+            const last5Rows = data2.slice(-5); // Last 5 rows from second sheet
 
-            const tr = document.createElement('tr');
-            rowData.forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell;
-                tr.appendChild(td);
+            const selector = document.getElementById('selector');
+            const headerRow = document.getElementById('header-row');
+            const selectedRowContainer = document.getElementById('selected-row');
+            const lastRowsContainer = document.getElementById('last-rows');
+
+            // Populate header row (B5 to X5)
+            header.forEach(cell => {
+                const th = document.createElement('th');
+                th.textContent = cell;
+                headerRow.appendChild(th);
             });
-            dataRows.appendChild(tr);
-        });
-    }
 
-    // Charger les données lorsque la page est prête
-    document.addEventListener('DOMContentLoaded', populateDropdown);
-</script>
+            // Populate dropdown with values from column D (D6 to D35)
+            rows.forEach((row, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = row[3]; // Column D
+                selector.appendChild(option);
+            });
 
+            // Update table based on selected dropdown option
+            selector.addEventListener('change', (event) => {
+                const selectedIndex = event.target.value;
+                const selectedRow = rows[selectedIndex];
+
+                selectedRowContainer.innerHTML = ''; // Clear previous content
+
+                const tr = document.createElement('tr');
+                selectedRow.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+
+                selectedRowContainer.appendChild(tr);
+            });
+
+            // Populate the last 5 rows from the second sheet
+            last5Rows.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                lastRowsContainer.appendChild(tr);
+            });
+        }
+
+        // Initialize everything on page load
+        initialize();
+    </script>
 </body>
 </html>
