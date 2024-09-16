@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau Dynamique</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        select {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #2b2b2b;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tableau Sélectionnable</h1>
+    <label for="nameDropdown">Sélectionner un nom :</label>
+    <select id="nameDropdown"></select>
+
+    <table id="dataTable">
+        <thead>
+            <tr id="tableHeader"></tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Les données de la ligne sélectionnée apparaîtront ici -->
+        </tbody>
+    </table>
+
+    <script>
+        // URL du Google Sheet en CSV
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=582059801';
+
+        // Fonction pour charger le CSV et le convertir en tableau
+        async function loadCSV() {
+            const response = await fetch(csvUrl);
+            const csvText = await response.text();
+            const rows = csvText.split('\n').slice(5, 36).map(row => row.split(','));
+            return rows;
+        }
+
+        // Fonction pour remplir le champ déroulant
+        function populateDropdown(rows) {
+            const dropdown = document.getElementById('nameDropdown');
+            rows.forEach((row, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = row[0]; // Nom dans la colonne B (index 0)
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Fonction pour afficher la ligne sélectionnée dans le tableau
+        function displaySelectedRow(rows) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            // Créer l'en-tête du tableau (se base sur la première ligne des données)
+            if (tableHeader.childElementCount === 0) {
+                rows[0].forEach((cell) => {
+                    const th = document.createElement('th');
+                    th.textContent = cell;
+                    tableHeader.appendChild(th);
+                });
+            }
+
+            // Mettre à jour l'affichage lors de la sélection dans la liste déroulante
+            document.getElementById('nameDropdown').addEventListener('change', function () {
+                const selectedIndex = this.value;
+                const selectedRow = rows[selectedIndex];
+
+                // Nettoyer le corps du tableau
+                tableBody.innerHTML = '';
+
+                // Ajouter les cellules de la ligne sélectionnée
+                const tr = document.createElement('tr');
+                selectedRow.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Initialisation du script
+        async function init() {
+            const rows = await loadCSV();
+            populateDropdown(rows);
+            displaySelectedRow(rows);
+        }
+
+        init();
+    </script>
+
+</body>
+</html>
