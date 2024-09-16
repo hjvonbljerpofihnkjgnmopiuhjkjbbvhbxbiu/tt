@@ -1,99 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Dropdown</title>
-    <style>
-        /* Night theme */
-        body {
-            background-color: #2e2e2e;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        select, table {
-            background-color: #444;
-            color: #fff;
-            border: 1px solid #888;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        th, td {
-            padding: 8px 12px;
-            border-bottom: 1px solid #888;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau avec sélection</title>
+  <style>
+    /* CSS pour le thème Night Mode */
+    body {
+      background-color: #121212;
+      color: #E0E0E0;
+      font-family: Arial, sans-serif;
+    }
+    select, table {
+      background-color: #1E1E1E;
+      color: #E0E0E0;
+      border: 1px solid #333;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #333;
+    }
+    tr:nth-child(even) {
+      background-color: #2C2C2C;
+    }
+  </style>
 </head>
 <body>
-    <h1>Selectionnez un nom</h1>
-    <select id="nameDropdown">
-        <option value="">-- Sélectionnez un nom --</option>
-    </select>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Colonne B</th>
-                <th>Colonne C</th>
-                <th>Colonne D</th>
-                <th>Colonne E</th>
-                <th>Colonne F</th>
-                <th>Colonne H</th>
-                <!-- Ajoutez plus de colonnes selon vos besoins -->
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 
-    <script>
-        // Fonction pour charger le CSV
-        async function loadCSV() {
-            const response = await fetch('votre-fichier.csv'); // Remplacez par le chemin du fichier CSV
-            const data = await response.text();
-            const rows = data.split('\n').slice(5, 35); // Récupère les lignes B6 à X35 (index 5 à 35)
+<h2>Sélectionnez un nom</h2>
+<select id="nameDropdown">
+  <option value="">-- Sélectionnez un nom --</option>
+</select>
 
-            const dropdown = document.getElementById('nameDropdown');
-            const tableBody = document.querySelector('#dataTable tbody');
-            
-            const tableData = rows.map(row => row.split(',')); // Convertit chaque ligne en tableau
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+      <th>F</th>
+      <th>G</th>
+      <!-- Continuez avec toutes les colonnes jusqu'à X -->
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-            // Remplir le champ déroulant avec les données de la colonne D
-            tableData.forEach((row, index) => {
-                if (row[2]) { // Colonne D (index 2)
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = row[2];
-                    dropdown.appendChild(option);
-                }
-            });
+<script>
+  // URL du Google Sheets en format CSV
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
 
-            // Afficher la ligne sélectionnée dans le tableau
-            dropdown.addEventListener('change', function () {
-                const selectedIndex = this.value;
-                if (selectedIndex) {
-                    const selectedRow = tableData[selectedIndex];
-                    const rowHtml = `<tr>
-                        <td>${selectedRow[0]}</td>
-                        <td>${selectedRow[1]}</td>
-                        <td>${selectedRow[2]}</td>
-                        <td>${selectedRow[3]}</td>
-                        <td>${selectedRow[4]}</td>
-                        <td>${selectedRow[6]}</td>
-                        <!-- Ajoutez plus de cellules si nécessaire -->
-                    </tr>`;
-                    tableBody.innerHTML = rowHtml;
-                } else {
-                    tableBody.innerHTML = '';
-                }
-            });
+  // Récupérer les données du Google Sheets
+  fetch(sheetUrl)
+    .then(response => response.text())
+    .then(csvText => {
+      const rows = csvText.split('\n').slice(5, 35); // On récupère de la ligne 6 à 35
+      const dropdown = document.getElementById('nameDropdown');
+      const tbody = document.getElementById('dataTable').querySelector('tbody');
+
+      // Remplir le menu déroulant avec les données de la colonne D
+      rows.forEach((row, index) => {
+        const cells = row.split(',');
+        const name = cells[3]; // Colonne D est l'index 3
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = name;
+        dropdown.appendChild(option);
+      });
+
+      // Afficher les données de la ligne sélectionnée
+      dropdown.addEventListener('change', function () {
+        const selectedRow = rows[this.value].split(',');
+        tbody.innerHTML = ''; // Effacez le contenu précédent
+
+        const rowElement = document.createElement('tr');
+        for (let i = 1; i < selectedRow.length; i++) {
+          const cell = document.createElement('td');
+          cell.textContent = selectedRow[i]; // On commence à partir de B
+          rowElement.appendChild(cell);
         }
+        tbody.appendChild(rowElement);
+      });
+    })
+    .catch(error => console.error('Erreur lors du chargement des données:', error));
+</script>
 
-        // Charger le CSV au chargement de la page
-        window.onload = loadCSV;
-    </script>
 </body>
 </html>
