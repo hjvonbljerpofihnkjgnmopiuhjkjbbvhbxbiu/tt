@@ -1,96 +1,112 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tableau avec sélection</title>
-  <style>
-    /* CSS pour le thème Night Mode */
-    body {
-      background-color: #121212;
-      color: #E0E0E0;
-      font-family: Arial, sans-serif;
-    }
-    select, table {
-      background-color: #1E1E1E;
-      color: #E0E0E0;
-      border: 1px solid #333;
-    }
-    table {
-      width: 100%;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #333;
-    }
-    tr:nth-child(even) {
-      background-color: #2C2C2C;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data Viewer</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+        select {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #header-row {
+            position: sticky;
+            top: 0;
+            background-color: #333;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Sélectionnez un nom</h2>
-<select id="nameDropdown">
-  <option value="">-- Sélectionnez un nom --</option>
-</select>
+<h1>Google Sheets Data Viewer</h1>
+<label for="select-row">Sélectionner un élément:</label>
+<select id="select-row"></select>
 
-<table id="dataTable">
-  <thead>
-    <tr>
-      <th>B</th>
-      <th>C</th>
-      <th>D</th>
-      <th>E</th>
-      <th>F</th>
-      <th>G</th>
-      <!-- Continuez avec toutes les colonnes jusqu'à X -->
-    </tr>
-  </thead>
-  <tbody></tbody>
+<table>
+    <thead>
+        <tr id="header-row"></tr>
+    </thead>
+    <tbody id="data-rows"></tbody>
 </table>
 
 <script>
-  // URL du Google Sheets en format CSV
-  const sheetUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
+    // URL de ton fichier Google Sheets publié en CSV
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQnXYZ.../pub?output=csv';
 
-  // Récupérer les données du Google Sheets
-  fetch(sheetUrl)
-    .then(response => response.text())
-    .then(csvText => {
-      const rows = csvText.split('\n').slice(5, 35); // On récupère de la ligne 6 à 35
-      const dropdown = document.getElementById('nameDropdown');
-      const tbody = document.getElementById('dataTable').querySelector('tbody');
+    // Fonction pour charger le CSV et convertir en tableau
+    async function loadCsv(url) {
+        const response = await fetch(url);
+        const data = await response.text();
+        const rows = data.split('\n').map(row => row.split(','));
+        return rows;
+    }
 
-      // Remplir le menu déroulant avec les données de la colonne D
-      rows.forEach((row, index) => {
-        const cells = row.split(',');
-        const name = cells[3]; // Colonne D est l'index 3
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = name;
-        dropdown.appendChild(option);
-      });
+    // Fonction pour remplir la liste déroulante et afficher les données
+    async function populateDropdown() {
+        const data = await loadCsv(csvUrl);
 
-      // Afficher les données de la ligne sélectionnée
-      dropdown.addEventListener('change', function () {
-        const selectedRow = rows[this.value].split(',');
-        tbody.innerHTML = ''; // Effacez le contenu précédent
+        const headerRow = document.getElementById('header-row');
+        const dataRows = document.getElementById('data-rows');
+        const select = document.getElementById('select-row');
 
-        const rowElement = document.createElement('tr');
-        for (let i = 1; i < selectedRow.length; i++) {
-          const cell = document.createElement('td');
-          cell.textContent = selectedRow[i]; // On commence à partir de B
-          rowElement.appendChild(cell);
+        // Afficher l'en-tête de B5 à X5
+        const headers = data[4].slice(1, 24); // B5 à X5
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+
+        // Ajouter les options dans la liste déroulante (D6 à D35)
+        for (let i = 5; i < 35; i++) {
+            const option = document.createElement('option');
+            option.value = i;  // index de la ligne
+            option.textContent = data[i][3]; // D6 à D35
+            select.appendChild(option);
         }
-        tbody.appendChild(rowElement);
-      });
-    })
-    .catch(error => console.error('Erreur lors du chargement des données:', error));
+
+        // Lors de la sélection dans la liste déroulante
+        select.addEventListener('change', () => {
+            const selectedRow = select.value;
+            const rowData = data[selectedRow].slice(1, 24); // B6 à X6 par exemple
+
+            // Nettoyer le tableau avant de remplir
+            dataRows.innerHTML = '';
+
+            const tr = document.createElement('tr');
+            rowData.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            dataRows.appendChild(tr);
+        });
+    }
+
+    // Charger les données lorsque la page est prête
+    document.addEventListener('DOMContentLoaded', populateDropdown);
 </script>
 
 </body>
