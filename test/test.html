@@ -3,121 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau Dynamique</title>
+    <title>Google Sheet Dropdown</title>
     <style>
+        /* Night theme */
         body {
-            background-color: #121212;
+            background-color: #2e2e2e;
             color: #ffffff;
             font-family: Arial, sans-serif;
         }
-        select {
-            background-color: #333;
+        select, table {
+            background-color: #444;
             color: #fff;
+            border: 1px solid #888;
             padding: 10px;
-            border: none;
+            margin: 10px 0;
             border-radius: 5px;
-            font-size: 16px;
-        }
-        table {
-            margin-top: 20px;
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid #444;
         }
         th, td {
-            padding: 12px;
-            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #888;
         }
-        th {
-            background-color: #333;
-        }
-        tr:nth-child(even) {
-            background-color: #2b2b2b;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
     </style>
 </head>
 <body>
-
-    <h1>Tableau Sélectionnable</h1>
-    <label for="nameDropdown">Sélectionner un nom :</label>
-    <select id="nameDropdown"></select>
-
+    <h1>Selectionnez un nom</h1>
+    <select id="nameDropdown">
+        <option value="">-- Sélectionnez un nom --</option>
+    </select>
     <table id="dataTable">
         <thead>
-            <tr id="tableHeader"></tr>
+            <tr>
+                <th>Colonne B</th>
+                <th>Colonne C</th>
+                <th>Colonne D</th>
+                <th>Colonne E</th>
+                <th>Colonne F</th>
+                <th>Colonne H</th>
+                <!-- Ajoutez plus de colonnes selon vos besoins -->
+            </tr>
         </thead>
-        <tbody id="tableBody">
-            <!-- Les données de la ligne sélectionnée apparaîtront ici -->
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <script>
-        // URL du Google Sheet en CSV
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=582059801';
-
-        // Fonction pour charger le CSV et le convertir en tableau
+        // Fonction pour charger le CSV
         async function loadCSV() {
-            const response = await fetch(csvUrl);
-            const csvText = await response.text();
-            const rows = csvText.split('\n').slice(5, 36).map(row => row.split(','));
-            return rows;
-        }
+            const response = await fetch('votre-fichier.csv'); // Remplacez par le chemin du fichier CSV
+            const data = await response.text();
+            const rows = data.split('\n').slice(5, 35); // Récupère les lignes B6 à X35 (index 5 à 35)
 
-        // Fonction pour remplir le champ déroulant
-        function populateDropdown(rows) {
             const dropdown = document.getElementById('nameDropdown');
-            rows.forEach((row, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = row[0]; // Nom dans la colonne B (index 0)
-                dropdown.appendChild(option);
+            const tableBody = document.querySelector('#dataTable tbody');
+            
+            const tableData = rows.map(row => row.split(',')); // Convertit chaque ligne en tableau
+
+            // Remplir le champ déroulant avec les données de la colonne D
+            tableData.forEach((row, index) => {
+                if (row[2]) { // Colonne D (index 2)
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = row[2];
+                    dropdown.appendChild(option);
+                }
             });
-        }
 
-        // Fonction pour afficher la ligne sélectionnée dans le tableau
-        function displaySelectedRow(rows) {
-            const tableHeader = document.getElementById('tableHeader');
-            const tableBody = document.getElementById('tableBody');
-
-            // Créer l'en-tête du tableau (se base sur la première ligne des données)
-            if (tableHeader.childElementCount === 0) {
-                rows[0].forEach((cell) => {
-                    const th = document.createElement('th');
-                    th.textContent = cell;
-                    tableHeader.appendChild(th);
-                });
-            }
-
-            // Mettre à jour l'affichage lors de la sélection dans la liste déroulante
-            document.getElementById('nameDropdown').addEventListener('change', function () {
+            // Afficher la ligne sélectionnée dans le tableau
+            dropdown.addEventListener('change', function () {
                 const selectedIndex = this.value;
-                const selectedRow = rows[selectedIndex];
-
-                // Nettoyer le corps du tableau
-                tableBody.innerHTML = '';
-
-                // Ajouter les cellules de la ligne sélectionnée
-                const tr = document.createElement('tr');
-                selectedRow.forEach(cell => {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
+                if (selectedIndex) {
+                    const selectedRow = tableData[selectedIndex];
+                    const rowHtml = `<tr>
+                        <td>${selectedRow[0]}</td>
+                        <td>${selectedRow[1]}</td>
+                        <td>${selectedRow[2]}</td>
+                        <td>${selectedRow[3]}</td>
+                        <td>${selectedRow[4]}</td>
+                        <td>${selectedRow[6]}</td>
+                        <!-- Ajoutez plus de cellules si nécessaire -->
+                    </tr>`;
+                    tableBody.innerHTML = rowHtml;
+                } else {
+                    tableBody.innerHTML = '';
+                }
             });
         }
 
-        // Initialisation du script
-        async function init() {
-            const rows = await loadCSV();
-            populateDropdown(rows);
-            displaySelectedRow(rows);
-        }
-
-        init();
+        // Charger le CSV au chargement de la page
+        window.onload = loadCSV;
     </script>
-
 </body>
 </html>
