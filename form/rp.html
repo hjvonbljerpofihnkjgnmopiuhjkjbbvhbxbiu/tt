@@ -73,7 +73,7 @@
 
         function parseCSV2(csv) {
             const lines = csv.split("\n");
-            const selectedLines = lines.slice(1, 11); // Sélectionner les lignes de 2 à 11 (index 1 à 10)
+            const selectedLines = lines.slice(1, 14); // Sélectionner les lignes de 2 à 11 (index 1 à 10)
             const headers = selectedLines[0].split(",").slice(28, 32); // Colonnes AC à AF (index 28 à 31)
             const rows = selectedLines.slice(1).map(line => line.split(",").slice(28, 32));
             return { headers, rows };
