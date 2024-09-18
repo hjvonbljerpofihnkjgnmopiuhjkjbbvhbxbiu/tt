@@ -1,143 +1,199 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Selector</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recherche de véhicule</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    body.night-mode {
+      background-color: #2c2c2c;
+      color: #fff;
+    }
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #444;
-            text-align: left;
-        }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
 
-        th {
-            background-color: #1e1e1e;
-            position: sticky;
-            top: 0;
-        }
+    .input-group {
+      display: flex;
+      margin-bottom: 20px;
+    }
 
-        select {
-            background-color: #333;
-            color: white;
-            border: 1px solid #444;
-            padding: 5px;
-        }
+    .input-group input {
+      width: 80%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-        #container {
-            margin-top: 20px;
-        }
-    </style>
+    .input-group button {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .buttons a {
+      text-decoration: none;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      color: #333;
+      transition: background-color 0.3s;
+    }
+
+    .buttons a:hover {
+      background-color: #ddd;
+    }
+
+    .theme-switch {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switch input[type="checkbox"] {
+      display: none;
+    }
+
+    .theme-switch label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .theme-switch .sun, .theme-switch .moon {
+      font-size: 20px;
+      margin-left: 10px;
+    }
+
+    .theme-switch .toggle {
+      width: 40px;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 20px;
+      position: relative;
+      transition: background-color 0.3s;
+    }
+
+    .theme-switch .toggle:before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .theme-switch input[type="checkbox"]:checked + label .toggle {
+      background-color: #4a4a4a;
+    }
+
+    .theme-switch input[type="checkbox"]:checked + label .toggle:before {
+      transform: translateX(20px);
+    }
+  </style>
 </head>
 <body>
-    <h1>Google Sheet Selector</h1>
 
-    <!-- Dropdown list -->
-    <label for="selector">Sélectionnez un nom :</label>
-    <select id="selector">
-        <!-- Options will be populated dynamically -->
-    </select>
+  <div class="theme-switch">
+    <input type="checkbox" id="theme-toggle">
+    <label for="theme-toggle">
+      <div class="toggle"></div>
+      <span class="sun">🌞</span>
+      <span class="moon">🌙</span>
+    </label>
+  </div>
 
-    <!-- Container to display selected row -->
-    <div id="container">
-        <table id="data-table">
-            <thead>
-                <tr id="header-row">
-                    <!-- Header cells will be populated dynamically -->
-                </tr>
-            </thead>
-            <tbody id="selected-row">
-                <!-- Selected row will appear here -->
-            </tbody>
-            <tbody id="last-rows">
-                <!-- Last 5 rows will be displayed here -->
-            </tbody>
-        </table>
+  <div class="container">
+    <h1>Recherche de véhicule</h1>
+
+    <div class="input-group">
+      <input type="text" id="search-input" placeholder="Entrez la plaque ou l'ID unique">
+      <button onclick="searchVehicle()">Rechercher</button>
     </div>
 
-    <script>
-        const sheetUrl1 = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=582059801';
-        const sheetUrl2 = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/gviz/tq?tqx=out:csv&gid=946596354';
+    <div class="result" id="result"></div>
 
-        // Load CSV data and parse it
-        async function fetchCsv(url) {
-            const response = await fetch(url);
-            const data = await response.text();
-            return data.split('\n').map(row => row.split(','));
-        }
+    <div class="buttons">
+      <a href="#">Page 1</a>
+      <a href="#">Page 2</a>
+      <a href="#">Page 3</a>
+      <a href="#">Page 4</a>
+    </div>
+  </div>
 
-        // Populate the dropdown and table
-        async function initialize() {
-            const data1 = await fetchCsv(sheetUrl1);
-            const data2 = await fetchCsv(sheetUrl2);
+  <script>
+    const vehicles = [
+      { code: 'GRP', model: 'Mule2', id: '577469', plaque: '5XTUFKGE' },
+      { code: 'GRP', model: 'Mule', id: '87770', plaque: '0B0MKM9R' },
+      { code: 'GRP', model: 'Mule', id: '576238', plaque: 'DCAS22YQ' },
+      { code: 'GRP', model: 'Mule', id: '586782', plaque: '9PFCT8RI' },
+      { code: 'GRP', model: 'Mule', id: '586788', plaque: 'AE40DB2M' },
+      { code: 'GRP', model: 'Mule', id: '597234', plaque: 'UB0AAE0Z' },
+      { code: 'GRP', model: 'Mule', id: '597238', plaque: 'YCJZ9EBP' },
+      { code: 'GRP', model: 'Jogger', id: '572677', plaque: '2BBPLQII' },
+      { code: 'GRP', model: 'Jogger', id: '576212', plaque: 'M0LPFAR8' },
+      { code: 'DY8', model: 'Gauntelts', id: '', plaque: 'IFGZQI2V' },
+      { code: 'DY8', model: 'Issi Rallye', id: '', plaque: '5Y8TMUJE' },
+      { code: 'DY8', model: 'Fugitive', id: '', plaque: 'KDMG1VTH' },
+      { code: 'DY8', model: 'Hachura', id: '', plaque: 'PEUU6EN5' },
+      { code: 'DY8', model: 'Hachura', id: '', plaque: 'NNBIPR2E' },
+      { code: 'DY8', model: 'Hakuchou', id: '', plaque: 'XAROIMWO' },
+      { code: 'DY8', model: 'Dominator GSX', id: '', plaque: 'KH2SZ0HS' },
+      { code: 'DY8', model: 'Double T', id: '', plaque: 'NFWWVPOG' }
+    ];
 
-            const header = data1[4]; // B5 to X5
-            const rows = data1.slice(5, 35); // B6 to X35
-            const last5Rows = data2.slice(-5); // Last 5 rows from second sheet
+    function searchVehicle() {
+      const input = document.getElementById('search-input').value.trim().toUpperCase();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
 
-            const selector = document.getElementById('selector');
-            const headerRow = document.getElementById('header-row');
-            const selectedRowContainer = document.getElementById('selected-row');
-            const lastRowsContainer = document.getElementById('last-rows');
+      const foundVehicle = vehicles.find(vehicle => 
+        vehicle.plaque === input || vehicle.id === input
+      );
 
-            // Populate header row (B5 to X5)
-            header.forEach(cell => {
-                const th = document.createElement('th');
-                th.textContent = cell;
-                headerRow.appendChild(th);
-            });
+      if (foundVehicle) {
+        resultDiv.innerHTML = `Code Partenaire: ${foundVehicle.code} <br> Modèle: ${foundVehicle.model}`;
+      } else {
+        resultDiv.innerHTML = 'Aucun véhicule trouvé.';
+      }
+    }
 
-            // Populate dropdown with values from column D (D6 to D35)
-            rows.forEach((row, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = row[3]; // Column D
-                selector.appendChild(option);
-            });
+    document.getElementById('theme-toggle').addEventListener('change', function() {
+      document.body.classList.toggle('night-mode');
+    });
+  </script>
 
-            // Update table based on selected dropdown option
-            selector.addEventListener('change', (event) => {
-                const selectedIndex = event.target.value;
-                const selectedRow = rows[selectedIndex];
-
-                selectedRowContainer.innerHTML = ''; // Clear previous content
-
-                const tr = document.createElement('tr');
-                selectedRow.forEach(cell => {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-
-                selectedRowContainer.appendChild(tr);
-            });
-
-            // Populate the last 5 rows from the second sheet
-            last5Rows.forEach(row => {
-                const tr = document.createElement('tr');
-                row.forEach(cell => {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-                lastRowsContainer.appendChild(tr);
-            });
-        }
-
-        // Initialize everything on page load
-        initialize();
-    </script>
 </body>
 </html>
