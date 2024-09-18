@@ -1,199 +1,256 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recherche de véhicule</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fff;
-      color: #000;
-      transition: background-color 0.3s, color 0.3s;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Véhicule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.5s, color 0.5s;
+}
 
-    body.night-mode {
-      background-color: #2c2c2c;
-      color: #fff;
-    }
+.light-mode {
+    background-color: #f4f4f4;
+    color: #333;
+}
 
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
+.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
 
-    .input-group {
-      display: flex;
-      margin-bottom: 20px;
-    }
+.container {
+    text-align: center;
+}
 
-    .input-group input {
-      width: 80%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
+input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
 
-    .input-group button {
-      padding: 10px 15px;
-      margin-left: 10px;
-      border: none;
-      border-radius: 5px;
-      background-color: #28a745;
-      color: white;
-      cursor: pointer;
-    }
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-    .result {
-      margin-top: 20px;
-    }
+.switch-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
 
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
 
-    .buttons a {
-      text-decoration: none;
-      padding: 10px 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f0f0f0;
-      color: #333;
-      transition: background-color 0.3s;
-    }
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-    .buttons a:hover {
-      background-color: #ddd;
-    }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
 
-    .theme-switch {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      align-items: center;
-    }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
 
-    .theme-switch input[type="checkbox"] {
-      display: none;
-    }
+input:checked + .slider {
+    background-color: #2196F3;
+}
 
-    .theme-switch label {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
 
-    .theme-switch .sun, .theme-switch .moon {
-      font-size: 20px;
-      margin-left: 10px;
-    }
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+    width: 40px;
+}
 
-    .theme-switch .toggle {
-      width: 40px;
-      height: 20px;
-      background-color: #ddd;
-      border-radius: 20px;
-      position: relative;
-      transition: background-color 0.3s;
-    }
+#sun {
+    opacity: 1;
+    transition: opacity 0.4s;
+}
 
-    .theme-switch .toggle:before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 16px;
-      height: 16px;
-      background-color: #fff;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
+#moon {
+    opacity: 0;
+    transition: opacity 0.4s;
+}
 
-    .theme-switch input[type="checkbox"]:checked + label .toggle {
-      background-color: #4a4a4a;
-    }
+input:checked ~ .icon #sun {
+    opacity: 0;
+}
 
-    .theme-switch input[type="checkbox"]:checked + label .toggle:before {
-      transform: translateX(20px);
-    }
-  </style>
+input:checked ~ .icon #moon {
+    opacity: 1;
+}
+
+/* Button styles */
+.button-container {
+    margin-top: 20px;
+}
+
+.animate {
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+}
+
+.action-button {
+    position: relative;
+    padding: 10px 40px;
+    margin: 0px 10px 10px 0px;
+    float: left;
+    border-radius: 3px;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    color: #FFF;
+    text-decoration: none;
+}
+
+.blue {
+    background-color: #3498db;
+    border-bottom: 5px solid #2980B9;
+    text-shadow: 0px -2px #2980B9;
+}
+
+.red {
+    background-color: #e74c3c;
+    border-bottom: 5px solid #c0392b;
+    text-shadow: 0px -2px #c0392b;
+}
+
+.green {
+    background-color: #2ecc71;
+    border-bottom: 5px solid #27ae60;
+    text-shadow: 0px -2px #27ae60;
+}
+
+.yellow {
+    background-color: #f1c40f;
+    border-bottom: 5px solid #f39c12;
+    text-shadow: 0px -2px #f39c12;
+}
+
+.action-button:active {
+    transform: translate(0px,5px);
+    -webkit-transform: translate(0px,5px);
+    border-bottom: 1px solid;
+}
+
+</style>
 </head>
-<body>
-
-  <div class="theme-switch">
-    <input type="checkbox" id="theme-toggle">
-    <label for="theme-toggle">
-      <div class="toggle"></div>
-      <span class="sun">🌞</span>
-      <span class="moon">🌙</span>
-    </label>
-  </div>
-
-  <div class="container">
-    <h1>Recherche de véhicule</h1>
-
-    <div class="input-group">
-      <input type="text" id="search-input" placeholder="Entrez la plaque ou l'ID unique">
-      <button onclick="searchVehicle()">Rechercher</button>
+<body class="light-mode">
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="theme-switch">
+            <span class="slider"></span>
+            <div class="icon"><span id="sun">☀️</span><span id="moon">🌙</span></div>
+        </label>
     </div>
 
-    <div class="result" id="result"></div>
+    <div class="container">
+        <h1>Recherche de Véhicule</h1>
+        <input type="text" id="search" placeholder="Entrez l'ID du véhicule ou la plaque">
+        <button id="search-btn">Rechercher</button>
 
-    <div class="buttons">
-      <a href="#">Page 1</a>
-      <a href="#">Page 2</a>
-      <a href="#">Page 3</a>
-      <a href="#">Page 4</a>
+        <div id="result"></div>
+
+        <div class="button-container">
+            <a href="#" class="action-button blue animate">Bouton 1</a>
+            <a href="#" class="action-button red animate">Bouton 2</a>
+            <a href="#" class="action-button green animate">Bouton 3</a>
+            <a href="#" class="action-button yellow animate">Bouton 4</a>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const vehicles = [
-      { code: 'GRP', model: 'Mule2', id: '577469', plaque: '5XTUFKGE' },
-      { code: 'GRP', model: 'Mule', id: '87770', plaque: '0B0MKM9R' },
-      { code: 'GRP', model: 'Mule', id: '576238', plaque: 'DCAS22YQ' },
-      { code: 'GRP', model: 'Mule', id: '586782', plaque: '9PFCT8RI' },
-      { code: 'GRP', model: 'Mule', id: '586788', plaque: 'AE40DB2M' },
-      { code: 'GRP', model: 'Mule', id: '597234', plaque: 'UB0AAE0Z' },
-      { code: 'GRP', model: 'Mule', id: '597238', plaque: 'YCJZ9EBP' },
-      { code: 'GRP', model: 'Jogger', id: '572677', plaque: '2BBPLQII' },
-      { code: 'GRP', model: 'Jogger', id: '576212', plaque: 'M0LPFAR8' },
-      { code: 'DY8', model: 'Gauntelts', id: '', plaque: 'IFGZQI2V' },
-      { code: 'DY8', model: 'Issi Rallye', id: '', plaque: '5Y8TMUJE' },
-      { code: 'DY8', model: 'Fugitive', id: '', plaque: 'KDMG1VTH' },
-      { code: 'DY8', model: 'Hachura', id: '', plaque: 'PEUU6EN5' },
-      { code: 'DY8', model: 'Hachura', id: '', plaque: 'NNBIPR2E' },
-      { code: 'DY8', model: 'Hakuchou', id: '', plaque: 'XAROIMWO' },
-      { code: 'DY8', model: 'Dominator GSX', id: '', plaque: 'KH2SZ0HS' },
-      { code: 'DY8', model: 'Double T', id: '', plaque: 'NFWWVPOG' }
-    ];
+    <script>
+const vehicles = [
+    { code: 'GRP', model: 'Mule2', id: '577469', plaque: '5XTUFKGE' },
+    { code: 'GRP', model: 'Mule', id: '87770', plaque: '0B0MKM9R' },
+    { code: 'GRP', model: 'Mule', id: '576238', plaque: 'DCAS22YQ' },
+    { code: 'GRP', model: 'Mule', id: '586782', plaque: '9PFCT8RI' },
+    { code: 'GRP', model: 'Mule', id: '586788', plaque: 'AE40DB2M' },
+    { code: 'GRP', model: 'Mule', id: '597234', plaque: 'UB0AAE0Z' },
+    { code: 'GRP', model: 'Mule', id: '597238', plaque: 'YCJZ9EBP' },
+    { code: 'GRP', model: 'Jogger', id: '572677', plaque: '2BBPLQII' },
+    { code: 'GRP', model: 'Jogger', id: '576212', plaque: 'M0LPFAR8' },
+    { code: 'DY8', model: 'Gauntelts', id: '', plaque: 'IFGZQI2V' },
+    { code: 'DY8', model: 'Issi Rallye', id: '', plaque: '5Y8TMUJE' },
+    { code: 'DY8', model: 'Fugitive', id: '', plaque: 'KDMG1VTH' },
+    { code: 'DY8', model: 'Hachura', id: '', plaque: 'PEUU6EN5' },
+    { code: 'DY8', model: 'Hachura', id: '', plaque: 'NNBIPR2E' },
+    { code: 'DY8', model: 'Hakuchou', id: '', plaque: 'XAROIMWO' },
+    { code: 'DY8', model: 'Dominator GSX', id: '', plaque: 'KH2SZ0HS' },
+    { code: 'DY8', model: 'Double T', id: '', plaque: 'NFWWVPOG' }
+];
 
-    function searchVehicle() {
-      const input = document.getElementById('search-input').value.trim().toUpperCase();
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '';
+document.getElementById('search-btn').addEventListener('click', function() {
+    const searchValue = document.getElementById('search').value.toUpperCase();
+    const resultDiv = document.getElementById('result');
+    const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
-      const foundVehicle = vehicles.find(vehicle => 
-        vehicle.plaque === input || vehicle.id === input
-      );
-
-      if (foundVehicle) {
-        resultDiv.innerHTML = `Code Partenaire: ${foundVehicle.code} <br> Modèle: ${foundVehicle.model}`;
-      } else {
-        resultDiv.innerHTML = 'Aucun véhicule trouvé.';
-      }
+    if (vehicle) {
+        resultDiv.innerHTML = `<p>Code Partenaire: ${vehicle.code}, Modèle: ${vehicle.model}</p>`;
+    } else {
+        resultDiv.innerHTML = `<p>Véhicule introuvable</p>`;
     }
+});
 
-    document.getElementById('theme-toggle').addEventListener('change', function() {
-      document.body.classList.toggle('night-mode');
-    });
-  </script>
+document.getElementById('theme-switch').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+    }
+});
 
+</script>
 </body>
 </html>
