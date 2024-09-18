@@ -176,6 +176,18 @@ input:checked ~ .icon #moon {
     text-shadow: 0px -2px #f39c12;
 }
 
+.emoji {
+    width: 20px; /* Taille réduite de l'emoji */
+    height: 20px;
+    vertical-align: middle; /* Aligne verticalement l'emoji avec le texte */
+    margin-right: 8px; /* Espace entre l'emoji et le texte */
+}
+
+.action-button {
+    display: flex; /* Flexbox pour aligner emoji et texte */
+    align-items: center; /* Alignement vertical centré */
+}
+
 .action-button:active {
     transform: translate(0px,5px);
     -webkit-transform: translate(0px,5px);
@@ -201,8 +213,12 @@ input:checked ~ .icon #moon {
         <div id="result"></div>
 
         <div class="button-container">
-            <a href="https://forms.gle/aEMtD82Xme2dyTSdA" class="action-button blue animate">Déclaration</a>
-            <a href="https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/edit?gid=0#gid=0" class="action-button red animate">Comptabilité</a>
+            <a href="https://forms.gle/aEMtD82Xme2dyTSdA" class="action-button blue animate">
+  <img src="https://cdn3.emoji.gg/emojis/23138-googleforms.png" alt="Form" class="emoji">
+Déclaration</a>
+            <a href="https://docs.google.com/spreadsheets/d/1pk7h4x_-0e5_8SV4fNA7SDEn7XC4hZsKe3jKesJvAA8/edit?gid=0#gid=0" class="action-button red animate">
+  <img src="https://cdn3.emoji.gg/emojis/8536-calculator.png" alt="Calculator" class="emoji">
+Comptabilité</a>
             <a href="#" class="action-button green animate">Calculatrice</a>
             <a href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="action-button yellow animate">Guide</a>
         </div>
