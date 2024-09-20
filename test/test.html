@@ -278,7 +278,7 @@ document.getElementById('search-btn').addEventListener('click', function() {
     const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
     if (vehicle) {
-        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicule.code} Modèle: ${vehicle.model}, Plaque: ${vehicule.plaque}, ID: ${vehicule.id}</p>`;
+        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
     } else {
         resultDiv.innerHTML = `<p>Véhicule introuvable</p>`;
     }
