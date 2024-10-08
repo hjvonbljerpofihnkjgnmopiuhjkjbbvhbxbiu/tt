@@ -3,56 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphique Simple avec Chart.js</title>
+    <title>Graphique Chiffre d'Affaires et Bénéfice Net</title>
     <!-- Inclure Chart.js depuis un CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Graphique des Valeurs</h1>
-    
-    <!-- Canvas où le graphique sera dessiné -->
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <h1>Graphique du Chiffre d'Affaires et du Bénéfice Net</h1>
+    <canvas id="myChart" width="400" height="200"></canvas> <!-- Le graphique sera affiché ici -->
 
-    <script>
-        // Sélection du contexte 2D pour dessiner dans le canvas
-        const ctx = document.getElementById('myChart').getContext('2d');
-        
-        // Création d'un graphique à barres avec Chart.js
-        const myChart = new Chart(ctx, {
-            type: 'bar',  // Type de graphique (bar, line, pie, etc.)
-            data: {
-                labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin'],  // Les étiquettes sur l'axe des X
-                datasets: [{
-                    label: 'Valeurs des mois',  // Label des données
-                    data: [12, 19, 3, 5, 2, 3],  // Les données à afficher sur l'axe Y
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1  // Épaisseur des bordures des barres
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true  // L'axe Y commence à 0
-                    }
-                }
-            }
-        });
-    </script>
+    <!-- Inclure le fichier JavaScript -->
+    <script src="scripttest.js"></script>
 </body>
 </html>
-
