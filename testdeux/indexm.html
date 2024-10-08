@@ -67,11 +67,11 @@
             tableau2.forEach(row => {
                 const identifiant = row[2]; // Colonne C
                 if (employesRoxwood.includes(identifiant)) {
-                    roxwoodFactures += parseFloat(row[4]) || 0; // Colonne E
-                    roxwoodCA += parseFloat(row[5]) || 0; // Colonne F
-                    roxwoodAchats += parseFloat(row[7]) || 0; // Colonne H
-                    roxwoodBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J
-                    roxwoodSalaires += parseFloat(row[22]) || 0; // Colonne W
+                    roxwoodFactures += parseInt(row[4]) || 0; // Colonne E - Nombre de factures
+                    roxwoodCA += parseFloat(row[5]) || 0; // Colonne F - Chiffre d'affaire
+                    roxwoodAchats += parseFloat(row[7]) || 0; // Colonne H - Chiffre d'achat
+                    roxwoodBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J - Bénéfice
+                    roxwoodSalaires += parseFloat(row[22]) || 0; // Colonne W - Salaires
                 }
             });
             logAction(`Total des factures Roxwood: ${roxwoodFactures}`);
@@ -93,11 +93,11 @@
             tableau2.forEach(row => {
                 const identifiant = row[2]; // Colonne C
                 if (employesPaleto.includes(identifiant)) {
-                    paletoFactures += parseFloat(row[4]) || 0; // Colonne E
-                    paletoCA += parseFloat(row[5]) || 0; // Colonne F
-                    paletoAchats += parseFloat(row[7]) || 0; // Colonne H
-                    paletoBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J
-                    paletoSalaires += parseFloat(row[22]) || 0; // Colonne W
+                    paletoFactures += parseInt(row[4]) || 0; // Colonne E - Nombre de factures
+                    paletoCA += parseFloat(row[5]) || 0; // Colonne F - Chiffre d'affaire
+                    paletoAchats += parseFloat(row[7]) || 0; // Colonne H - Chiffre d'achat
+                    paletoBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J - Bénéfice
+                    paletoSalaires += parseFloat(row[22]) || 0; // Colonne W - Salaires
                 }
             });
             logAction(`Total des factures Paleto: ${paletoFactures}`);
