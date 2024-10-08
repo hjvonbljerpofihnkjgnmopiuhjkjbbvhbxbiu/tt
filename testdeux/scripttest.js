@@ -1,3 +1,4 @@
+
 // Fonction pour récupérer et traiter les CSV
 function fetchCSV(url) {
     return fetch(url)
@@ -52,8 +53,12 @@ function processRoxwoodEmployees(roxwoodIds, tableau2) {
 
     for (let i = 5; i <= 34; i++) {  // B6:W35 correspond aux lignes 6 à 35 (index 5 à 34)
         const employeeId = tableau2[i][3];  // Colonne D = identifiant (hypothèse)
-        
+
         if (roxwoodIds.includes(employeeId)) {
+            // Afficher les valeurs avant de les additionner
+            console.log(`Traitement de l'employé ID: ${employeeId}`);
+            console.log(`Factures: ${tableau2[i][4]}, Chiffre d'Affaire: ${tableau2[i][5]}, Achats: ${tableau2[i][7]}, Bénéfice: ${tableau2[i][9]}, Salaires: ${tableau2[i][22]}`);
+
             totalFactures += parseFloat(tableau2[i][4]) || 0;  // Colonne E = nombre de factures
             totalChiffreAffaire += parseFloat(tableau2[i][5]) || 0;  // Colonne F = chiffre d'affaires
             totalAchats += parseFloat(tableau2[i][7]) || 0;  // Colonne H = chiffre d'achat
@@ -88,6 +93,10 @@ function processPaletoEmployees(paletoIds, tableau2) {
         const employeeId = tableau2[i][3];  // Colonne D = identifiant (hypothèse)
 
         if (paletoIds.includes(employeeId)) {
+            // Afficher les valeurs avant de les additionner
+            console.log(`Traitement de l'employé ID: ${employeeId}`);
+            console.log(`Factures: ${tableau2[i][4]}, Chiffre d'Affaire: ${tableau2[i][5]}, Achats: ${tableau2[i][7]}, Bénéfice: ${tableau2[i][9]}, Salaires: ${tableau2[i][22]}`);
+
             totalFactures += parseFloat(tableau2[i][4]) || 0;  // Colonne E = nombre de factures
             totalChiffreAffaire += parseFloat(tableau2[i][5]) || 0;  // Colonne F = chiffre d'affaires
             totalAchats += parseFloat(tableau2[i][7]) || 0;  // Colonne H = chiffre d'achat
@@ -112,3 +121,4 @@ function processPaletoEmployees(paletoIds, tableau2) {
 
 // Appeler la fonction principale pour traiter les employés
 processEmployees();
+
