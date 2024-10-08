@@ -49,9 +49,11 @@
 
             // Extraction des identifiants d'employés depuis le Tableau 1
             tableau1.forEach(row => {
-                const identifiant = row[3]; // Colonne D
+                const identifiant = row[3].trim(); // Colonne D
                 const isRoxwood = row[22] === 'TRUE'; // Colonne W
-                if (identifiant) { // Ignore les lignes sans identifiant
+                const idPattern = /^\d+$/; // Expression régulière pour valider que c'est un identifiant numérique
+
+                if (identifiant && idPattern.test(identifiant)) { // Ignore les lignes sans identifiant ou non numériques
                     if (isRoxwood) {
                         employesRoxwood.push(identifiant);
                     } else {
@@ -65,13 +67,13 @@
             // Calculs pour Roxwood
             let roxwoodFactures = 0, roxwoodCA = 0, roxwoodAchats = 0, roxwoodBeneficeBrut = 0, roxwoodSalaires = 0;
             tableau2.forEach(row => {
-                const identifiant = row[2]; // Colonne C
+                const identifiant = row[2].trim(); // Colonne C
                 if (employesRoxwood.includes(identifiant)) {
-                    roxwoodFactures += parseInt(row[4]) || 0; // Colonne E - Nombre de factures
-                    roxwoodCA += parseFloat(row[5]) || 0; // Colonne F - Chiffre d'affaire
-                    roxwoodAchats += parseFloat(row[7]) || 0; // Colonne H - Chiffre d'achat
-                    roxwoodBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J - Bénéfice
-                    roxwoodSalaires += parseFloat(row[22]) || 0; // Colonne W - Salaires
+                    roxwoodFactures += parseFloat(row[4]) || 0; // Colonne E
+                    roxwoodCA += parseFloat(row[5]) || 0; // Colonne F
+                    roxwoodAchats += parseFloat(row[7]) || 0; // Colonne H
+                    roxwoodBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J
+                    roxwoodSalaires += parseFloat(row[22]) || 0; // Colonne W
                 }
             });
             logAction(`Total des factures Roxwood: ${roxwoodFactures}`);
@@ -91,13 +93,13 @@
             // Calculs pour Paleto
             let paletoFactures = 0, paletoCA = 0, paletoAchats = 0, paletoBeneficeBrut = 0, paletoSalaires = 0;
             tableau2.forEach(row => {
-                const identifiant = row[2]; // Colonne C
+                const identifiant = row[2].trim(); // Colonne C
                 if (employesPaleto.includes(identifiant)) {
-                    paletoFactures += parseInt(row[4]) || 0; // Colonne E - Nombre de factures
-                    paletoCA += parseFloat(row[5]) || 0; // Colonne F - Chiffre d'affaire
-                    paletoAchats += parseFloat(row[7]) || 0; // Colonne H - Chiffre d'achat
-                    paletoBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J - Bénéfice
-                    paletoSalaires += parseFloat(row[22]) || 0; // Colonne W - Salaires
+                    paletoFactures += parseFloat(row[4]) || 0; // Colonne E
+                    paletoCA += parseFloat(row[5]) || 0; // Colonne F
+                    paletoAchats += parseFloat(row[7]) || 0; // Colonne H
+                    paletoBeneficeBrut += parseFloat(row[9]) || 0; // Colonne J
+                    paletoSalaires += parseFloat(row[22]) || 0; // Colonne W
                 }
             });
             logAction(`Total des factures Paleto: ${paletoFactures}`);
