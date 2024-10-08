@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graphique Chiffre d'Affaires et Bénéfice Net</title>
-    <!-- Inclure Chart.js depuis un CDN -->
+<style>
+        /* Réduire la taille du canvas */
+        canvas {
+            max-width: 300px;  /* largeur maximale du graphique */
+            max-height: 150px; /* hauteur maximale du graphique */
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>Graphique du Chiffre d'Affaires et du Bénéfice Net</h1>
-    <canvas id="myChart" width="200" height="100"></canvas> <!-- Le graphique sera affiché ici -->
+    <canvas id="myChart" width="200" height="100"></canvas> <!-- Le graphique -->
 
-    <!-- Inclure le fichier JavaScript -->
+
     <script src="scripttest.js"></script>
 </body>
 </html>
