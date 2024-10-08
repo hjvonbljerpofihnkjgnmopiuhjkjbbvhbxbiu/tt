@@ -44,13 +44,9 @@
 
         // Fonction pour vérifier si une ligne est valide (sans éléments indésirables)
         function isValidRow(row) {
-            const invalidPatterns = [
-                /\{.*\}/, // RegEx pour détecter les accolades
-                /#.*#/,   // RegEx pour détecter les éléments entre hashtags
-                /#Pourcentage/, // Assure que les lignes avec "Pourcentage" ne soient pas prises en compte
-                /Prix de craft/ // Assure que les lignes avec "Prix de craft" ne soient pas prises en compte
-            ];
-            return !invalidPatterns.some(pattern => pattern.test(row.join(','))); // Vérifie si la ligne ne contient pas d'éléments indésirables
+            const invalidPattern = /\{.*\}/; // RegEx pour détecter les lignes contenant des accolades
+            const unwantedKeywords = ["Pourcentage", "Prix de craft", "$"]; // Mots-clés à ignorer
+            return !invalidPattern.test(row.join(',')) && !unwantedKeywords.some(keyword => row.join(',').includes(keyword));
         }
 
         // Fonction principale
