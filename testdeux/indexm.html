@@ -35,15 +35,22 @@
 
         // Fonction pour charger un CSV depuis une URL et le convertir en tableau
         async function loadCSV(url) {
+            console.log(`Fetching data from: ${url}`);
             const response = await fetch(url);
             const text = await response.text();
+            console.log(`Data fetched successfully from: ${url}`);
             return text.split('\n').map(row => row.split(','));
         }
 
         // Fonction principale pour traiter les données et afficher les résultats
         async function processData() {
+            console.log("Starting data processing...");
+
             const tableau1 = await loadCSV(urlTableau1);
             const tableau2 = await loadCSV(urlTableau2);
+
+            console.log("Data from Tableau 1:", tableau1);
+            console.log("Data from Tableau 2:", tableau2);
 
             // Récupérer les identifiants des employés de RoxWood et Paleto
             const roxwoodIds = [];
@@ -54,10 +61,15 @@
                 const isRoxwood = row[22] === 'TRUE';
                 if (isRoxwood) {
                     roxwoodIds.push(employeeId);
+                    console.log(`Found RoxWood employee with ID: ${employeeId}`);
                 } else {
                     paletoIds.push(employeeId);
+                    console.log(`Found Paleto employee with ID: ${employeeId}`);
                 }
             });
+
+            console.log("RoxWood Employee IDs:", roxwoodIds);
+            console.log("Paleto Employee IDs:", paletoIds);
 
             // Initialiser les sommes pour RoxWood et Paleto
             let roxwoodFactures = 0, roxwoodCA = 0, roxwoodAchat = 0, roxwoodBeneficeBrut = 0, roxwoodSalaries = 0;
@@ -73,12 +85,14 @@
                 const salaire = parseFloat(row[22]) || 0;
 
                 if (roxwoodIds.includes(employeeId)) {
+                    console.log(`Processing RoxWood employee ID: ${employeeId}`);
                     roxwoodFactures += factures;
                     roxwoodCA += ca;
                     roxwoodAchat += achat;
                     roxwoodBeneficeBrut += benefice;
                     roxwoodSalaries += salaire;
                 } else if (paletoIds.includes(employeeId)) {
+                    console.log(`Processing Paleto employee ID: ${employeeId}`);
                     paletoFactures += factures;
                     paletoCA += ca;
                     paletoAchat += achat;
@@ -90,6 +104,9 @@
             // Calcul des bénéfices nets
             const roxwoodBeneficeNet = roxwoodBeneficeBrut - roxwoodSalaries;
             const paletoBeneficeNet = paletoBeneficeBrut - paletoSalaries;
+
+            console.log("RoxWood Totals:", { roxwoodFactures, roxwoodCA, roxwoodAchat, roxwoodBeneficeBrut, roxwoodBeneficeNet });
+            console.log("Paleto Totals:", { paletoFactures, paletoCA, paletoAchat, paletoBeneficeBrut, paletoBeneficeNet });
 
             // Afficher les résultats pour RoxWood
             document.getElementById('roxwood-factures').textContent = roxwoodFactures;
@@ -104,6 +121,8 @@
             document.getElementById('paleto-achat').textContent = paletoAchat;
             document.getElementById('paleto-benefice-brut').textContent = paletoBeneficeBrut;
             document.getElementById('paleto-benefice-net').textContent = paletoBeneficeNet;
+
+            console.log("Data processing completed.");
         }
 
         // Charger et traiter les données au chargement de la page
