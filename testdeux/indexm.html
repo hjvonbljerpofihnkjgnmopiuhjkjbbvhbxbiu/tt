@@ -49,9 +49,11 @@
                 for (let i = 2; i <= 31; i++) {  // D3:W32 correspond aux lignes 3 à 32 (index 2 à 31)
                     const employeeId = tableau1[i][3].trim();  // Colonne D = identifiant
                     const isRoxwood = tableau1[i][22].trim().toUpperCase() === 'TRUE';  // Colonne W = boolean
+                    console.log(`Traitement ligne ${i + 1}: ID = ${employeeId}, Roxwood = ${isRoxwood}`);  // Debug info
+
                     if (isRoxwood) {
                         roxwoodIds.push(employeeId);
-                    } else {
+                    } else if (employeeId) {
                         paletoIds.push(employeeId);
                     }
                 }
