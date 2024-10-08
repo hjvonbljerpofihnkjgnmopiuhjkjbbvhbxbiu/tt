@@ -4,110 +4,107 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Récupération des Données Employés</title>
+    <title>Employés RoxWood et Paleto</title>
+    <style>
+        .results {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    <h1>Informations sur les employés</h1>
 
-    <div id="roxwoodResults">
-        <h2>Employés de Roxwood</h2>
-        <div>Nombre total de factures : <span id="roxwoodFactures"></span></div>
-        <div>Chiffre d'affaires généré : <span id="roxwoodChiffreAffaire"></span></div>
-        <div>Chiffre d'achat total : <span id="roxwoodChiffreAchat"></span></div>
-        <div>Bénéfice brut : <span id="roxwoodBeneficeBrut"></span></div>
-        <div>Bénéfice net : <span id="roxwoodBeneficeNet"></span></div>
-    </div>
+    <h1>Résultats pour RoxWood</h1>
+    <div class="results" id="roxwood-factures">Factures Total: </div>
+    <div class="results" id="roxwood-chiffre-affaire">Chiffre d'affaire Total: </div>
+    <div class="results" id="roxwood-chiffre-achat">Chiffre d'achat Total: </div>
+    <div class="results" id="roxwood-benefice-brut">Bénéfice Brut: </div>
+    <div class="results" id="roxwood-benefice-net">Bénéfice Net: </div>
 
-    <div id="paletoResults">
-        <h2>Employés de Paleto</h2>
-        <div>Nombre total de factures : <span id="paletoFactures"></span></div>
-        <div>Chiffre d'affaires généré : <span id="paletoChiffreAffaire"></span></div>
-        <div>Chiffre d'achat total : <span id="paletoChiffreAchat"></span></div>
-        <div>Bénéfice brut : <span id="paletoBeneficeBrut"></span></div>
-        <div>Bénéfice net : <span id="paletoBeneficeNet"></span></div>
-    </div>
+    <h1>Résultats pour Paleto</h1>
+    <div class="results" id="paleto-factures">Factures Total: </div>
+    <div class="results" id="paleto-chiffre-affaire">Chiffre d'affaire Total: </div>
+    <div class="results" id="paleto-chiffre-achat">Chiffre d'achat Total: </div>
+    <div class="results" id="paleto-benefice-brut">Bénéfice Brut: </div>
+    <div class="results" id="paleto-benefice-net">Bénéfice Net: </div>
 
     <script>
-        // URLs des tableaux CSV
-        const tableau1URL = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=821726330';
-        const tableau2URL = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
+        // URLs des fichiers CSV
+        const tableau1Url = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=821726330';
+        const tableau2Url = 'https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=582059801';
 
-        // Fonction pour parser le CSV en un tableau d'objets
-        function parseCSV(csv) {
-            const lines = csv.split('\n');
-            const headers = lines[0].split(',');
-            return lines.slice(1).map(line => {
-                const data = line.split(',');
-                return headers.reduce((obj, header, index) => {
-                    obj[header.trim()] = data[index]?.trim();
-                    return obj;
-                }, {});
-            });
-        }
+        // Fonctions pour analyser les données et afficher les résultats
+        async function fetchAndProcessData() {
+            console.log("Début de la récupération des données des tableaux.");
 
-        // Fonction principale pour récupérer et traiter les données
-        async function fetchData() {
-            console.log('Démarrage du script');
-            
-            try {
-                const [response1, response2] = await Promise.all([
-                    fetch(tableau1URL),
-                    fetch(tableau2URL)
-                ]);
+            // Récupérer les données des deux tableaux
+            const [tableau1Data, tableau2Data] = await Promise.all([
+                fetch(tableau1Url).then(response => response.text()),
+                fetch(tableau2Url).then(response => response.text())
+            ]);
 
-                const tableau1 = parseCSV(await response1.text());
-                const tableau2 = parseCSV(await response2.text());
+            console.log("Données des tableaux récupérées avec succès.");
 
-                console.log('Données récupérées des deux tableaux');
+            // Convertir les CSV en tableau
+            const tableau1 = tableau1Data.split('\n').slice(2, 42).map(row => row.split(','));
+            const tableau2 = tableau2Data.split('\n').slice(5, 45).map(row => row.split(','));
 
-                const roxwoodIDs = tableau1
-                    .filter(row => row['D'] && row['W'] === 'TRUE')
-                    .map(row => row['D']);
-                console.log('Identifiants employés de Roxwood:', roxwoodIDs);
+            // Extraire les identifiants des employés de RoxWood et Paleto
+            const employeesRoxWood = tableau1.filter(row => row[19] === 'TRUE').map(row => row[0]);
+            const employeesPaleto = tableau1.filter(row => row[19] === 'FALSE').map(row => row[0]);
 
-                const paletoIDs = tableau1
-                    .filter(row => row['D'] && row['W'] === 'FALSE')
-                    .map(row => row['D']);
-                console.log('Identifiants employés de Paleto:', paletoIDs);
+            console.log("Employés de RoxWood:", employeesRoxWood);
+            console.log("Employés de Paleto:", employeesPaleto);
 
-                calculateAndDisplayResults(roxwoodIDs, tableau2, 'roxwood');
-                calculateAndDisplayResults(paletoIDs, tableau2, 'paleto');
-            } catch (error) {
-                console.error('Erreur lors de la récupération des données:', error);
-            }
-        }
+            // Initialiser les totaux
+            let roxwoodData = { factures: 0, chiffreAffaire: 0, achat: 0, beneficeBrut: 0, salaires: 0 };
+            let paletoData = { factures: 0, chiffreAffaire: 0, achat: 0, beneficeBrut: 0, salaires: 0 };
 
-        // Fonction pour calculer et afficher les résultats
-        function calculateAndDisplayResults(ids, tableau, type) {
-            let totalFactures = 0;
-            let totalChiffreAffaire = 0;
-            let totalChiffreAchat = 0;
-            let totalBenefice = 0;
-            let totalSalaires = 0;
-
-            tableau.forEach(row => {
-                if (ids.includes(row['C'])) {
-                    totalFactures += parseFloat(row['E']) || 0;
-                    totalChiffreAffaire += parseFloat(row['F']) || 0;
-                    totalChiffreAchat += parseFloat(row['H']) || 0;
-                    totalBenefice += parseFloat(row['J']) || 0;
-                    totalSalaires += parseFloat(row['W']) || 0;
+            // Calculer les totaux pour RoxWood et Paleto
+            tableau2.forEach(row => {
+                const identifiant = row[2];
+                if (employeesRoxWood.includes(identifiant)) {
+                    roxwoodData.factures += parseFloat(row[4]) || 0;
+                    roxwoodData.chiffreAffaire += parseFloat(row[5]) || 0;
+                    roxwoodData.achat += parseFloat(row[7]) || 0;
+                    roxwoodData.beneficeBrut += parseFloat(row[9]) || 0;
+                    roxwoodData.salaires += parseFloat(row[22]) || 0;
+                }
+                if (employeesPaleto.includes(identifiant)) {
+                    paletoData.factures += parseFloat(row[4]) || 0;
+                    paletoData.chiffreAffaire += parseFloat(row[5]) || 0;
+                    paletoData.achat += parseFloat(row[7]) || 0;
+                    paletoData.beneficeBrut += parseFloat(row[9]) || 0;
+                    paletoData.salaires += parseFloat(row[22]) || 0;
                 }
             });
 
-            const beneficeNet = totalBenefice - totalSalaires;
+            // Calcul des bénéfices nets
+            roxwoodData.beneficeNet = roxwoodData.beneficeBrut - roxwoodData.salaires;
+            paletoData.beneficeNet = paletoData.beneficeBrut - paletoData.salaires;
 
-            document.getElementById(`${type}Factures`).textContent = totalFactures;
-            document.getElementById(`${type}ChiffreAffaire`).textContent = totalChiffreAffaire;
-            document.getElementById(`${type}ChiffreAchat`).textContent = totalChiffreAchat;
-            document.getElementById(`${type}BeneficeBrut`).textContent = totalBenefice;
-            document.getElementById(`${type}BeneficeNet`).textContent = beneficeNet;
+            console.log("Données calculées pour RoxWood:", roxwoodData);
+            console.log("Données calculées pour Paleto:", paletoData);
 
-            console.log(`Résultats pour ${type} calculés et affichés.`);
+            // Afficher les résultats pour RoxWood
+            document.getElementById('roxwood-factures').textContent += roxwoodData.factures;
+            document.getElementById('roxwood-chiffre-affaire').textContent += roxwoodData.chiffreAffaire;
+            document.getElementById('roxwood-chiffre-achat').textContent += roxwoodData.achat;
+            document.getElementById('roxwood-benefice-brut').textContent += roxwoodData.beneficeBrut;
+            document.getElementById('roxwood-benefice-net').textContent += roxwoodData.beneficeNet;
+
+            // Afficher les résultats pour Paleto
+            document.getElementById('paleto-factures').textContent += paletoData.factures;
+            document.getElementById('paleto-chiffre-affaire').textContent += paletoData.chiffreAffaire;
+            document.getElementById('paleto-chiffre-achat').textContent += paletoData.achat;
+            document.getElementById('paleto-benefice-brut').textContent += paletoData.beneficeBrut;
+            document.getElementById('paleto-benefice-net').textContent += paletoData.beneficeNet;
         }
 
-        // Lancer le script à l'exécution de la page
-        fetchData();
+        // Appeler la fonction pour démarrer le traitement
+        fetchAndProcessData().catch(error => console.error('Erreur lors du traitement des données:', error));
     </script>
+
 </body>
 </html>
