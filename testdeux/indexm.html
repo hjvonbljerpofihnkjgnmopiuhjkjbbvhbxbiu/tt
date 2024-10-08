@@ -57,9 +57,12 @@
         function isValidRow(row) {
             const invalidPattern = /\{.*\}/; // RegEx pour détecter les lignes contenant des accolades
             const invalidKeywords = ['Pourcentage', 'Prix de craft']; // Mots clés à exclure
+            const invalidValues = ['50%', '45%', '40%', '33%', '27%', '25 $', '10 $', '5 $', '7 $']; // Valeurs à exclure
             const rowString = row.join(','); // Concatène la ligne en une seule chaîne
 
-            return !invalidPattern.test(rowString) && !invalidKeywords.some(keyword => rowString.includes(keyword));
+            return !invalidPattern.test(rowString) && 
+                   !invalidKeywords.some(keyword => rowString.includes(keyword)) && 
+                   !invalidValues.some(value => rowString.includes(value));
         }
 
         // Fonction principale
