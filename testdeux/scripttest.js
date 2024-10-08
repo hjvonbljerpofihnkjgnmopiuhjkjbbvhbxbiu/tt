@@ -18,8 +18,10 @@ function fetchCSVAndGenerateChart(url) {
                 // Si les colonnes importantes sont remplies
                 if (week && revenue && netProfit) {
                     weeks.push(week.trim());  // Ajout de la semaine
-                    revenues.push(parseFloat(revenue.trim()));  // Ajout du chiffre d'affaires (en milliers)
-                    netProfits.push(parseFloat(netProfit.trim()));  // Ajout du bénéfice net (en milliers)
+                    
+                    // Supprimer les espaces dans les chiffres avant de les convertir en nombres
+                    revenues.push(parseFloat(revenue.replace(/\s/g, '').trim()));  // Chiffre d'affaires
+                    netProfits.push(parseFloat(netProfit.replace(/\s/g, '').trim()));  // Bénéfice net
                 }
             }
 
@@ -38,14 +40,14 @@ function generateChart(weeks, revenues, netProfits) {
             labels: weeks,  // Les semaines sur l'axe X
             datasets: [
                 {
-                    label: 'Chiffre d\'affaires (en milliers)',
+                    label: 'Chiffre d\'affaires',
                     data: revenues,  // Données pour le chiffre d'affaires
                     borderColor: 'rgba(75, 192, 192, 1)',  // Couleur de la ligne
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Couleur du remplissage
                     fill: true
                 },
                 {
-                    label: 'Bénéfice net (en milliers)',
+                    label: 'Bénéfice net',
                     data: netProfits,  // Données pour le bénéfice net
                     borderColor: 'rgba(153, 102, 255, 1)',
                     backgroundColor: 'rgba(153, 102, 255, 0.2)',
@@ -56,26 +58,25 @@ function generateChart(weeks, revenues, netProfits) {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: true,  // Commencer l'axe Y à 0
                     ticks: {
-                        // Formater les ticks (valeurs sur l'axe Y) en milliers
+                        // Afficher les valeurs avec des séparateurs de milliers
                         callback: function(value) {
-                            return value + 'k';  // Ajouter 'k' pour indiquer milliers
+                            return value.toLocaleString();  // Formater les valeurs avec des séparateurs de milliers
                         }
                     }
                 }
             },
-            responsive: true,
+            responsive: true,  // Le graphique est réactif
             plugins: {
                 title: {
                     display: true,
-                    text: 'Chiffre d\'affaires et Bénéfice net par semaine (en milliers)'
+                    text: 'Chiffre d\'affaires et Bénéfice net par semaine'
                 }
             }
         }
     });
 }
-
 
 // Appel de la fonction avec l'URL du CSV Google Sheets exporté
 fetchCSVAndGenerateChart('https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/export?format=csv&gid=49803468');
