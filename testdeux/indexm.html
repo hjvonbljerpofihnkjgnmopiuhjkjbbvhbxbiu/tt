@@ -5,6 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcul Employés RoxWood et Paleto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            color: #333;
+        }
+        div {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h2>RoxWood</h2>
@@ -45,8 +56,10 @@
         // Fonction pour vérifier si une ligne est valide (sans éléments indésirables)
         function isValidRow(row) {
             const invalidPattern = /\{.*\}/; // RegEx pour détecter les lignes contenant des accolades
-            const unwantedKeywords = ["Pourcentage", "Prix de craft", "$"]; // Mots-clés à ignorer
-            return !invalidPattern.test(row.join(',')) && !unwantedKeywords.some(keyword => row.join(',').includes(keyword));
+            const invalidKeywords = ['Pourcentage', 'Prix de craft']; // Mots clés à exclure
+            const rowString = row.join(','); // Concatène la ligne en une seule chaîne
+
+            return !invalidPattern.test(rowString) && !invalidKeywords.some(keyword => rowString.includes(keyword));
         }
 
         // Fonction principale
