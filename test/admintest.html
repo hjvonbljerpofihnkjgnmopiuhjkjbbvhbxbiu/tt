@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Véhicule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+h1{
+    color: whitesmoke;
+}
+
+.light-mode {
+    background-color: #1f1f2e;
+    color: #27293d;
+}
+
+.dark-mode {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.container-button {
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.switch-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #333;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+    width: 40px;
+}
+
+#sun {
+    opacity: 1;
+    transition: opacity 0.4s;
+}
+
+#moon {
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+input:checked ~ .icon #sun {
+    opacity: 0;
+}
+
+input:checked ~ .icon #moon {
+    opacity: 1;
+}
+
+/* Button styles */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.animate {
+    transition: all 0.1s;
+    -webkit-transition: all 0.1s;
+}
+
+.action-button {
+    position: relative;
+    padding: 10px 40px;
+    margin: 0px 15px 25px 0px;
+    float: left;
+    border-radius: 3px;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    color: #FFF;
+    text-decoration: none;
+}
+
+.blue {
+    background-color: #b934db;
+    border-bottom: 5px solid #802598;
+    text-shadow: 0px -2px #802598;
+}
+
+.red {
+    background-color: #e74c3c;
+    border-bottom: 5px solid #c0392b;
+    text-shadow: 0px -2px #c0392b;
+}
+
+.green {
+    background-color: #2ecc71;
+    border-bottom: 5px solid #27ae60;
+    text-shadow: 0px -2px #27ae60;
+}
+
+.yellow {
+    background-color: #f1c40f;
+    border-bottom: 5px solid #f39c12;
+    text-shadow: 0px -2px #f39c12;
+}
+
+.orange {
+    background-color: #f97300;
+    border-bottom: 5px solid #cc5e00;
+    text-shadow: 0px -2px #cc5e00;
+}
+
+.bleu {
+    background-color: #0d5cd2;
+    border-bottom: 5px solid #063D8F;
+    text-shadow: 0px -2px #063D8F;
+}
+
+.blanc {
+    background-color: #d17c18;
+    border-bottom: 5px solid #c16414;
+    text-shadow: 0px -2px #c16414;
+}
+
+.emoji {
+    width: 20px; /* Taille réduite de l'emoji */
+    height: 20px;
+    vertical-align: middle; /* Aligne verticalement l'emoji avec le texte */
+    margin-right: 8px; /* Espace entre l'emoji et le texte */
+}
+
+.action-button {
+    display: flex; /* Flexbox pour aligner emoji et texte */
+    align-items: center; /* Alignement vertical centré */
+}
+
+.action-button:active {
+    transform: translate(0px,5px);
+    -webkit-transform: translate(0px,5px);
+    border-bottom: 1px solid;
+}
+
+.notif {
+  position: fixed;
+  left: 20px;
+  bottom: -50px;
+  background-color: #323232;
+  padding: 12px 24px 17px 24px;
+  vertical-align: middle;
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(0,0,0,0.2);
+  border-radius: 1px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.peek {
+  -webkit-animation: peek 5s forwards;
+  -webkit-animation-delay: 0.5s;
+  animation: peek 5s forwards;
+  animation-delay: 500ms;
+}
+
+.show {
+  -webkit-animation: show 0.5s forwards;
+  -webkit-animation-delay: 0.5s;
+  animation: show 0.5s forwards;
+  animation-delay: 500ms;
+}
+
+@-webkit-keyframes peek {
+      0% { bottom: -50px; }
+     10% { bottom: 80px; }  /*demo purposes; change to 20px*/
+     90% { bottom: 80px; }  /*demo purposes; change to 20px*/
+    100% { bottom: -50px; }
+}
+
+@keyframes peek {
+      0% { bottom: -50px; }
+     10% { bottom: 80px; }  /*demo purposes; change to 20px*/
+     90% { bottom: 80px; }  /*demo purposes; change to 20px*/
+    100% { bottom: -50px; }
+}
+
+
+@-webkit-keyframes show {
+    100% { bottom: 20px; }
+}
+
+@keyframes show {
+    100% { bottom: 20px; }
+}
+</style>
+</head>
+<body class="light-mode">
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="theme-switch">
+            <span class="slider"></span>
+            <div class="icon">🌙<span id="sun"></span><span id="moon">☀️</span></div>
+        </label>
+    </div>
+
+    <div class="container">
+        <h1>Recherche de Véhicule</h1>
+        <input type="text" id="search" placeholder="Entrez l'ID du véhicule ou la plaque">
+        <button id="search-btn">🔍 Rechercher</button>
+
+        <div id="result"></div>
+
+        <div class="button-container">
+            <div class="container-button">
+                <a href="https://forms.gle/aEMtD82Xme2dyTSdA" class="action-button blue animate">
+                <img src="https://cdn3.emoji.gg/emojis/23138-googleforms.png" alt="Form" class="emoji">
+                Déclaration</a>
+
+                <a href="https://docs.google.com/spreadsheets/d/1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g/edit?gid=821726330#gid=821726330" class="action-button red animate">
+                <img src="https://cdn3.emoji.gg/emojis/30609-googlesheets.png" alt="Sheet" class="emoji">
+                Comptabilité</a>
+
+                <a href="https://docs.google.com/spreadsheets/d/1L0jPzK__Mb8-gxCHjDT_nfNHWH9kliwA2T0fhPWnCe8/edit?gid=0#gid=0" class="action-button green animate">
+                <img src="https://cdn3.emoji.gg/emojis/6650-samsungcalculator.png" alt="Calculator" class="emoji">
+                Calculatrice</a>
+
+                <a href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test.html" class="action-button yellow animate">
+                <img src="https://cdn3.emoji.gg/emojis/2138-books.png" alt="Guide" class="emoji">
+                Guide</a>
+
+                <a href="https://hjvonbljerpofihnkjgnmopiuhjkjbbvhbxbiu.github.io/tt/test/hh.html" class="action-button bleu animate">
+                <img src="https://cdn3.emoji.gg/emojis/54633-paint.png" alt="Palette" class="emoji">
+                Palette Custom</a>
+
+                <a href="https://crisbrb.github.io/CustomMotors/" class="action-button orange animate">
+                <img src="" alt="Dash" class="emoji">
+                Dashboard</a>
+
+                <a href="#" class="action-button blanc animate">
+                <img src="https://cdn3.emoji.gg/emojis/54633-paint.png" alt="Archive" class="emoji">
+                Archive</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const vehicles = [
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '599686', plaque: 'EAV9IRI1' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule2', id: '577469', plaque: '5XTUFKGE' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '87770', plaque: '0B0MKM9R' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '576238', plaque: 'DCAS22YQ' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '586782', plaque: '9PFCT8RI' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '586788', plaque: 'AE40DB2M' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '597234', plaque: 'UB0AAE0Z' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '597238', plaque: 'YCJZ9EBP' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Jogger', id: '572677', plaque: '2BBPLQII' },
+    { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Jogger', id: '576212', plaque: 'M0LPFAR8' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Benson', id: '304117', plaque: 'ZQ3PGDGN' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Bison', id: '115346', plaque: '05RAH209' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Speedo', id: '374065', plaque: 'TTFDHU7Z' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Benson', id: '374061', plaque: 'ZQ3PGDGN' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Benson', id: '304117', plaque: 'RPEFAAKG' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Mule', id: '141130', plaque: 'YHLVFMXN' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Benson', id: '163654', plaque: 'PHTEA5HS' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Bison', id: '304117', plaque: 'PP0UWXWI' },
+    { ent: `🐟| Millar's Fishery`, code: 'MIL/MILEXT', model: 'Sandking', id: '298856', plaque: 'BQSJF2QJ' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '341272', plaque: '81UNR658' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '361144', plaque: 'KBRELOTU' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '385492', plaque: '74HWFP3N' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '252734', plaque: 'IHTXWZOU' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '546402', plaque: 'UUR61IKC' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Benson', id: '385495', plaque: 'XLJYYESL' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Pounder2', id: '385502', plaque: 'RDOK0EBO' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Bobcatxl', id: '5334', plaque: '80GGA326' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Rumpo Box', id: '9118', plaque: '67WLS213' },
+    { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
+];
+
+document.getElementById('search-btn').addEventListener('click', function() {
+    const searchValue = document.getElementById('search').value.toUpperCase();
+    const resultDiv = document.getElementById('result');
+
+    // Vérification si le champ est vide
+    if (searchValue.trim() === "") {
+        resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
+        return;
+    }
+
+    const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
+
+    if (vehicle) {
+        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+    } else {
+        resultDiv.innerHTML = `<p>Véhicule introuvable</p>`;
+    }
+});
+
+// Changement de thème clair/sombre
+document.getElementById('theme-switch').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+    }
+});
+
+
+</script>
+<div class="notif show">  <!--stays on screen 4eva-->
+  Recherche Ferme Grapeseed, Milars-Fish, Ferme BioGood ✅
+</div>
+
+
+
+<!-- <div class="notif peek"> -->  
+<!--    ID Chassis Dynasty 8 ❌-->
+<!-- </div>-->
+</body>
+</html>
