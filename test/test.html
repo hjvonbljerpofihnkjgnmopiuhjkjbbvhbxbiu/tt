@@ -322,6 +322,26 @@ input:checked ~ .icon #moon {
     </div>
 
     <script>
+// Ajout des données Badge/Nom depuis Google Sheet
+let badgeData = [];
+
+// Fonction pour charger les données du CSV
+fetch('https://docs.google.com/spreadsheets/d/10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M/export?format=csv&gid=0')
+    .then(response => response.text())
+    .then(csvData => {
+        // Transformation du CSV en tableau JavaScript
+        const rows = csvData.split('\n');
+        for (let i = 5; i < 85; i++) { // G6 à H85 correspond aux indices 5 à 84
+            const columns = rows[i].split(',');
+            const name = columns[6].trim(); // Colonne G (Nom et prénom)
+            const badge = columns[7].trim(); // Colonne H (n° de badge)
+            if (name && badge) { // Si le nom et le badge ne sont pas vides
+                badgeData.push({ name, badge, company: '👨🌾| Ferme Grapeseed' });
+            }
+        }
+    });
+
+const vehicles = [
 const vehicles = [
     { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '599686', plaque: 'EAV9IRI1' },
     { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule2', id: '577469', plaque: '5XTUFKGE' },
@@ -354,23 +374,33 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
+// Fonction de recherche
 document.getElementById('search-btn').addEventListener('click', function() {
     const searchValue = document.getElementById('search').value.toUpperCase();
     const resultDiv = document.getElementById('result');
 
-    // Vérification si le champ est vide
     if (searchValue.trim() === "") {
         resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
         return;
     }
 
+    // Recherche par véhicule (ID ou plaque)
     const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
     if (vehicle) {
         resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-    } else {
-        resultDiv.innerHTML = `<p>Véhicule introuvable</p>`;
+        return;
     }
+
+    // Recherche par badge
+    const badgePerson = badgeData.find(person => person.badge === searchValue);
+    
+    if (badgePerson) {
+        resultDiv.innerHTML = `<p>${badgePerson.name} - ${badgePerson.badge} - ${badgePerson.company}</p>`;
+        return;
+    }
+
+    resultDiv.innerHTML = `<p>Aucun résultat trouvé pour cette recherche.</p>`;
 });
 
 // Changement de thème clair/sombre
@@ -383,7 +413,6 @@ document.getElementById('theme-switch').addEventListener('change', function() {
         document.body.classList.add('light-mode');
     }
 });
-
 
 </script>
 <div class="notif show">  
