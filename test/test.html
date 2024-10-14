@@ -355,59 +355,50 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-        let users = [];
-
-        // Fonction pour récupérer les données des utilisateurs
-        async function fetchUsers() {
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbw0VlAfGAogrXbeNfrV3hCsM_Kpk_MIHcB000-oCJfqIRG424wvpLQhFFarmimOb9etPw/exec');
-                const data = await response.json();
-
-                // Récupération des données entre G6 et H85
-                users = data.slice(5, 85).map(row => ({
-                    name: row[0], // Assurez-vous que la colonne G est à l'index 0
-                    badge: row[1], // Assurez-vous que la colonne H est à l'index 1
-                    ent: 'Ferme Grapeseed' // Nom de l'entreprise
-                })).filter(user => user.name && user.badge); // Supprimer les entrées vides
-
-            } catch (error) {
-                console.error('Erreur lors de la récupération des utilisateurs:', error);
-            }
+       async function fetchData() {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbw0VlAfGAogrXbeNfrV3hCsM_Kpk_MIHcB000-oCJfqIRG424wvpLQhFFarmimOb9etPw/exec");
+            const data = await response.json();
+            return data.map(person => ({
+                nomPrenom: person.nomPrenom,
+                badge: person.badge,
+                ent: 'Ferme Grapeseed' // Nom d'entreprise associé
+            }));
         }
 
-        // Lancer la récupération des utilisateurs
-        fetchUsers();
-
-        document.getElementById('search-btn').addEventListener('click', function() {
+        // Fonction de recherche
+        async function searchVehicles() {
             const searchValue = document.getElementById('search').value.toUpperCase();
             const resultDiv = document.getElementById('result');
 
-            // Vérification si le champ est vide
             if (searchValue.trim() === "") {
                 resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
                 return;
             }
 
-            // Recherche d'un véhicule
+            // Récupérer les données des badges
+            const badgeData = await fetchData();
+
+            // Chercher dans les véhicules et les données de badge
             const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
+            const person = badgeData.find(p => p.badge === searchValue);
 
-            // Recherche d'un utilisateur
-            const user = users.find(u => u.badge === searchValue || u.name.toUpperCase().includes(searchValue));
-
-            // Affichage des résultats
             if (vehicle) {
-                resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-            } else if (user) {
-                resultDiv.innerHTML = `<p>${user.name} - ${user.badge} - ${user.ent}</p>`;
+                resultDiv.innerHTML = `<p>${vehicle.ent} - ${vehicle.plaque} - ${vehicle.id}</p>`;
+            } else if (person) {
+                resultDiv.innerHTML = `<p>${person.nomPrenom} - ${person.badge} - ${person.ent}</p>`;
             } else {
-                resultDiv.innerHTML = `<p>Véhicule ou utilisateur introuvable</p>`;
+                resultDiv.innerHTML = `<p>Véhicule ou badge introuvable</p>`;
             }
-        });
+        }
+
+        document.getElementById('search-btn').addEventListener('click', searchVehicles);
 
         // Changement de thème clair/sombre
         document.getElementById('theme-switch').addEventListener('change', function() {
             document.body.classList.toggle('dark-mode', this.checked);
+            document.body.classList.toggle('light-mode', !this.checked);
         });
+
     </script>
 
 <div class="notif show">  
