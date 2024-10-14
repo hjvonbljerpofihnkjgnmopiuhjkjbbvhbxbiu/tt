@@ -355,40 +355,31 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-let badges = [];
+let badgesData = [];
 
-// Fonction pour récupérer les données des badges
+// Fonction pour récupérer les données des badges depuis l'URL fourni
 async function fetchBadgesData() {
-    const urls = [
-        { url: 'https://script.googleusercontent.com/macros/echo?user_content_key=3DRZRqdxaMju51M8Kixd5q9fylSDIXyYV4YBYtJ_-K8zw6oc_d4U0bo-L20p5G4YwPmncEaRGFWc0CjRL1fOJBOUubEZ_mWdm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNdashjk-17ya8e2W50vXILm7oeRMlTbcXs7EsAMZVp0BYsKO3IZ2E5cj-IHitfAwS-CK-9w2_H5q1JJnmo3Ro3dnh9WqeZsRNz9Jw9Md8uu&lib=MyMvh9ZEEdE1HrLjGEbaOMAtI-IdHFEsA', 
-          company: 'Ferme Grapeseed' }
-        // Ajouter d'autres liens et entreprises ici si nécessaire
-    ];
+    const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=3DRZRqdxaMju51M8Kixd5q9fylSDIXyYV4YBYtJ_-K8zw6oc_d4U0bo-L20p5G4YwPmncEaRGFWc0CjRL1fOJBOUubEZ_mWdm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNdashjk-17ya8e2W50vXILm7oeRMlTbcXs7EsAMZVp0BYsKO3IZ2E5cj-IHitfAwS-CK-9w2_H5q1JJnmo3Ro3dnh9WqeZsRNz9Jw9Md8uu&lib=MyMvh9ZEEdE1HrLjGEbaOMAtI-IdHFEsA';
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-    for (const entry of urls) {
-        try {
-            const response = await fetch(entry.url);
-            const data = await response.json();
-
-            data.forEach(person => {
-                if (person[0] && person[1]) {  // Vérifie que les valeurs ne sont pas vides
-                    badges.push({
-                        name: person[0],
-                        badgeNumber: person[1],
-                        company: entry.company
-                    });
-                }
-            });
-        } catch (error) {
-            console.error('Erreur lors de la récupération des données des badges:', error);
-        }
+        // Suppression des valeurs vides et transformation des données dans le format souhaité
+        badgesData = data.filter(item => item[0] && item[1]).map(item => ({
+            name: item[0],
+            badge: item[1],
+            company: 'Ferme Grapeseed' // Nom de l'entreprise associé à l'URL
+        }));
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données des badges:', error);
     }
 }
 
-// Appel de la fonction pour récupérer les données des badges
+// Appel de la fonction pour charger les données au chargement de la page
 fetchBadgesData();
 
-document.getElementById('search-btn').addEventListener('click', function () {
+document.getElementById('search-btn').addEventListener('click', function() {
     const searchValue = document.getElementById('search').value.toUpperCase();
     const resultDiv = document.getElementById('result');
 
@@ -398,24 +389,22 @@ document.getElementById('search-btn').addEventListener('click', function () {
         return;
     }
 
-    // Recherche du véhicule
+    // Rechercher dans les véhicules et les badges
     const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
+    const badge = badgesData.find(b => b.badge.toUpperCase() === searchValue || b.name.toUpperCase().includes(searchValue));
 
-    // Recherche du badge
-    const badge = badges.find(b => b.badgeNumber.toUpperCase() === searchValue);
-
-    // Affichage du résultat
+    // Affichage des résultats
     if (vehicle) {
         resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
     } else if (badge) {
-        resultDiv.innerHTML = `<p>Nom Prénom: ${badge.name} - N° Badge: ${badge.badgeNumber} - Entreprise: ${badge.company}</p>`;
+        resultDiv.innerHTML = `<p>${badge.name} - N° de badge: ${badge.badge} - Entreprise: ${badge.company}</p>`;
     } else {
         resultDiv.innerHTML = `<p>Résultat introuvable</p>`;
     }
 });
 
 // Changement de thème clair/sombre
-document.getElementById('theme-switch').addEventListener('change', function () {
+document.getElementById('theme-switch').addEventListener('change', function() {
     if (this.checked) {
         document.body.classList.remove('light-mode');
         document.body.classList.add('dark-mode');
@@ -424,8 +413,8 @@ document.getElementById('theme-switch').addEventListener('change', function () {
         document.body.classList.add('light-mode');
     }
 });
-
 </script>
+
 <div class="notif show">  
   Recherche Ferme Grapeseed, Milars-Fish, Ferme BioGood ✅
 </div>
