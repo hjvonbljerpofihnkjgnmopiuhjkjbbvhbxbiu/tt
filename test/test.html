@@ -326,7 +326,7 @@ input:checked ~ .icon #moon {
 let badgeData = [];
 
 // Fonction pour charger les données du CSV
-fetch('https://docs.google.com/spreadsheets/d/10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M/export?format=csv&gid=0')
+fetch('https://script.google.com/macros/s/AKfycbw0VlAfGAogrXbeNfrV3hCsM_Kpk_MIHcB000-oCJfqIRG424wvpLQhFFarmimOb9etPw/exec')
     .then(response => response.text())
     .then(csvData => {
         // Transformation du CSV en tableau JavaScript
