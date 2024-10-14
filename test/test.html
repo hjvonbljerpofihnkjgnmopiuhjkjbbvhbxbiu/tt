@@ -355,31 +355,21 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-let badgesData = [];
-
-// Fonction pour récupérer les données des badges depuis l'URL fourni
-async function fetchBadgesData() {
+// Fonction pour obtenir les données JSON depuis l'URL
+async function fetchBadgeData() {
     const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=3DRZRqdxaMju51M8Kixd5q9fylSDIXyYV4YBYtJ_-K8zw6oc_d4U0bo-L20p5G4YwPmncEaRGFWc0CjRL1fOJBOUubEZ_mWdm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNdashjk-17ya8e2W50vXILm7oeRMlTbcXs7EsAMZVp0BYsKO3IZ2E5cj-IHitfAwS-CK-9w2_H5q1JJnmo3Ro3dnh9WqeZsRNz9Jw9Md8uu&lib=MyMvh9ZEEdE1HrLjGEbaOMAtI-IdHFEsA';
-    
     try {
         const response = await fetch(url);
         const data = await response.json();
-
-        // Suppression des valeurs vides et transformation des données dans le format souhaité
-        badgesData = data.filter(item => item[0] && item[1]).map(item => ({
-            name: item[0],
-            badge: item[1],
-            company: 'Ferme Grapeseed' // Nom de l'entreprise associé à l'URL
-        }));
+        return data; // Renvoie les données JSON récupérées
     } catch (error) {
-        console.error('Erreur lors de la récupération des données des badges:', error);
+        console.error('Erreur lors de la récupération des données:', error);
+        return [];
     }
 }
 
-// Appel de la fonction pour charger les données au chargement de la page
-fetchBadgesData();
-
-document.getElementById('search-btn').addEventListener('click', function() {
+// Gestionnaire d'événement pour la recherche
+document.getElementById('search-btn').addEventListener('click', async function() {
     const searchValue = document.getElementById('search').value.toUpperCase();
     const resultDiv = document.getElementById('result');
 
@@ -389,17 +379,20 @@ document.getElementById('search-btn').addEventListener('click', function() {
         return;
     }
 
-    // Rechercher dans les véhicules et les badges
+    // Recherche dans les véhicules
     const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
-    const badge = badgesData.find(b => b.badge.toUpperCase() === searchValue || b.name.toUpperCase().includes(searchValue));
 
-    // Affichage des résultats
+    // Recherche dans les données de badge
+    const badgeData = await fetchBadgeData();
+    const badgeEntry = badgeData.find(entry => entry[1] === searchValue); // Recherche par numéro de badge
+
     if (vehicle) {
-        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-    } else if (badge) {
-        resultDiv.innerHTML = `<p>${badge.name} - N° de badge: ${badge.badge} - Entreprise: ${badge.company}</p>`;
+        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+    } else if (badgeEntry) {
+        const [nomPrenom, badge, entreprise] = badgeEntry;
+        resultDiv.innerHTML = `<p>${nomPrenom} - N° de badge: ${badge} - Entreprise: ${entreprise}</p>`;
     } else {
-        resultDiv.innerHTML = `<p>Résultat introuvable</p>`;
+        resultDiv.innerHTML = `<p>Véhicule ou badge introuvable</p>`;
     }
 });
 
