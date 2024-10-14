@@ -322,24 +322,6 @@ input:checked ~ .icon #moon {
     </div>
 
     <script>
-// Ajout des données Badge/Nom depuis Google Sheet
-let badgeData = [];
-
-// Fonction pour charger les données du CSV
-fetch('https://script.google.com/macros/s/AKfycbw0VlAfGAogrXbeNfrV3hCsM_Kpk_MIHcB000-oCJfqIRG424wvpLQhFFarmimOb9etPw/exec')
-    .then(response => response.text())
-    .then(csvData => {
-        // Transformation du CSV en tableau JavaScript
-        const rows = csvData.split('\n');
-        for (let i = 5; i < 85; i++) { // G6 à H85 correspond aux indices 5 à 84
-            const columns = rows[i].split(',');
-            const name = columns[6].trim(); // Colonne G (Nom et prénom)
-            const badge = columns[7].trim(); // Colonne H (n° de badge)
-            if (name && badge) { // Si le nom et le badge ne sont pas vides
-                badgeData.push({ name, badge, company: '👨🌾| Ferme Grapeseed' });
-            }
-        }
-    });
 
 const vehicles = [
     { ent: '👨🌾| Ferme Grapeseed', code: 'GRP', model: 'Mule', id: '599686', plaque: 'EAV9IRI1' },
@@ -373,37 +355,67 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-// Fonction de recherche
-document.getElementById('search-btn').addEventListener('click', function() {
+let badges = [];
+
+// Fonction pour récupérer les données des badges
+async function fetchBadgesData() {
+    const urls = [
+        { url: 'https://script.googleusercontent.com/macros/echo?user_content_key=3DRZRqdxaMju51M8Kixd5q9fylSDIXyYV4YBYtJ_-K8zw6oc_d4U0bo-L20p5G4YwPmncEaRGFWc0CjRL1fOJBOUubEZ_mWdm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnNdashjk-17ya8e2W50vXILm7oeRMlTbcXs7EsAMZVp0BYsKO3IZ2E5cj-IHitfAwS-CK-9w2_H5q1JJnmo3Ro3dnh9WqeZsRNz9Jw9Md8uu&lib=MyMvh9ZEEdE1HrLjGEbaOMAtI-IdHFEsA', 
+          company: 'Ferme Grapeseed' }
+        // Ajouter d'autres liens et entreprises ici si nécessaire
+    ];
+
+    for (const entry of urls) {
+        try {
+            const response = await fetch(entry.url);
+            const data = await response.json();
+
+            data.forEach(person => {
+                if (person[0] && person[1]) {  // Vérifie que les valeurs ne sont pas vides
+                    badges.push({
+                        name: person[0],
+                        badgeNumber: person[1],
+                        company: entry.company
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données des badges:', error);
+        }
+    }
+}
+
+// Appel de la fonction pour récupérer les données des badges
+fetchBadgesData();
+
+document.getElementById('search-btn').addEventListener('click', function () {
     const searchValue = document.getElementById('search').value.toUpperCase();
     const resultDiv = document.getElementById('result');
 
+    // Vérification si le champ est vide
     if (searchValue.trim() === "") {
         resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
         return;
     }
 
-    // Recherche par véhicule (ID ou plaque)
+    // Recherche du véhicule
     const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
+    // Recherche du badge
+    const badge = badges.find(b => b.badgeNumber.toUpperCase() === searchValue);
+
+    // Affichage du résultat
     if (vehicle) {
-        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-        return;
+        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+    } else if (badge) {
+        resultDiv.innerHTML = `<p>Nom Prénom: ${badge.name} - N° Badge: ${badge.badgeNumber} - Entreprise: ${badge.company}</p>`;
+    } else {
+        resultDiv.innerHTML = `<p>Résultat introuvable</p>`;
     }
-
-    // Recherche par badge
-    const badgePerson = badgeData.find(person => person.badge === searchValue);
-    
-    if (badgePerson) {
-        resultDiv.innerHTML = `<p>${badgePerson.name} - ${badgePerson.badge} - ${badgePerson.company}</p>`;
-        return;
-    }
-
-    resultDiv.innerHTML = `<p>Aucun résultat trouvé pour cette recherche.</p>`;
 });
 
 // Changement de thème clair/sombre
-document.getElementById('theme-switch').addEventListener('change', function() {
+document.getElementById('theme-switch').addEventListener('change', function () {
     if (this.checked) {
         document.body.classList.remove('light-mode');
         document.body.classList.add('dark-mode');
