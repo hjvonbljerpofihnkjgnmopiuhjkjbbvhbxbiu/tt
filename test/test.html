@@ -23,6 +23,10 @@ h1{
     color: whitesmoke;
 }
 
+p{
+    color: whitesmoke;
+}
+
 .light-mode {
     background-color: #1f1f2e;
     color: #27293d;
@@ -356,61 +360,52 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-// Extrait les données de Google Sheets
-function getSheetData() {
-    const sheetId = '10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M'; // ID de la feuille
-    const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Clé API
+// Fonction pour récupérer les données du Google Sheet
+        async function fetchGoogleSheet() {
+            const sheetId = '10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M';
+            const range = 'G6:H85';
+            const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Clé API
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
-    // URL pour récupérer les données du tableau de G6 à H85
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/G6:H85?key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            badges = data.values
+                .filter(row => row[0] && row[1])  // Supprimer les cellules vides
+                .map(row => ({
+                    name: row[0],
+                    badge: row[1],
+                    ent: '👨🌾| Ferme Grapeseed'  // Ajouter le nom de l'entreprise
+                }));
+        }
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            // Filtrer les cellules vides
-            const sheetData = data.values.filter(row => row[0] && row[1]);
-            // Convertir les données en format utilisable
-            sheetData.forEach(row => {
-                const person = { name: row[0], badge: row[1] };
-                people.push(person); // Ajout à notre tableau
-            });
-        })
-        .catch(error => console.error('Erreur lors de la récupération des données :', error));
-}
-let people = []; // Ce tableau contiendra les noms et badges
+        // Appeler la fonction pour récupérer les données au chargement de la page
+        fetchGoogleSheet();
 
-// Appel pour récupérer les données au chargement de la page
-window.onload = function() {
-    getSheetData();
-};
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const searchValue = document.getElementById('search').value.toUpperCase();
+            const resultDiv = document.getElementById('result');
 
+            // Vérification si le champ est vide
+            if (searchValue.trim() === "") {
+                resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
+                return;
+            }
 
-        // Fonction de recherche
-document.getElementById('search-btn').addEventListener('click', function() {
-    const searchValue = document.getElementById('search').value.toUpperCase();
-    const resultDiv = document.getElementById('result');
+            // Recherche dans les véhicules
+            const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
-    // Vérification si le champ est vide
-    if (searchValue.trim() === "") {
-        resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
-        return;
-    }
+            // Recherche dans les badges
+            const badge = badges.find(b => b.badge === searchValue || b.name.toUpperCase().includes(searchValue));
 
-    // Recherche par véhicule
-    const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
-
-    // Recherche par nom ou badge
-    const person = people.find(p => p.name.toUpperCase().includes(searchValue) || p.badge === searchValue);
-
-    if (vehicle) {
-        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-    } else if (person) {
-        resultDiv.innerHTML = `<p>${person.name} - n° de badge : ${person.badge} - Entreprise : [Nom entreprise]</p>`;
-    } else {
-        resultDiv.innerHTML = `<p>Aucun résultat trouvé</p>`;
-    }
-});
-
+            // Affichage des résultats
+            if (vehicle) {
+                resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+            } else if (badge) {
+                resultDiv.innerHTML = `<p>Nom: ${badge.name}, Badge: ${badge.badge}, Entreprise: ${badge.ent}</p>`;
+            } else {
+                resultDiv.innerHTML = `<p>Résultat introuvable</p>`;
+            }
+        });
 
         // Changement de thème clair/sombre
         document.getElementById('theme-switch').addEventListener('change', function() {
