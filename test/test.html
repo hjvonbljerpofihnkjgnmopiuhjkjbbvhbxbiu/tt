@@ -356,51 +356,61 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-const personnes = [];
+// Extrait les données de Google Sheets
+function getSheetData() {
+    const sheetId = '10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M'; // ID de la feuille
+    const apiKey = 'VOTRE_API_KEY'; // Clé API
 
-        // Fonction pour récupérer les données du CSV
-        async function loadData() {
-            const response = await fetch('https://docs.google.com/spreadsheets/d/10B3Ve8jOcUJsaZH3RlX3MNi4Ugt-gdicCr09vV0gC4M/export?format=csv&gid=0');
-            const csvData = await response.text();
-            const rows = csvData.split('\n').slice(5, 85); // Récupérer uniquement les lignes de G6 à H85
-            for (const row of rows) {
-                const cols = row.split(',');
-                const nomPrenom = cols[0].trim(); // Colonne G
-                const numeroBadge = cols[1].trim(); // Colonne H
-                if (nomPrenom && numeroBadge) {
-                    personnes.push({ nomPrenom, numeroBadge, entreprise: 'Nom de l\'entreprise' }); // Modifiez si vous avez besoin d'une autre logique pour l'entreprise
-                }
-            }
-        }
+    // URL pour récupérer les données du tableau de G6 à H85
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/G6:H85?key=${apiKey}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Filtrer les cellules vides
+            const sheetData = data.values.filter(row => row[0] && row[1]);
+            // Convertir les données en format utilisable
+            sheetData.forEach(row => {
+                const person = { name: row[0], badge: row[1] };
+                people.push(person); // Ajout à notre tableau
+            });
+        })
+        .catch(error => console.error('Erreur lors de la récupération des données :', error));
+}
+let people = []; // Ce tableau contiendra les noms et badges
+
+// Appel pour récupérer les données au chargement de la page
+window.onload = function() {
+    getSheetData();
+};
+
 
         // Fonction de recherche
-        document.getElementById('search-btn').addEventListener('click', function() {
-            const searchValue = document.getElementById('search').value.toUpperCase();
-            const resultDiv = document.getElementById('result');
+document.getElementById('search-btn').addEventListener('click', function() {
+    const searchValue = document.getElementById('search').value.toUpperCase();
+    const resultDiv = document.getElementById('result');
 
-            // Vérification si le champ est vide
-            if (searchValue.trim() === "") {
-                resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
-                return;
-            }
+    // Vérification si le champ est vide
+    if (searchValue.trim() === "") {
+        resultDiv.innerHTML = `<p style="color: red;">Veuillez remplir le champ de texte avant de rechercher.</p>`;
+        return;
+    }
 
-            const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
-            const personne = personnes.find(p => p.nomPrenom.toUpperCase().includes(searchValue) || p.numeroBadge.toUpperCase() === searchValue);
+    // Recherche par véhicule
+    const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
 
-            let results = '';
-            if (vehicle) {
-                results += `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-            }
-            if (personne) {
-                results += `<p>${personne.nomPrenom} - ${personne.numeroBadge} - ${personne.entreprise}</p>`;
-            }
+    // Recherche par nom ou badge
+    const person = people.find(p => p.name.toUpperCase().includes(searchValue) || p.badge === searchValue);
 
-            if (!results) {
-                resultDiv.innerHTML = `<p>Aucun résultat trouvé.</p>`;
-            } else {
-                resultDiv.innerHTML = results;
-            }
-        });
+    if (vehicle) {
+        resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code} Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+    } else if (person) {
+        resultDiv.innerHTML = `<p>${person.name} - n° de badge : ${person.badge} - Entreprise : [Nom entreprise]</p>`;
+    } else {
+        resultDiv.innerHTML = `<p>Aucun résultat trouvé</p>`;
+    }
+});
+
 
         // Changement de thème clair/sombre
         document.getElementById('theme-switch').addEventListener('change', function() {
@@ -413,9 +423,7 @@ const personnes = [];
             }
         });
 
-        // Charger les données au démarrage
-        loadData();
-    </script>
+        // Charger les données au démarrag    </script>
 
 <div class="notif show">  
   Recherche Ferme Grapeseed, Milars-Fish, Ferme BioGood ✅
