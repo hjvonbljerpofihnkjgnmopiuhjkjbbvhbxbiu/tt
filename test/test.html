@@ -355,12 +355,25 @@ const vehicles = [
     { ent: `🐮| Ferme BioGood`, code: 'BIO', model: 'Toros', id: '177283', plaque: '7V6MKB9V' }    
 ];
 
-       async function fetchData() {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbxZWwFJFddHvrMTIMZhy3bRlyrusQ7R5pjS_vFEaVvVuw2F29IQl-290viLZQnF_-Qmzw/exec');
-            return response.json();
+// Nouvelle structure pour stocker les données du CSV
+        let badgeData = [];
+
+        // Fonction pour charger les données CSV
+        async function loadBadgeData() {
+            const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSj-LWadNR_va5PkGp7Fr88lyeH12NHN7un6gruyZt9YMyRckcfjEqsVb676QIX9NDtxXAoH9RvZ1-F/pub?gid=0&single=true&output=csv');
+            const text = await response.text();
+            const rows = text.split('\n').slice(5, 81); // G6 à H85 (index 5 à 80)
+
+            badgeData = rows.map(row => {
+                const [name, badge] = row.split(',');
+                return { name: name.trim(), badge: badge.trim() };
+            }).filter(person => person.name && person.badge); // Supprimer les cellules vides
         }
 
-        document.getElementById('search-btn').addEventListener('click', async function() {
+        // Charger les données du badge lors du chargement de la page
+        window.onload = loadBadgeData;
+
+        document.getElementById('search-btn').addEventListener('click', function() {
             const searchValue = document.getElementById('search').value.toUpperCase();
             const resultDiv = document.getElementById('result');
 
@@ -370,17 +383,19 @@ const vehicles = [
                 return;
             }
 
-            // Récupération des données
-            const data = await fetchData();
-
-            // Chercher véhicule par ID, plaque, ou badge
+            // Recherche dans les véhicules
             const vehicle = vehicles.find(v => v.id === searchValue || v.plaque === searchValue);
-            const user = data.find(u => u.badge === searchValue);
 
             if (vehicle) {
-                resultDiv.innerHTML = `<p>Véhicule trouvé: ${vehicle.ent}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
-            } else if (user) {
-                resultDiv.innerHTML = `<p>Utilisateur trouvé: ${user.nomPrenom} - n° de badge: ${user.badge}</p>`;
+                resultDiv.innerHTML = `<p>Partenaire: ${vehicle.ent}, Code: ${vehicle.code}, Modèle: ${vehicle.model}, Plaque: ${vehicle.plaque}, ID: ${vehicle.id}</p>`;
+                return; // Si trouvé, on arrête la recherche ici
+            }
+
+            // Recherche dans les données des badges
+            const badgeResult = badgeData.find(b => b.badge === searchValue);
+
+            if (badgeResult) {
+                resultDiv.innerHTML = `<p>${badgeResult.name} - ${badgeResult.badge} - Ferme Grapeseed</p>`; // Remplacer le nom de l'entreprise si nécessaire
             } else {
                 resultDiv.innerHTML = `<p>Aucun résultat trouvé</p>`;
             }
@@ -396,7 +411,6 @@ const vehicles = [
                 document.body.classList.add('light-mode');
             }
         });
-
     </script>
 
 <div class="notif show">  
