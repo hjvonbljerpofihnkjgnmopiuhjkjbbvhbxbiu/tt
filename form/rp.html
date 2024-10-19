@@ -38,7 +38,7 @@
 
         function parseCSV1(csv) {
             const lines = csv.split("\n");
-            const selectedLines = lines.slice(2, 18);  // Sélectionne les lignes de 3 à 18 (index 2 à 17)
+            const selectedLines = lines.slice(2, 20);  // Sélectionne les lignes de 3 à 20 (index 2 à 19)
             const headers = selectedLines[0].split(",").slice(1, 9); // Colonnes B à J (index 1 à 9)
             const rows = selectedLines.slice(1).map(line => line.split(",").slice(1, 9));
             return { headers, rows };
