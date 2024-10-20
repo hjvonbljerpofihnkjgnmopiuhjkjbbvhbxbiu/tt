@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets API - Affichage</title>
+    <title>Google Sheet Table</title>
     <style>
         table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
         }
-        table, th, td {
+        th, td {
             border: 1px solid black;
-            padding: 10px;
-            text-align: center;
+            padding: 8px;
+            text-align: left;
         }
         td {
             cursor: pointer;
@@ -21,81 +21,90 @@
     </style>
 </head>
 <body>
-    <h1>Affichage du Google Sheet Partenaire</h1>
-    <div id="table-container"></div>
 
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-        const SHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-        const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';
-        const RANGE = 'Partenaires!B2:J25';
+<h2>Tableau des partenaires</h2>
 
-        function initClient() {
-            gapi.client.init({
-                'apiKey': API_KEY
-            }).then(function() {
-                return gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: SHEET_ID,
-                    range: RANGE
-                });
-            }).then(function(response) {
-                const values = response.result.values;
-                if (values.length > 0) {
-                    generateTable(values);
-                } else {
-                    console.log("Pas de données trouvées.");
-                }
-            }, function(response) {
-                console.error('Erreur: ' + response.result.error.message);
+<table id="sheetTable">
+    <!-- Le tableau sera inséré ici -->
+</table>
+
+<script>
+    // Remplacez par votre propre clé API Google Sheets
+    const apiKey = 'VOTRE_CLE_API';
+    const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
+    const range = 'Partenaire!B2:J25'; // Le range que vous voulez afficher
+
+    // Fonction pour récupérer les données Google Sheets
+    async function fetchSheetData() {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            displayTable(data.values);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données:', error);
+        }
+    }
+
+    // Fonction pour afficher les données dans un tableau HTML
+    function displayTable(data) {
+        const table = document.getElementById('sheetTable');
+        const headerRow = data[0];  // Supposons que la première ligne contient les titres
+        let tableHtml = '<thead><tr>';
+        
+        // Générer les en-têtes de colonnes
+        headerRow.forEach(header => {
+            tableHtml += `<th>${header}</th>`;
+        });
+        tableHtml += '</tr></thead><tbody>';
+        
+        // Générer les lignes du tableau
+        for (let rowIndex = 1; rowIndex < data.length; rowIndex++) {
+            const row = data[rowIndex];
+            tableHtml += '<tr>';
+            row.forEach((cell, colIndex) => {
+                const cellId = `R${rowIndex+1}C${colIndex+2}`; // Ex: R2C4 pour ligne 2, colonne 4 (réel)
+                tableHtml += `<td id="${cellId}" data-row="${rowIndex + 1}" data-col="${colIndex + 2}">${cell}</td>`;
             });
+            tableHtml += '</tr>';
         }
 
-        function generateTable(data) {
-            const tableContainer = document.getElementById('table-container');
-            const table = document.createElement('table');
-            const tbody = document.createElement('tbody');
+        tableHtml += '</tbody>';
+        table.innerHTML = tableHtml;
 
-            data.forEach((row, rowIndex) => {
-                const tr = document.createElement('tr');
-                row.forEach((cell, colIndex) => {
-                    const td = document.createElement('td');
-                    td.textContent = cell;
+        // Ajouter les événements de clic aux cellules des colonnes D à I (index 3 à 8)
+        const tableCells = document.querySelectorAll('#sheetTable td');
+        tableCells.forEach(cell => {
+            const colIndex = parseInt(cell.getAttribute('data-col'));
+            const rowIndex = parseInt(cell.getAttribute('data-row'));
+            if (colIndex >= 4 && colIndex <= 9) {  // Colonnes D à I
+                cell.addEventListener('click', () => handleCellClick(rowIndex, colIndex));
+            }
+        });
+    }
 
-                    if (colIndex >= 3 && colIndex <= 8 && rowIndex > 0) {  // Colonnes D à I
-                        td.addEventListener('click', function() {
-                            handleCellClick(rowIndex + 2, colIndex + 2, data);
-                        });
-                    }
+    // Fonction de gestion du clic sur une cellule des colonnes D à I
+    function handleCellClick(rowIndex, colIndex) {
+        const colCValue = document.querySelector(`#R${rowIndex}C3`).textContent;  // Valeur de la colonne C
+        const colHeaderValue = document.querySelector(`#R3C${colIndex}`).textContent;  // Valeur de la 3ème ligne (en-tête)
 
-                    tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
+        const concatenatedValue = colCValue + '+' + colHeaderValue;
+        console.log('Valeur à copier:', concatenatedValue);
+
+        // Copier dans le presse-papier
+        navigator.clipboard.writeText(concatenatedValue)
+            .then(() => {
+                alert(`Valeur copiée dans le presse-papier: ${concatenatedValue}`);
+            })
+            .catch(err => {
+                console.error('Erreur lors de la copie:', err);
             });
+    }
 
-            table.appendChild(tbody);
-            tableContainer.appendChild(table);
-        }
+    // Récupérer et afficher les données lorsque la page est chargée
+    fetchSheetData();
 
-        function handleCellClick(row, col, data) {
-            // Récupérer les valeurs des cellules nécessaires
-            const valueC = data[row - 2][1]; // Colonne C (B est index 1 dans l'array)
-            const valueTop = data[1][col - 2]; // Ligne 3 colonne du clic (D, E, F...)
+</script>
 
-            const result = `${valueC} ${valueTop}`;
-            copyToClipboard(result);
-        }
-
-        function copyToClipboard(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert(`Valeur copiée: ${text}`);
-        }
-
-        gapi.load('client', initClient);
-    </script>
 </body>
 </html>
