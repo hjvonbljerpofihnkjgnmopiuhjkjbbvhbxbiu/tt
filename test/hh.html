@@ -264,3 +264,252 @@
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparaison des bénéfices - RoxWood vs Paletot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #e0e0e0;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #1e1e1e;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px 0;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <h1>Comparaison des bénéfices</h1>
+
+    <h2>Résultats</h2>
+    <div id="roxwood-factures" class="result"></div>
+    <div id="roxwood-chiffre-affaire" class="result"></div>
+    <div id="roxwood-prix-usine" class="result"></div>
+    <div id="roxwood-benefice-brut" class="result"></div>
+    <div id="roxwood-salaires" class="result"></div>
+    <div id="roxwood-benefice-net" class="result"></div>
+    
+    <div id="paletot-factures" class="result"></div>
+    <div id="paletot-chiffre-affaire" class="result"></div>
+    <div id="paletot-prix-usine" class="result"></div>
+    <div id="paletot-benefice-brut" class="result"></div>
+    <div id="paletot-salaires" class="result"></div>
+    <div id="paletot-benefice-net" class="result"></div>
+
+    <h2>Graphiques</h2>
+    <canvas id="comparisonBarChart"></canvas>
+    <canvas id="barChartDeclaration"></canvas>
+
+    <script>
+        const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Remplacez par votre clé API
+        const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
+
+        async function fetchSheetData(range) {
+            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`);
+            const data = await response.json();
+            console.log(`Données récupérées pour la plage ${range}:`, data.values); // Log des données brutes
+            return data.values || [];
+        }
+
+        function parseFormattedValue(value) {
+            if (value === undefined || value === null) return 0; // Ajout de la vérification
+            return parseFloat(value.replace(/\s/g, '') || 0);
+        }
+
+        async function processData() {
+            const tableau1 = await fetchSheetData('Employé!D4:Z43');
+            const tableau2 = await fetchSheetData('Dashboard!C6:W45');
+            const tableau3 = await fetchSheetData('Archives!B4:I23');
+
+            let roxwoodFactures = 0, roxwoodChiffreAffaire = 0, roxwoodPrixUsine = 0, roxwoodBeneficeBrut = 0, roxwoodSalaires = 0;
+            let paletotFactures = 0, paletotChiffreAffaire = 0, paletotPrixUsine = 0, paletotBeneficeBrut = 0, paletotSalaires = 0;
+            let roxwoodIds = [];
+            let paletotIds = [];
+
+            tableau1.forEach((row) => {
+                const employeId = row[0]; // Colonne D
+                const isRoxwood = row[19] === 'TRUE'; // Colonne W
+                if (isRoxwood) {
+                    roxwoodIds.push(employeId);
+                } else {
+                    paletotIds.push(employeId);
+                }
+                console.log(`Employé ID: ${employeId}, Roxwood: ${isRoxwood}`);
+            });
+
+            tableau2.forEach((row) => {
+                const employeId = row[0]; // Colonne C
+                const factures = parseFormattedValue(row[2]); // Colonne E
+                const chiffreAffaire = parseFormattedValue(row[3]); // Colonne F
+                const prixUsine = parseFormattedValue(row[5]); // Colonne H
+                const beneficeBrut = parseFormattedValue(row[7]); // Colonne J
+                const salaire = parseFormattedValue(row[20]); // Colonne W
+
+                if (roxwoodIds.includes(employeId)) {
+                    roxwoodFactures += factures;
+                    roxwoodChiffreAffaire += chiffreAffaire;
+                    roxwoodPrixUsine += prixUsine;
+                    roxwoodBeneficeBrut += beneficeBrut;
+                    roxwoodSalaires += salaire;
+                } else if (paletotIds.includes(employeId)) {
+                    paletotFactures += factures;
+                    paletotChiffreAffaire += chiffreAffaire;
+                    paletotPrixUsine += prixUsine;
+                    paletotBeneficeBrut += beneficeBrut;
+                    paletotSalaires += salaire;
+                }
+            });
+
+            const roxwoodBeneficeNet = roxwoodBeneficeBrut - roxwoodSalaires;
+            const paletotBeneficeNet = paletotBeneficeBrut - paletotSalaires;
+
+            // Bénéfice après déclaration
+            const declarationDeduction = parseFormattedValue(tableau1[12][22]); // Cellule Z16
+            const beneficeDeclaration = roxwoodBeneficeNet + paletotBeneficeNet - declarationDeduction;
+
+            document.getElementById('roxwood-factures').innerText = `Total des factures RoxWood: ${roxwoodFactures}`;
+            document.getElementById('roxwood-chiffre-affaire').innerText = `Chiffre d'affaire RoxWood: ${roxwoodChiffreAffaire}`;
+            document.getElementById('roxwood-prix-usine').innerText = `Prix usine RoxWood: ${roxwoodPrixUsine}`;
+            document.getElementById('roxwood-benefice-brut').innerText = `Bénéfice brut RoxWood: ${roxwoodBeneficeBrut}`;
+            document.getElementById('roxwood-salaires').innerText = `Total des salaires RoxWood: ${roxwoodSalaires}`;
+            document.getElementById('roxwood-benefice-net').innerText = `Bénéfice net RoxWood: ${roxwoodBeneficeNet}`;
+            
+            document.getElementById('paletot-factures').innerText = `Total des factures Paletot: ${paletotFactures}`;
+            document.getElementById('paletot-chiffre-affaire').innerText = `Chiffre d'affaire Paletot: ${paletotChiffreAffaire}`;
+            document.getElementById('paletot-prix-usine').innerText = `Prix usine Paletot: ${paletotPrixUsine}`;
+            document.getElementById('paletot-benefice-brut').innerText = `Bénéfice brut Paletot: ${paletotBeneficeBrut}`;
+            document.getElementById('paletot-salaires').innerText = `Total des salaires Paletot: ${paletotSalaires}`;
+            document.getElementById('paletot-benefice-net').innerText = `Bénéfice net Paletot: ${paletotBeneficeNet}`;
+
+            // Préparation des données pour le graphique à barres fusionné
+            const labels = ['Factures', 'Chiffre d\'affaire', 'Prix usine', 'Bénéfice brut', 'Salaires', 'Bénéfice net'];
+            const roxwoodData = [
+                roxwoodFactures,
+                roxwoodChiffreAffaire,
+                roxwoodPrixUsine,
+                roxwoodBeneficeBrut,
+                roxwoodSalaires,
+                roxwoodBeneficeNet
+            ];
+            const paletotData = [
+                paletotFactures,
+                paletotChiffreAffaire,
+                paletotPrixUsine,
+                paletotBeneficeBrut,
+                paletotSalaires,
+                paletotBeneficeNet
+            ];
+
+            // Créer le graphique à barres fusionné
+            const ctxComparisonBar = document.getElementById('comparisonBarChart').getContext('2d');
+            const comparisonBarChart = new Chart(ctxComparisonBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'RoxWood',
+                            data: roxwoodData,
+                            backgroundColor: '#4CAF50',
+                        },
+                        {
+                            label: 'Paletot',
+                            data: paletotData,
+                            backgroundColor: '#FF5733',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Préparer les données pour le graphique à barres des bénéfices après déclaration
+            const barLabels = [];
+            const barData = [];
+            tableau3.forEach((row) => {
+                const semaine = row[0]; // Colonne B
+                const beneficeDeclarationSemaine = parseFormattedValue(row[7]); // Colonne I
+                if (semaine) {
+                    barLabels.push(semaine);
+                    barData.push(beneficeDeclarationSemaine || 0);
+                }
+            });
+
+            // Créer le graphique à barres pour les bénéfices après déclaration
+            const ctxBarDeclaration = document.getElementById('barChartDeclaration').getContext('2d');
+            const barChartDeclaration = new Chart(ctxBarDeclaration, {
+                type: 'bar',
+                data: {
+                    labels: barLabels,
+                    datasets: [{
+                        label: 'Bénéfice après déclaration',
+                        data: barData,
+                        backgroundColor: '#2196F3',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Log des données
+            console.log("Données de RoxWood:", {
+                factures: roxwoodFactures,
+                chiffreAffaire: roxwoodChiffreAffaire,
+                prixUsine: roxwoodPrixUsine,
+                beneficeBrut: roxwoodBeneficeBrut,
+                salaires: roxwoodSalaires,
+                beneficeNet: roxwoodBeneficeNet,
+                beneficeDeclaration: beneficeDeclaration
+            });
+
+            console.log("Données de Paletot:", {
+                factures: paletotFactures,
+                chiffreAffaire: paletotChiffreAffaire,
+                prixUsine: paletotPrixUsine,
+                beneficeBrut: paletotBeneficeBrut,
+                salaires: paletotSalaires,
+                beneficeNet: paletotBeneficeNet,
+            });
+
+            console.log("Graphiques:", {
+                roxwoodData: roxwoodData,
+                paletotData: paletotData,
+                barData: barData,
+            });
+        }
+
+        // Lancer le traitement des données au chargement de la page
+        processData();
+    </script>
+
+</body>
+</html>
