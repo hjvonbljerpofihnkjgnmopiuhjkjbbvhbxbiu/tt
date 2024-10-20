@@ -137,12 +137,25 @@
         const RANGE = 'Partenaires!B2:J25';  
 
        
+        const exceptions = [
+            { row: 4, col: 5 },  // Exemple : cellule E4
+            { row: 5, col: 7 },  // Exemple : cellule G5
+            // Ajoutez d'autres exceptions selon vos besoins
+        ];
+
+        // Fonction pour charger les données depuis Google Sheets
         async function loadSheetData() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
             const response = await fetch(url);
             const data = await response.json();
             displayData(data.values);
         }
+
+        // Fonction pour vérifier si une cellule est une exception
+        function isException(row, col) {
+            return exceptions.some(exception => exception.row === row && exception.col === col);
+        }
+
 
        
         function displayData(values) {
@@ -154,9 +167,9 @@
                     td.textContent = cell;
 
                   
-                    if (colIndex >= 2 && colIndex <= 7 && rowIndex >= 2) {  
+                    if (colIndex >= 3 && colIndex <= 8 && rowIndex >= 1 && !isException(rowIndex + 2, colIndex + 2)) {
                         td.classList.add('clickable');
-                        td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  
+                        td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  // +2 car range commence à B2
                     }
 
                     tr.appendChild(td);
