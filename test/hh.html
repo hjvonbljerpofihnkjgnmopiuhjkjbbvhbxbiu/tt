@@ -164,9 +164,9 @@
             const barLabels = [];
             const barData = [];
             tableau3.forEach((row) => {
-                const semaine = row[1]; // Colonne B
+                const semaine = row[0]; // Colonne B
 
-                const beneficeDeclarationSemaine = parseFloat(row[8]); // Colonne I
+                const beneficeDeclarationSemaine = parseFloat(row[7]); // Colonne I
                 if (semaine) {
                     barLabels.push(semaine);
                     barData.push(beneficeDeclarationSemaine || 0);
