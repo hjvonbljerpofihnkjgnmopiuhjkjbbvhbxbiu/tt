@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,74 +8,90 @@
         table {
             border-collapse: collapse;
             width: 100%;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
         }
-        tr:hover {
-            background-color: #f1f1f1;
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
         }
-        td {
+        td:hover {
+            background-color: #f0f0f0;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Google Sheets Data (B2:J25)</h1>
+    <h1>Feuille Partenaire (B2:J25)</h1>
     <table id="data-table"></table>
 
     <script>
-        const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Insère ta clé API ici
+        // Configuration de la feuille Google Sheets
         const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-        const range = 'B2:J25';
+        const range = 'Partenaire!B2:J25';
+        const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';  // Remplacez avec votre clé API Google Sheets
 
-        function getData() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-            fetch(url)
+        // Fonction pour récupérer les données via l'API Google Sheets
+        function fetchSheetData() {
+            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`)
                 .then(response => response.json())
                 .then(data => {
-                    displayData(data.values);
+                    const values = data.values;
+                    generateTable(values);
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => console.error('Erreur lors de la récupération des données:', error));
         }
 
-        function displayData(data) {
+        // Fonction pour générer le tableau
+        function generateTable(data) {
             const table = document.getElementById('data-table');
-            const headerRow = document.createElement('tr');
+            table.innerHTML = ''; // Reset du tableau
 
-            // Ajoute les en-têtes de colonnes
-            const headers = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-            headers.forEach(headerText => {
-                const headerCell = document.createElement('th');
-                headerCell.textContent = headerText;
-                headerRow.appendChild(headerCell);
+            // Création de l'en-tête
+            const headerRow = document.createElement('tr');
+            ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
             });
             table.appendChild(headerRow);
 
-            // Ajoute les lignes et les cellules
+            // Création des lignes du tableau
             data.forEach((row, rowIndex) => {
-                const rowElement = document.createElement('tr');
-                row.forEach((cell, colIndex) => {
-                    const cellElement = document.createElement('td');
-                    cellElement.textContent = cell;
-                    rowElement.appendChild(cellElement);
+                const tr = document.createElement('tr');
 
-                    // Ajoute des événements pour les cellules des colonnes D à I (index 3 à 8)
-                    if (colIndex >= 3 && colIndex <= 8) {
-                        cellElement.addEventListener('click', () => {
-                            const rowCValue = data[rowIndex][1];  // Valeur de la colonne C de la même ligne
-                            const row3Value = data[1][colIndex];  // Valeur de la ligne 3 dans la même colonne
-                            alert(`Valeur de C${rowIndex + 2}: ${rowCValue}\nValeur de ${headers[colIndex]}3: ${row3Value}`);
+                row.forEach((cell, cellIndex) => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+
+                    // Ajout de l'événement de clic pour les colonnes D à I
+                    if (cellIndex >= 3 && cellIndex <= 8) {  // Correspond aux colonnes D à I (index 3 à 8)
+                        td.addEventListener('click', () => {
+                            handleClick(rowIndex, cellIndex);
                         });
                     }
+
+                    tr.appendChild(td);
                 });
-                table.appendChild(rowElement);
+
+                table.appendChild(tr);
             });
         }
 
-        // Charge les données lorsque la page est prête
-        document.addEventListener('DOMContentLoaded', getData);
+        // Fonction de gestion du clic sur une cellule
+        function handleClick(rowIndex, cellIndex) {
+            const table = document.getElementById('data-table');
+            const colCValue = table.rows[rowIndex + 1].cells[1].textContent;  // Colonne C (index 1), ligne correspondante
+            const colHeaderValue = table.rows[1].cells[cellIndex].textContent;  // En-tête de colonne ligne 3
+
+            alert(`Valeurs : ${colCValue} + ${colHeaderValue}`);
+        }
+
+        // Appel de la fonction pour récupérer et afficher les données de la feuille
+        fetchSheetData();
     </script>
 </body>
 </html>
