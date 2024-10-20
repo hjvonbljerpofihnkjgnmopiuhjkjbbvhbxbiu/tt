@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Partenaires</title>
     <style>
-        /* Dark Theme Styling */
         body {
             background-color: #121212;
             color: #e0e0e0;
@@ -39,7 +38,6 @@
             background-color: #1e1e1e;
         }
 
-        /* Style des cellules cliquables */
         .clickable {
             cursor: pointer;
             background-color: #2c2c2c;
@@ -49,7 +47,6 @@
             background-color: #444;
         }
 
-        /* Dark scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -68,7 +65,6 @@
             background: #777;
         }
 
-        /* Notifications */
         .notification {
             position: fixed;
             bottom: 20px;
@@ -83,24 +79,57 @@
             z-index: 1000;
         }
 
-        /* Bouton retour */
-        .btn-back {
-            display: inline-block;
-            background-color: #444;
-            color: #e0e0e0;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin: 20px;
-            display: block;
-            width: 200px;
-            text-align: center;
-            margin: 0 auto;
-        }
+.notif {
+  position: fixed;
+  left: 20px;
+  bottom: -50px;
+  background-color: #323232;
+  padding: 12px 24px 17px 24px;
+  vertical-align: middle;
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(0,0,0,0.2);
+  border-radius: 1px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
 
-        .btn-back:hover {
-            background-color: #666;
-        }
+.peek {
+  -webkit-animation: peek 10s forwards;
+  -webkit-animation-delay: 1s;
+  animation: peek 10s forwards;
+  animation-delay: 1000ms;
+}
+
+.show {
+  -webkit-animation: show 0.5s forwards;
+  -webkit-animation-delay: 0.5s;
+  animation: show 0.5s forwards;
+  animation-delay: 500ms;
+}
+
+@-webkit-keyframes peek {
+      0% { bottom: -50px; }
+     10% { bottom: 80px; }  
+     90% { bottom: 80px; }  
+    100% { bottom: -50px; }
+}
+
+@keyframes peek {
+      0% { bottom: -50px; }
+     10% { bottom: 80px; } 
+     90% { bottom: 80px; }  
+    100% { bottom: -50px; }
+}
+
+
+@-webkit-keyframes show {
+    100% { bottom: 20px; }
+}
+
+@keyframes show {
+    100% { bottom: 20px; }
+}
+
+
     </style>
     <script>
         const SHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
@@ -179,6 +208,10 @@
 
 
     <div id="notification" class="notification"></div>
+
+<div class="notif peek">
+Raison facture a copier coller ✅
+ </div>
 
 </body>
 </html>
