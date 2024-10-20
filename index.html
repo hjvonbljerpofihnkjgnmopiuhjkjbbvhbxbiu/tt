@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau Google Sheets - Dark Mode</title>
+    <title>Partenaires</title>
     <style>
         /* Dark Theme Styling */
         body {
@@ -104,10 +104,10 @@
     </style>
     <script>
         const SHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-        const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';  // Remplacez par votre clé API Google Sheets
-        const RANGE = 'Partenaires!B2:J25';  // Le range des données à récupérer
+        const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';  
+        const RANGE = 'Partenaires!B2:J25';  
 
-        // Fonction pour charger les données depuis Google Sheets
+       
         async function loadSheetData() {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
             const response = await fetch(url);
@@ -115,7 +115,7 @@
             displayData(data.values);
         }
 
-        // Fonction pour afficher les données dans une table HTML
+       
         function displayData(values) {
             const table = document.getElementById('sheet-table');
             values.forEach((row, rowIndex) => {
@@ -124,10 +124,10 @@
                     const td = document.createElement('td');
                     td.textContent = cell;
 
-                    // Si la colonne est entre D et I (colIndex 3 à 8), permettre le clic
-                    if (colIndex >= 2 && colIndex <= 7 && rowIndex >= 2) {  // rowIndex >= 1 pour correspondre aux lignes 3 et au-dessus
+                  
+                    if (colIndex >= 2 && colIndex <= 7 && rowIndex >= 2) {  
                         td.classList.add('clickable');
-                        td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  // +2 car range commence à B2
+                        td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  
                     }
 
                     tr.appendChild(td);
@@ -136,18 +136,18 @@
             });
         }
 
-        // Fonction déclenchée lors du clic sur une cellule cliquable
+       
         function handleClick(row, col) {
             const table = document.getElementById('sheet-table');
-            const columnCValue = table.rows[row - 2].cells[1].textContent;  // Valeur de la colonne C
-            const row3Value = table.rows[1].cells[col - 2].textContent;  // Valeur de la ligne 3, même colonne que la cellule cliquée
+            const columnCValue = table.rows[row - 2].cells[1].textContent;  
+            const row3Value = table.rows[1].cells[col - 2].textContent;  
 
             const result = `${columnCValue} ${row3Value}`;
             copyToClipboard(result);
             showNotification(`Copié dans le presse-papier : ${result}`);
         }
 
-        // Fonction pour copier le texte dans le presse-papier
+       
         function copyToClipboard(text) {
             const tempInput = document.createElement('textarea');
             tempInput.value = text;
@@ -157,31 +157,27 @@
             document.body.removeChild(tempInput);
         }
 
-        // Fonction pour afficher une notification CSS
+
         function showNotification(message) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.style.display = 'block';
             setTimeout(() => {
                 notification.style.display = 'none';
-            }, 3000);  // Notification visible pendant 3 secondes
+            }, 3000); 
         }
 
-        // Charger les données lorsque la page est chargée
         window.onload = loadSheetData;
     </script>
 </head>
 <body>
 
-    <h1>Tableau Google Sheets - Feuillet "Partenaires"</h1>
+    <h1>Partenaires</h1>
     
-    <!-- Bouton de retour -->
-    <a href="https://votre-lien-de-retour.com" class="btn-back">Retour</a>
 
-    <!-- Tableau où les données seront affichées -->
     <table id="sheet-table"></table>
 
-    <!-- Notification pour feedback après un clic -->
+
     <div id="notification" class="notification"></div>
 
 </body>
