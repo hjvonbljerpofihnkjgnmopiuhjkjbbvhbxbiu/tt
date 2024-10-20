@@ -3,95 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets Data</title>
+    <title>Google Sheets API - Affichage</title>
     <style>
         table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
             text-align: center;
         }
-        td:hover {
-            background-color: #f0f0f0;
+        td {
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Feuille Partenaire (B2:J25)</h1>
-    <table id="data-table"></table>
+    <h1>Affichage du Google Sheet Partenaire</h1>
+    <div id="table-container"></div>
 
+    <script src="https://apis.google.com/js/api.js"></script>
     <script>
-        // Configuration de la feuille Google Sheets
-        const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-        const range = 'Partenaires!B2:J25';
-        const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';  // Remplacez avec votre clé API Google Sheets
+        const SHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
+        const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';
+        const RANGE = 'Partenaires!B2:J25';
 
-        // Fonction pour récupérer les données via l'API Google Sheets
-        function fetchSheetData() {
-            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`)
-                .then(response => response.json())
-                .then(data => {
-                    const values = data.values;
+        function initClient() {
+            gapi.client.init({
+                'apiKey': API_KEY
+            }).then(function() {
+                return gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: SHEET_ID,
+                    range: RANGE
+                });
+            }).then(function(response) {
+                const values = response.result.values;
+                if (values.length > 0) {
                     generateTable(values);
-                })
-                .catch(error => console.error('Erreur lors de la récupération des données:', error));
+                } else {
+                    console.log("Pas de données trouvées.");
+                }
+            }, function(response) {
+                console.error('Erreur: ' + response.result.error.message);
+            });
         }
 
-        // Fonction pour générer le tableau
         function generateTable(data) {
-            const table = document.getElementById('data-table');
-            table.innerHTML = ''; // Reset du tableau
+            const tableContainer = document.getElementById('table-container');
+            const table = document.createElement('table');
+            const tbody = document.createElement('tbody');
 
-            // Création de l'en-tête
-            const headerRow = document.createElement('tr');
-            ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].forEach(headerText => {
-                const th = document.createElement('th');
-                th.textContent = headerText;
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
-
-            // Création des lignes du tableau
             data.forEach((row, rowIndex) => {
                 const tr = document.createElement('tr');
-
-                row.forEach((cell, cellIndex) => {
+                row.forEach((cell, colIndex) => {
                     const td = document.createElement('td');
                     td.textContent = cell;
 
-                    // Ajout de l'événement de clic pour les colonnes D à I
-                    if (cellIndex >= 3 && cellIndex <= 8) {  // Correspond aux colonnes D à I (index 3 à 8)
-                        td.addEventListener('click', () => {
-                            handleClick(rowIndex, cellIndex);
+                    if (colIndex >= 3 && colIndex <= 8 && rowIndex > 0) {  // Colonnes D à I
+                        td.addEventListener('click', function() {
+                            handleCellClick(rowIndex + 2, colIndex + 2, data);
                         });
                     }
 
                     tr.appendChild(td);
                 });
-
-                table.appendChild(tr);
+                tbody.appendChild(tr);
             });
+
+            table.appendChild(tbody);
+            tableContainer.appendChild(table);
         }
 
-        // Fonction de gestion du clic sur une cellule
-        function handleClick(rowIndex, cellIndex) {
-            const table = document.getElementById('data-table');
-            const colCValue = table.rows[rowIndex + 1].cells[1].textContent;  // Colonne C (index 1), ligne correspondante
-            const colHeaderValue = table.rows[1].cells[cellIndex].textContent;  // En-tête de colonne ligne 3
+        function handleCellClick(row, col, data) {
+            // Récupérer les valeurs des cellules nécessaires
+            const valueC = data[row - 2][1]; // Colonne C (B est index 1 dans l'array)
+            const valueTop = data[1][col - 2]; // Ligne 3 colonne du clic (D, E, F...)
 
-            alert(`Valeurs : ${colCValue} + ${colHeaderValue}`);
+            const result = `${valueC} ${valueTop}`;
+            copyToClipboard(result);
         }
 
-        // Appel de la fonction pour récupérer et afficher les données de la feuille
-        fetchSheetData();
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert(`Valeur copiée: ${text}`);
+        }
+
+        gapi.load('client', initClient);
     </script>
 </body>
 </html>
