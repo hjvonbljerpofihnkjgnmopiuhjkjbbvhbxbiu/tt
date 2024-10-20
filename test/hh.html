@@ -77,11 +77,11 @@
             // Traiter les données du tableau 2 pour chaque employé
             tableau2.forEach((row, index) => {
                 const employeId = row[0]; // Colonne C (Index 2)
-                const factures = parseFloat(row[3]) || 0; // Colonne E (Index 4)
-                const chiffreAffaire = parseFloat(row[4]) || 0; // Colonne F (Index 5)
-                const prixUsine = parseFloat(row[6]) || 0; // Colonne H (Index 7)
-                const beneficeBrut = parseFloat(row[8]) || 0; // Colonne J (Index 9)
-                const salaire = parseFloat(row[21]) || 0; // Colonne W (Index 22)
+                const factures = parseFloat(row[2]) || 0; // Colonne E (Index 4)
+                const chiffreAffaire = parseFloat(row[3]) || 0; // Colonne F (Index 5)
+                const prixUsine = parseFloat(row[5]) || 0; // Colonne H (Index 7)
+                const beneficeBrut = parseFloat(row[7]) || 0; // Colonne J (Index 9)
+                const salaire = parseFloat(row[20]) || 0; // Colonne W (Index 22)
 
                 // Vérifier si l'employé appartient à Roxwood ou Paletot
                 if (roxwoodIds.includes(employeId)) {
