@@ -125,7 +125,7 @@
                     td.textContent = cell;
 
                     // Si la colonne est entre D et I (colIndex 3 à 8), permettre le clic
-                    if (colIndex >= 2 && colIndex <= 7) {
+                    if (colIndex >= 2 && colIndex <= 7 && rowIndex >= 1) {  // rowIndex >= 1 pour correspondre aux lignes 3 et au-dessus
                         td.classList.add('clickable');
                         td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  // +2 car range commence à B2
                     }
