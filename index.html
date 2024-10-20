@@ -1,109 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Table</title>
+    <title>Google Sheet Partenaires</title>
     <style>
         table {
-            border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
+            border-collapse: collapse;
         }
-        th, td {
+        table, th, td {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
+            text-align: center;
         }
-        td {
+        td:hover {
+            background-color: #f0f0f0;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<h2>Tableau des partenaires</h2>
-
-<table id="sheetTable">
-    <!-- Le tableau sera inséré ici -->
+<h1>Tableau des Partenaires</h1>
+<table id="partenaires-table">
+    <!-- Le tableau sera rempli dynamiquement par JavaScript -->
 </table>
 
 <script>
-    // Remplacez par votre propre clé API Google Sheets
-    const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';
-    const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-    const range = 'Partenaires!B2:J25'; // Le range que vous voulez afficher
+// Remplacer par votre clé API Google Sheets
+const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';
 
-    // Fonction pour récupérer les données Google Sheets
-    async function fetchSheetData() {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            displayTable(data.values);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des données:', error);
-        }
-    }
+// L'ID de votre Google Sheet
+const SPREADSHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
 
-    // Fonction pour afficher les données dans un tableau HTML
-    function displayTable(data) {
-        const table = document.getElementById('sheetTable');
-        const headerRow = data[0];  // Supposons que la première ligne contient les titres
-        let tableHtml = '<thead><tr>';
-        
-        // Générer les en-têtes de colonnes
-        headerRow.forEach(header => {
-            tableHtml += `<th>${header}</th>`;
-        });
-        tableHtml += '</tr></thead><tbody>';
-        
-        // Générer les lignes du tableau
-        for (let rowIndex = 1; rowIndex < data.length; rowIndex++) {
-            const row = data[rowIndex];
-            tableHtml += '<tr>';
-            row.forEach((cell, colIndex) => {
-                const cellId = `R${rowIndex+1}C${colIndex+2}`; // Ex: R2C4 pour ligne 2, colonne 4 (réel)
-                tableHtml += `<td id="${cellId}" data-row="${rowIndex + 1}" data-col="${colIndex + 2}">${cell}</td>`;
-            });
-            tableHtml += '</tr>';
-        }
+// Le nom de la feuille
+const SHEET_NAME = 'Partenaires';
 
-        tableHtml += '</tbody>';
-        table.innerHTML = tableHtml;
+// La plage que nous voulons récupérer (B2:J25)
+const RANGE = `${SHEET_NAME}!B2:J25`;
 
-        // Ajouter les événements de clic aux cellules des colonnes D à I (index 3 à 8)
-        const tableCells = document.querySelectorAll('#sheetTable td');
-        tableCells.forEach(cell => {
-            const colIndex = parseInt(cell.getAttribute('data-col'));
-            const rowIndex = parseInt(cell.getAttribute('data-row'));
-            if (colIndex >= 4 && colIndex <= 9) {  // Colonnes D à I
-                cell.addEventListener('click', () => handleCellClick(rowIndex, colIndex));
+// Fonction pour récupérer les données de Google Sheets
+async function fetchSheetData() {
+    const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`);
+    const data = await response.json();
+    return data.values;
+}
+
+// Fonction pour remplir le tableau HTML avec les données
+function fillTable(data) {
+    const table = document.getElementById('partenaires-table');
+    data.forEach((row, rowIndex) => {
+        const tr = document.createElement('tr');
+        row.forEach((cell, colIndex) => {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            tr.appendChild(td);
+
+            // Ajouter l'événement de clic sur les colonnes D à I (index 3 à 8)
+            if (colIndex >= 3 && colIndex <= 8 && rowIndex >= 0) {
+                td.addEventListener('click', () => {
+                    const colLetter = String.fromCharCode(68 + colIndex - 3); // Convertir l'index en lettre (D, E, F...)
+                    const cellValueC = data[rowIndex][1]; // Récupérer la valeur de la colonne C dans la même ligne
+                    const cellValueRow3 = data[0][colIndex]; // Récupérer la valeur de la ligne 3 dans la même colonne
+
+                    // Copier les valeurs dans le presse-papier
+                    const copyText = `${cellValueC} ${cellValueRow3}`;
+                    navigator.clipboard.writeText(copyText).then(() => {
+                        alert(`Copié: ${copyText}`);
+                    }).catch(err => {
+                        console.error('Erreur lors de la copie: ', err);
+                    });
+                });
             }
         });
-    }
+        table.appendChild(tr);
+    });
+}
 
-    // Fonction de gestion du clic sur une cellule des colonnes D à I
-    function handleCellClick(rowIndex, colIndex) {
-        const colCValue = document.querySelector(`#R${rowIndex}C3`).textContent;  // Valeur de la colonne C
-        const colHeaderValue = document.querySelector(`#R3C${colIndex}`).textContent;  // Valeur de la 3ème ligne (en-tête)
-
-        const concatenatedValue = colCValue + '+' + colHeaderValue;
-        console.log('Valeur à copier:', concatenatedValue);
-
-        // Copier dans le presse-papier
-        navigator.clipboard.writeText(concatenatedValue)
-            .then(() => {
-                alert(`Valeur copiée dans le presse-papier: ${concatenatedValue}`);
-            })
-            .catch(err => {
-                console.error('Erreur lors de la copie:', err);
-            });
-    }
-
-    // Récupérer et afficher les données lorsque la page est chargée
-    fetchSheetData();
-
+// Charger les données et remplir le tableau
+fetchSheetData().then(data => {
+    fillTable(data);
+});
 </script>
 
 </body>
