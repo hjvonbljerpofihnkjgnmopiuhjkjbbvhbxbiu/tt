@@ -137,11 +137,24 @@
         const RANGE = 'Partenaires!B2:J25';  
 
        
-        const exceptions = [
-            { row: 4, col: 5 },  // Exemple : cellule E4
-            { row: 5, col: 7 },  // Exemple : cellule G5
-            // Ajoutez d'autres exceptions selon vos besoins
-        ];
+const exceptions = [
+    { row: 8, col: 6 },  // F8
+    { row: 8, col: 7 },  // G8
+    { row: 9, col: 5 },  // E9
+    { row: 9, col: 4 },  // D9
+    { row: 10, col: 6 }, // F10
+    { row: 10, col: 7 }, // G10
+    { row: 11, col: 4 }, // D11
+    { row: 11, col: 5 }, // E11
+    { row: 17, col: 8 }, // H17
+    { row: 17, col: 9 }, // I17
+    { row: 18, col: 9 }, // I18
+    { row: 18, col: 4 }, // D18
+    { row: 18, col: 5 }, // E18
+    { row: 18, col: 6 }, // F18
+    { row: 18, col: 7 }, // G18
+];
+
 
         // Fonction pour charger les données depuis Google Sheets
         async function loadSheetData() {
