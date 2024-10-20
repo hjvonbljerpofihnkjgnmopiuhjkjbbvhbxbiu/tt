@@ -180,7 +180,7 @@ const exceptions = [
                     td.textContent = cell;
 
                   
-                    if (colIndex >= 3 && colIndex <= 8 && rowIndex >= 1 && !isException(rowIndex + 2, colIndex + 2)) {
+                    if (colIndex >= 2 && colIndex <= 7 && rowIndex >= 2 && !isException(rowIndex + 2, colIndex + 2)) {
                         td.classList.add('clickable');
                         td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  // +2 car range commence à B2
                     }
