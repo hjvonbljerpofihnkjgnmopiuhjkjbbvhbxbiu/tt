@@ -64,12 +64,13 @@
         }
 
         function parseFormattedValue(value) {
+            if (value === undefined || value === null) return 0; // Ajout de la vérification
             return parseFloat(value.replace(/\s/g, '') || 0);
         }
 
         async function processData() {
-            const tableau1 = await fetchSheetData('Employé!D4:W43');
-            const tableau2 = await fetchSheetData('Dashboard!B6:W45');
+            const tableau1 = await fetchSheetData('Employé!D4:Z43');
+            const tableau2 = await fetchSheetData('Dashboard!C6:W45');
             const tableau3 = await fetchSheetData('Archives!B4:I23');
 
             let roxwoodFactures = 0, roxwoodChiffreAffaire = 0, roxwoodPrixUsine = 0, roxwoodBeneficeBrut = 0, roxwoodSalaires = 0;
@@ -164,9 +165,8 @@
             const barLabels = [];
             const barData = [];
             tableau3.forEach((row) => {
-                const semaine = row[0]; // Colonne B
-
-                const beneficeDeclarationSemaine = parseFloat(row[7]); // Colonne I
+                const semaine = row[1]; // Colonne B
+                const beneficeDeclarationSemaine = parseFormattedValue(row[8]); // Colonne I
                 if (semaine) {
                     barLabels.push(semaine);
                     barData.push(beneficeDeclarationSemaine || 0);
