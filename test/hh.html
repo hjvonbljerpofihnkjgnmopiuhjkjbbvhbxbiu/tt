@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,26 +12,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcul des bénéfices - RoxWood vs Paletot</title>
     <style>
+        /* Dark theme styling */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #121212;
+            color: #f1f1f1;
         }
         .result {
             margin: 10px 0;
             padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            border: 1px solid #333;
+            background-color: #1e1e1e;
+        }
+        h1, h2 {
+            color: #f1f1f1;
+        }
+        canvas {
+            margin-top: 20px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
     <h1>Calcul des bénéfices</h1>
+    
     <h2>RoxWood</h2>
     <div id="roxwood-factures" class="result"></div>
     <div id="roxwood-chiffre-affaire" class="result"></div>
     <div id="roxwood-prix-usine" class="result"></div>
     <div id="roxwood-benefice-brut" class="result"></div>
+    <div id="roxwood-salaires" class="result"></div>
     <div id="roxwood-benefice-net" class="result"></div>
 
     <h2>Paletot</h2>
@@ -32,7 +51,11 @@
     <div id="paletot-chiffre-affaire" class="result"></div>
     <div id="paletot-prix-usine" class="result"></div>
     <div id="paletot-benefice-brut" class="result"></div>
+    <div id="paletot-salaires" class="result"></div>
     <div id="paletot-benefice-net" class="result"></div>
+
+    <h2>Graphiques</h2>
+    <canvas id="beneficeChart"></canvas>
 
     <script>
         const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Remplacez par votre clé API
@@ -46,8 +69,8 @@
             return data.values;
         }
 
+        // Fonction pour convertir une valeur formatée en milliers avec espaces en float
         function parseFormattedValue(value) {
-            // Retirer les espaces et convertir en nombre flottant
             return parseFloat(value.replace(/\s/g, '') || 0);
         }
 
@@ -128,18 +151,65 @@
             console.log('Salaires:', paletotSalaires);
             console.log('Bénéfice net:', paletotBeneficeNet);
 
-            // Affichage des résultats dans la page HTML
+            // Affichage des résultats dans la page HTML pour Roxwood
             document.getElementById('roxwood-factures').innerText = `Total des factures: ${roxwoodFactures}`;
             document.getElementById('roxwood-chiffre-affaire').innerText = `Chiffre d'affaire: ${roxwoodChiffreAffaire}`;
             document.getElementById('roxwood-prix-usine').innerText = `Prix usine: ${roxwoodPrixUsine}`;
             document.getElementById('roxwood-benefice-brut').innerText = `Bénéfice brut: ${roxwoodBeneficeBrut}`;
+            document.getElementById('roxwood-salaires').innerText = `Salaires: ${roxwoodSalaires}`;
             document.getElementById('roxwood-benefice-net').innerText = `Bénéfice net: ${roxwoodBeneficeNet}`;
 
+            // Affichage des résultats dans la page HTML pour Paletot
             document.getElementById('paletot-factures').innerText = `Total des factures: ${paletotFactures}`;
             document.getElementById('paletot-chiffre-affaire').innerText = `Chiffre d'affaire: ${paletotChiffreAffaire}`;
             document.getElementById('paletot-prix-usine').innerText = `Prix usine: ${paletotPrixUsine}`;
             document.getElementById('paletot-benefice-brut').innerText = `Bénéfice brut: ${paletotBeneficeBrut}`;
+            document.getElementById('paletot-salaires').innerText = `Salaires: ${paletotSalaires}`;
             document.getElementById('paletot-benefice-net').innerText = `Bénéfice net: ${paletotBeneficeNet}`;
+
+            // Création du graphique avec Chart.js
+            const ctx = document.getElementById('beneficeChart').getContext('2d');
+            const beneficeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['RoxWood', 'Paletot'],
+                    datasets: [
+                        {
+                            label: 'Factures',
+                            data: [roxwoodFactures, paletotFactures],
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        },
+                        {
+                            label: 'Chiffre d\'affaire',
+                            data: [roxwoodChiffreAffaire, paletotChiffreAffaire],
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        },
+                        {
+                            label: 'Bénéfice brut',
+                            data: [roxwoodBeneficeBrut, paletotBeneficeBrut],
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        },
+                        {
+                            label: 'Bénéfice net',
+                            data: [roxwoodBeneficeNet, paletotBeneficeNet],
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                        },
+                        {
+                            label: 'Salaires',
+                            data: [roxwoodSalaires, paletotSalaires],
+                            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         }
 
         // Lancer le traitement des données au chargement de la page
