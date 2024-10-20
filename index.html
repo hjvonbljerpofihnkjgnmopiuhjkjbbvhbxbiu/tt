@@ -58,7 +58,7 @@ function fillTable(data) {
             tr.appendChild(td);
 
             // Ajouter l'événement de clic sur les colonnes D à I (index 3 à 8)
-            if (colIndex >= 3 && colIndex <= 8 && rowIndex >= 0) {
+            if (colIndex >= 4 && colIndex <= 8 && rowIndex >= 0) {
                 td.addEventListener('click', () => {
                     const colLetter = String.fromCharCode(68 + colIndex - 3); // Convertir l'index en lettre (D, E, F...)
                     const cellValueC = data[rowIndex][1]; // Récupérer la valeur de la colonne C dans la même ligne
