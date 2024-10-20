@@ -3,104 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Récapitulatif Employés</title>
+    <title>Calcul des bénéfices - RoxWood vs Paletot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Récapitulatif Employés</h1>
-    
-    <!-- Résultats RoxWood -->
-    <div>
-        <h2>RoxWood</h2>
-        <p>Nombre de factures: <span id="factures-roxwood"></span></p>
-        <p>Chiffre d'affaires: <span id="chiffre-roxwood"></span></p>
-        <p>Prix usine: <span id="prix-roxwood"></span></p>
-        <p>Bénéfice brut: <span id="benefice-brut-roxwood"></span></p>
-        <p>Bénéfice net: <span id="benefice-net-roxwood"></span></p>
-    </div>
+    <h1>Calcul des bénéfices</h1>
+    <h2>RoxWood</h2>
+    <div id="roxwood-factures" class="result"></div>
+    <div id="roxwood-chiffre-affaire" class="result"></div>
+    <div id="roxwood-prix-usine" class="result"></div>
+    <div id="roxwood-benefice-brut" class="result"></div>
+    <div id="roxwood-benefice-net" class="result"></div>
 
-    <!-- Résultats Paletot -->
-    <div>
-        <h2>Paletot</h2>
-        <p>Nombre de factures: <span id="factures-paletot"></span></p>
-        <p>Chiffre d'affaires: <span id="chiffre-paletot"></span></p>
-        <p>Prix usine: <span id="prix-paletot"></span></p>
-        <p>Bénéfice brut: <span id="benefice-brut-paletot"></span></p>
-        <p>Bénéfice net: <span id="benefice-net-paletot"></span></p>
-    </div>
+    <h2>Paletot</h2>
+    <div id="paletot-factures" class="result"></div>
+    <div id="paletot-chiffre-affaire" class="result"></div>
+    <div id="paletot-prix-usine" class="result"></div>
+    <div id="paletot-benefice-brut" class="result"></div>
+    <div id="paletot-benefice-net" class="result"></div>
 
     <script>
-        // Fonction pour récupérer les données des Google Sheets
-        async function fetchGoogleSheetData(sheetId, range) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0`;
-            const response = await fetch(url);
+        const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Remplacez par votre clé API
+        const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
+
+        // Récupérer les données de Google Sheets
+        async function fetchSheetData(range) {
+            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`);
             const data = await response.json();
             return data.values;
         }
 
         // Fonction principale pour traiter les données
-        async function processEmployeeData() {
-            const sheetId = "1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g";
-
+        async function processData() {
             // Récupérer les données des deux tableaux
-            const tableau1 = await fetchGoogleSheetData(sheetId, 'Employé!D3:W32');
-            const tableau2 = await fetchGoogleSheetData(sheetId, 'Dashboard!B6:W35');
+            const tableau1 = await fetchSheetData('Employé!D4:W43');
+            const tableau2 = await fetchSheetData('Dashboard!B6:W45');
 
-            // Initialiser les variables de calcul pour RoxWood et Paletot
-            let facturesRoxwood = 0, chiffreRoxwood = 0, prixUsineRoxwood = 0, beneficeBrutRoxwood = 0, salaireRoxwood = 0;
-            let facturesPaletot = 0, chiffrePaletot = 0, prixUsinePaletot = 0, beneficeBrutPaletot = 0, salairePaletot = 0;
+            let roxwoodFactures = 0, roxwoodChiffreAffaire = 0, roxwoodPrixUsine = 0, roxwoodBeneficeBrut = 0, roxwoodSalaires = 0;
+            let paletotFactures = 0, paletotChiffreAffaire = 0, paletotPrixUsine = 0, paletotBeneficeBrut = 0, paletotSalaires = 0;
 
-            // Parcourir le tableau 1 pour trouver les employés RoxWood et Paletot
-            for (let i = 0; i < tableau1.length; i++) {
-                const employeId = tableau1[i][0]; // Identifiant de l'employé (Colonne D)
-                const isRoxwood = tableau1[i][19] === 'TRUE'; // Boolean RoxWood ou Paletot (Colonne W)
+            const roxwoodIds = [];
+            const paletotIds = [];
 
-                // Trouver les données correspondantes dans le tableau 2
-                const employeData = tableau2.find(row => row[2] === employeId); // Colonne C dans tableau 2
-                if (employeData) {
-                    const factures = parseFloat(employeData[4]) || 0; // Colonne E
-                    const chiffreAffaire = parseFloat(employeData[5]) || 0; // Colonne F
-                    const prixUsine = parseFloat(employeData[7]) || 0; // Colonne H
-                    const benefice = parseFloat(employeData[9]) || 0; // Colonne J
-                    const salaire = parseFloat(employeData[22]) || 0; // Colonne W
-
-                    if (isRoxwood) {
-                        facturesRoxwood += factures;
-                        chiffreRoxwood += chiffreAffaire;
-                        prixUsineRoxwood += prixUsine;
-                        beneficeBrutRoxwood += benefice;
-                        salaireRoxwood += salaire;
-                    } else {
-                        facturesPaletot += factures;
-                        chiffrePaletot += chiffreAffaire;
-                        prixUsinePaletot += prixUsine;
-                        beneficeBrutPaletot += benefice;
-                        salairePaletot += salaire;
-                    }
+            // Séparer les employés Roxwood et Paletot
+            tableau1.forEach(row => {
+                const employeId = row[0]; // Colonne D (Index 0, car les colonnes sont décalées)
+                const isRoxwood = row[19] === 'TRUE'; // Colonne W (Index 19)
+                if (isRoxwood) {
+                    roxwoodIds.push(employeId);
+                } else {
+                    paletotIds.push(employeId);
                 }
-            }
+            });
+
+            // Traiter les données du tableau 2
+            tableau2.forEach(row => {
+                const employeId = row[2]; // Colonne C (Index 2)
+                const factures = parseFloat(row[4]) || 0; // Colonne E (Index 4)
+                const chiffreAffaire = parseFloat(row[5]) || 0; // Colonne F (Index 5)
+                const prixUsine = parseFloat(row[7]) || 0; // Colonne H (Index 7)
+                const beneficeBrut = parseFloat(row[9]) || 0; // Colonne J (Index 9)
+                const salaire = parseFloat(row[22]) || 0; // Colonne W (Index 22)
+
+                if (roxwoodIds.includes(employeId)) {
+                    roxwoodFactures += factures;
+                    roxwoodChiffreAffaire += chiffreAffaire;
+                    roxwoodPrixUsine += prixUsine;
+                    roxwoodBeneficeBrut += beneficeBrut;
+                    roxwoodSalaires += salaire;
+                } else if (paletotIds.includes(employeId)) {
+                    paletotFactures += factures;
+                    paletotChiffreAffaire += chiffreAffaire;
+                    paletotPrixUsine += prixUsine;
+                    paletotBeneficeBrut += beneficeBrut;
+                    paletotSalaires += salaire;
+                }
+            });
 
             // Calculer les bénéfices nets
-            const beneficeNetRoxwood = beneficeBrutRoxwood - salaireRoxwood;
-            const beneficeNetPaletot = beneficeBrutPaletot - salairePaletot;
+            const roxwoodBeneficeNet = roxwoodBeneficeBrut - roxwoodSalaires;
+            const paletotBeneficeNet = paletotBeneficeBrut - paletotSalaires;
 
-            // Mettre à jour le DOM avec les résultats RoxWood
-            document.getElementById('factures-roxwood').textContent = facturesRoxwood;
-            document.getElementById('chiffre-roxwood').textContent = chiffreRoxwood;
-            document.getElementById('prix-roxwood').textContent = prixUsineRoxwood;
-            document.getElementById('benefice-brut-roxwood').textContent = beneficeBrutRoxwood;
-            document.getElementById('benefice-net-roxwood').textContent = beneficeNetRoxwood;
+            // Afficher les résultats
+            document.getElementById('roxwood-factures').innerText = `Total des factures: ${roxwoodFactures}`;
+            document.getElementById('roxwood-chiffre-affaire').innerText = `Chiffre d'affaire: ${roxwoodChiffreAffaire}`;
+            document.getElementById('roxwood-prix-usine').innerText = `Prix usine: ${roxwoodPrixUsine}`;
+            document.getElementById('roxwood-benefice-brut').innerText = `Bénéfice brut: ${roxwoodBeneficeBrut}`;
+            document.getElementById('roxwood-benefice-net').innerText = `Bénéfice net: ${roxwoodBeneficeNet}`;
 
-            // Mettre à jour le DOM avec les résultats Paletot
-            document.getElementById('factures-paletot').textContent = facturesPaletot;
-            document.getElementById('chiffre-paletot').textContent = chiffrePaletot;
-            document.getElementById('prix-paletot').textContent = prixUsinePaletot;
-            document.getElementById('benefice-brut-paletot').textContent = beneficeBrutPaletot;
-            document.getElementById('benefice-net-paletot').textContent = beneficeNetPaletot;
+            document.getElementById('paletot-factures').innerText = `Total des factures: ${paletotFactures}`;
+            document.getElementById('paletot-chiffre-affaire').innerText = `Chiffre d'affaire: ${paletotChiffreAffaire}`;
+            document.getElementById('paletot-prix-usine').innerText = `Prix usine: ${paletotPrixUsine}`;
+            document.getElementById('paletot-benefice-brut').innerText = `Bénéfice brut: ${paletotBeneficeBrut}`;
+            document.getElementById('paletot-benefice-net').innerText = `Bénéfice net: ${paletotBeneficeNet}`;
         }
 
-        // Appeler la fonction principale après le chargement de la page
-        window.onload = processEmployeeData;
+        // Lancer le traitement des données au chargement de la page
+        processData();
     </script>
 
 </body>
