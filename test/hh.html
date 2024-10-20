@@ -46,6 +46,11 @@
             return data.values;
         }
 
+        function parseFormattedValue(value) {
+            // Retirer les espaces et convertir en nombre flottant
+            return parseFloat(value.replace(/\s/g, '') || 0);
+        }
+
         // Fonction principale pour traiter les données
         async function processData() {
             // Récupérer les données des deux tableaux
@@ -77,11 +82,11 @@
             // Traiter les données du tableau 2 pour chaque employé
             tableau2.forEach((row, index) => {
                 const employeId = row[0]; // Colonne C (Index 2)
-                const factures = parseFloat(row[2]) || 0; // Colonne E (Index 4)
-                const chiffreAffaire = parseFloat(row[3]) || 0; // Colonne F (Index 5)
-                const prixUsine = parseFloat(row[5]) || 0; // Colonne H (Index 7)
-                const beneficeBrut = parseFloat(row[7]) || 0; // Colonne J (Index 9)
-                const salaire = parseFloat(row[20]) || 0; // Colonne W (Index 22)
+                const factures = parseFormattedValue(row[2]) || 0; // Colonne E (Index 4)
+                const chiffreAffaire = parseFormattedValue(row[3]) || 0; // Colonne F (Index 5)
+                const prixUsine = parseFormattedValue(row[5]) || 0; // Colonne H (Index 7)
+                const beneficeBrut = parseFormattedValue(row[7]) || 0; // Colonne J (Index 9)
+                const salaire = parseFormattedValue(row[20]) || 0; // Colonne W (Index 22)
 
                 // Vérifier si l'employé appartient à Roxwood ou Paletot
                 if (roxwoodIds.includes(employeId)) {
