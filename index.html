@@ -3,156 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet - Partenaires</title>
+    <title>Affichage Google Sheets</title>
+    <script>
+        const SHEET_ID = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
+        const API_KEY = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0';  // Remplacez par votre clé API Google Sheets
+        const RANGE = 'Partenaires!B2:J25';  // Le range des données à récupérer
+
+        // Fonction pour charger les données depuis Google Sheets
+        async function loadSheetData() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            displayData(data.values);
+        }
+
+        // Fonction pour afficher les données dans une table HTML
+        function displayData(values) {
+            const table = document.getElementById('sheet-table');
+            values.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+                row.forEach((cell, colIndex) => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    
+                    // Si la colonne est entre D et I, permettre le clic
+                    if (colIndex >= 3 && colIndex <= 8) {
+                        td.classList.add('clickable');
+                        td.addEventListener('click', () => handleClick(rowIndex + 2, colIndex + 2));  // +2 car range commence à B2
+                    }
+
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+            });
+        }
+
+        // Fonction déclenchée lors du clic sur une cellule cliquable
+        function handleClick(row, col) {
+            const table = document.getElementById('sheet-table');
+            const columnCValue = table.rows[row - 2].cells[1].textContent;  // Valeur de la colonne C
+            const row3Value = table.rows[1].cells[col - 2].textContent;  // Valeur de la ligne 3, même colonne que la cellule cliquée
+
+            const result = `${columnCValue} ${row3Value}`;
+            copyToClipboard(result);
+            alert(`Copié dans le presse-papier : ${result}`);
+        }
+
+        // Fonction pour copier le texte dans le presse-papier
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        // Charger les données lorsque la page est chargée
+        window.onload = loadSheetData;
+    </script>
     <style>
-        /* Style pour la table */
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
         }
 
-        th, td {
-            border: 1px solid #ddd;
+        td, th {
+            border: 1px solid black;
             padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
             text-align: center;
         }
 
-        td {
-            text-align: center;
+        .clickable {
             cursor: pointer;
+            background-color: #f0f0f0;
         }
 
-        td.clickable {
-            background-color: #e7f3ff;
-        }
-
-        /* Notification CSS */
-        .notification {
-            visibility: hidden;
-            min-width: 200px;
-            margin-left: -100px;
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            border-radius: 2px;
-            padding: 10px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            top: 30px;
-            font-size: 17px;
-        }
-
-        .show {
-            visibility: visible;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-
-        @keyframes fadein {
-            from {top: 0; opacity: 0;} 
-            to {top: 30px; opacity: 1;}
-        }
-
-        @keyframes fadeout {
-            from {top: 30px; opacity: 1;} 
-            to {top: 0; opacity: 0;}
+        .clickable:hover {
+            background-color: #d3d3d3;
         }
     </style>
 </head>
 <body>
-
-<h1>Feuille Google - Partenaires</h1>
-<div id="table-container"></div>
-
-<!-- Notification CSS -->
-<div id="notification" class="notification">Valeurs copiées !</div>
-
-<script>
-    // Lien de la feuille Google Sheets
-    const spreadsheetId = '1M19pAtJYNnDCaKxhO5XjWIlxqT7p2zvk6FHqKYVBJ1g';
-    const range = 'Partenaires!B2:J25';
-    const apiKey = 'AIzaSyBpcBw4PhPUq7k5FdkfzvMyRxEyCjmpkK0'; // Remplacez par votre clé API Google Sheets
-
-    // Fonction pour charger les données de la feuille Google
-    function loadSheetData() {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-        
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const values = data.values;
-                if (values && values.length > 0) {
-                    renderTable(values);
-                } else {
-                    console.error('Aucune donnée trouvée.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur de chargement de la feuille Google:', error);
-            });
-    }
-
-    // Fonction pour afficher les données dans une table HTML
-    function renderTable(data) {
-        let table = '<table>';
-        table += '<tr><th>' + data[0].join('</th><th>') + '</th></tr>';
-
-        for (let i = 1; i < data.length; i++) {
-            table += '<tr>';
-            for (let j = 0; j < data[i].length; j++) {
-                let cellClass = (j >= 3 && j <= 8) ? 'clickable' : ''; // Colonnes D à I
-                table += `<td class="${cellClass}" data-row="${i+2}" data-col="${j}">${data[i][j]}</td>`;
-            }
-            table += '</tr>';
-        }
-
-        table += '</table>';
-        document.getElementById('table-container').innerHTML = table;
-
-        // Ajout des événements de clic
-        document.querySelectorAll('td.clickable').forEach(cell => {
-            cell.addEventListener('click', function () {
-                const row = this.getAttribute('data-row');
-                const col = this.getAttribute('data-col');
-                handleCellClick(row, col);
-            });
-        });
-    }
-
-    // Gestion du clic sur une cellule
-    function handleCellClick(row, col) {
-        // Obtenez la valeur de la colonne C de la même ligne
-        const colCValue = document.querySelector(`td[data-row="${row}"][data-col="2"]`).textContent;
-        // Obtenez la valeur de la cellule de la ligne 3 de la même colonne
-        const headerValue = document.querySelector(`td[data-row="3"][data-col="${col}"]`).textContent;
-
-        // Texte à copier dans le presse-papier
-        const textToCopy = `${colCValue} ${headerValue}`;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            showNotification('Valeurs copiées: ' + textToCopy);
-        }).catch(err => {
-            console.error('Erreur lors de la copie: ', err);
-        });
-    }
-
-    // Fonction pour afficher une notification
-    function showNotification(message) {
-        const notification = document.getElementById('notification');
-        notification.textContent = message;
-        notification.className = 'show';
-        setTimeout(() => {
-            notification.className = notification.className.replace('show', '');
-        }, 3000);
-    }
-
-    // Charger les données à l'ouverture de la page
-    loadSheetData();
-</script>
-
+    <h1>Tableau Google Sheets - Feuillet "Partenaires"</h1>
+    <table id="sheet-table"></table>
 </body>
 </html>
