@@ -1,6 +1,39 @@
 
 	
-<html lang="en" class="no-js"><head></head><body>
+<html lang="en" class="no-js"><head>            <style>
+        .back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .emoji {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()">
+        <img src="https://i.postimg.cc/KYgdy2Nt/icons8-dashboard-32.png" alt="Retour" class="emoji">
+        Retour
+    </button>
 
   <title>Fiche récap</title>
   <meta name="description" content="Tablette de formation. Il est seulement complèmentaire a la formation.">
